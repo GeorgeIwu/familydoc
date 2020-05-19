@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "familydoc",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authfamilydoc6df81674",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

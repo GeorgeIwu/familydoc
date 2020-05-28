@@ -1,15 +1,15 @@
 projects:
   familydoc:
-    schemaPath: src/_lib/graphql/schema.json
+    schemaPath: src/components/graphql/schema.json
     includes:
-      - src/_lib/graphql/**/*.js
+      - src/components/graphql/**/*.js
     excludes:
       - ./amplify/**
     extensions:
       amplify:
         codeGenTarget: javascript
         generatedFileName: ''
-        docsFilePath: src/_lib/graphql
+        docsFilePath: src/components/graphql
 extensions:
   amplify:
     version: 3

@@ -1,7 +1,7 @@
 import React from 'react';
-import { useStore, useForm } from '../_lib/hooks';
+import { useStore, useForm } from '../components/hooks';
 
-const Verify = () => {
+const Recover = () => {
   const [store, storeActions] = useStore()
   const [form, formActions] = useForm({code: '', phone_number: ''})
 
@@ -20,4 +20,4 @@ const Verify = () => {
   )
 };
 
-export default Verify;
+export default Recover;

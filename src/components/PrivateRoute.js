@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import {useStore} from '../hooks'
-import AppBars from './AppBars'
+import {useStore} from './hooks'
+import AppBar from './AppBar'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [store] = useStore()
@@ -13,7 +13,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        isAuthed ? <AppBars><Component {...props} /></AppBars>
+        isAuthed ? <AppBar><Component {...props} /></AppBar>
           : <Redirect to={{ pathname: `/`, state: { from: props.location } }}/>
       }
     />

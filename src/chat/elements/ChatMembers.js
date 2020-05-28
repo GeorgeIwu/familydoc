@@ -1,11 +1,11 @@
 
 import React from 'react'
-import { useChat, useForm } from '../_lib/hooks'
-import Button from "../_lib/components/Button";
-import Input from "../_lib/components/Input";
+import { useForm } from '../../components/hooks'
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
-const ChatMessages = ({match: { params: { id } } }) => {
-  const [chat, chatActions] = useChat(id)
+const ChatMessages = ({ chatApi }) => {
+  const [chat, chatActions] = chatApi
   const [form, formActions] = useForm({ text: '' })
   const { values } = form
 
@@ -24,7 +24,6 @@ const ChatMessages = ({match: { params: { id } } }) => {
 
   return (
     <div style={{}}>
-      <h1 style={{}}>Messages</h1>
       {chat.messages.map(message => (
           <div key={message.id}>
             <div style={{display: 'inline-block', marginRight: '20px'}}>

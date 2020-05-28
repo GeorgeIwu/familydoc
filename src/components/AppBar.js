@@ -1,14 +1,15 @@
 
 import React from 'react'
 import styled from "styled-components";
-import AppBar from "@material-ui/core/AppBar";
+import { Link } from 'react-router-dom'
+import MuAppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import AddIcon from '@material-ui/icons/Add';
 
-const StyledAppBar = styled(AppBar)`
+const StyledAppBar = styled(MuAppBar)`
   .root {
     flex-grow: 1
   }
@@ -18,9 +19,12 @@ const StyledAppBar = styled(AppBar)`
   .title {
     flex-grow: 1,
   }
+  .link {
+    color: white
+  }
 `
 
-const AppBars = ({ children }) => {
+const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
 
   return (
     <div>
@@ -29,10 +33,16 @@ const AppBars = ({ children }) => {
           <IconButton edge="start" className={'menu-button'} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
+
+          <Link to="/chat/new" className={'link'}>
+            <IconButton color="inherit" aria-label="add">
+              <AddIcon />
+            </IconButton>
+          </Link>
+
           <Typography variant="h6" className={'title'}>
-            News
+            {user.name}
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </StyledAppBar>
       {children}
@@ -40,4 +50,4 @@ const AppBars = ({ children }) => {
   );
 };
 
-export default AppBars;
+export default AppBar;

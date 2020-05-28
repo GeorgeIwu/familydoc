@@ -1,12 +1,12 @@
 import React from 'react';
-import {PrivateRoute} from '../_lib/components'
-import Chats from './Chats'
-import ChatMessages from './ChatMessages'
+import {PrivateRoute} from '../components'
+import List from './List'
+import New from './New'
 
 const Chat = () => (
   <div>
-    <PrivateRoute exact path="/chat" component={Chats} />
-    <PrivateRoute exact path="/chat/:id" component={ChatMessages} />
+    <PrivateRoute exact path="/chat" component={List} />
+    <PrivateRoute exact path="/chat/new" component={New} />
   </div>
 );
 

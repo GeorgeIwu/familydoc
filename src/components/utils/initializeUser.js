@@ -25,7 +25,8 @@ const CreateMessage = gql(createMessage)
 //     }), {})
 //   })
 // })
-
+// attributes = await getUserAttributes(attributes.username)
+  
 const getUserInput = (attributes) => ({
   input: {
     id: attributes.sub || uuid(),
@@ -60,12 +61,12 @@ const getMessageInput = (chat) => ({
 })
 
 const initializeUser = async (attributes) => {
-  // attributes = await getUserAttributes(attributes.username)
   if (!attributes) return null
 
   const user = await API.graphql(graphqlOperation(CreateUser, getUserInput(attributes)))
   const chat = await API.graphql(graphqlOperation(CreateChat, getChatInput(user.data.createUser)))
   const message = await API.graphql(graphqlOperation(CreateMessage, getMessageInput(chat.data.createChat)))
+  console.log({message})
 
   return user
 }

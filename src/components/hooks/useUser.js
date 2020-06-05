@@ -54,9 +54,9 @@ const userActions = (owner, actions) => {
 }
 
 const useUser = (initialState = {}) => {
-  const [user, setUser] = useState(initialState)
   const [createUser] = useMutation(CreateUser)
   const [updateUser] = useMutation(UpdateUser)
+  const [user, setUser] = useState(initialState)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
   const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes.sub }})
 

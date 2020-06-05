@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useChats, useChat } from '../components/hooks'
+import { useChat, useChats, useStore } from '../components/hooks'
 import ChatListItem from "../components/ChatListItem";
 import ChatList from "../components/ChatList";
 import Tabs from "../components/Tabs";
@@ -19,13 +19,14 @@ const StyledGrid = styled(Grid)`
 `
 
 const Chats = ({history}) => {
-  const [chats] = useChats()
-  const [id, setId] = useState()
-  const chatApi = useChat(id)
+  const [store] = useStore()
+  const [chatId, setChatId] = useState()
+  const [chats] = useChats(store.user.id)
+  const chatApi = useChat(chatId, store.user.id)
 
   useEffect(() => {
     if (chats.items[0] && chats.items[0].id) {
-      setId(chats.items[0].id)
+      setChatId(chats.items[0].id)
     }
   }, [chats.items])
 
@@ -34,7 +35,7 @@ const Chats = ({history}) => {
       <Grid item xs={4}>
         <ChatList >
           {chats.items.map(chat =>
-            <ChatListItem key={chat.id} chat={chat} isLast={false} onClick={() => setId(chat.id)} />)}
+            <ChatListItem key={chat.id} chat={chat} isLast={false} onClick={() => setChatId(chat.id)} />)}
         </ChatList>
       </Grid>
       <Grid item xs={8}>

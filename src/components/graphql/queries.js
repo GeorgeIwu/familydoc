@@ -7,7 +7,12 @@ export const getChat = /* GraphQL */ `
       id
       name
       owner
-      members
+      members {
+        items {
+          id
+        }
+        nextToken
+      }
       messages {
         items {
           id
@@ -34,11 +39,55 @@ export const listChats = /* GraphQL */ `
         id
         name
         owner
-        members
+        members {
+          nextToken
+        }
         messages {
           nextToken
         }
         createdAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      email
+      username
+      phone_number
+      family_name
+      given_name
+      type
+      chats {
+        items {
+          id
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const listUsers = /* GraphQL */ `
+  query ListUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        type
+        chats {
+          nextToken
+        }
       }
       nextToken
     }

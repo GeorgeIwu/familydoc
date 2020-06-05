@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import {useStore} from '../hooks'
 import {getChat} from '../graphql/queries'
 import {createMessage, updateMessage, deleteMessage} from '../graphql/mutations'
 import {onCreateMessage, onUpdateMessage, onDeleteMessage} from '../graphql/subscriptions'
@@ -17,12 +16,13 @@ const OnCreateMessage = gql(onCreateMessage);
 const OnUpdateMessage = gql(onUpdateMessage);
 const OnDeleteMessage = gql(onDeleteMessage);
 
-const chatActions = (chat, owner, { createMessage, updateMessage, deleteMessage }) => {
+const chatActions = (owner, chat, actions) => {
   const {id: messageChatId} = chat
+  const { createMessage = () => {}, updateMessage = () => {}, deleteMessage = () => {} } = actions
 
   const addMessage = async ({ text, type }) => {
     const input = { text, messageChatId, type, owner, createdAt: new Date(), updatedAt: new Date() }
-    createMessage({
+    return createMessage({
       variables: { input },
       context: { serializationKey: 'CREATE_MESSAGE' },
       optimisticResponse: createdMessage(input, chat),
@@ -32,7 +32,7 @@ const chatActions = (chat, owner, { createMessage, updateMessage, deleteMessage 
 
   const editMessage = async ({ __typename, ...rest }) => {
     const input = { ...rest, messageChatId, updatedAt: new Date() }
-    updateMessage({
+    return updateMessage({
       variables: { input },
       context: { serializationKey: 'UPDATE_MESSAGE' },
       optimisticResponse: updatedMessage(input, chat),
@@ -42,7 +42,7 @@ const chatActions = (chat, owner, { createMessage, updateMessage, deleteMessage 
 
   const removeMessage = async (message) => {
     const input = { id: message.id }
-    deleteMessage({
+    return deleteMessage({
       variables: { input },
       context: { serializationKey: 'DELETE_MESSAGE' },
       optimisticResponse: deletedMessage(message, chat),
@@ -53,15 +53,14 @@ const chatActions = (chat, owner, { createMessage, updateMessage, deleteMessage 
   return {addMessage, editMessage, removeMessage}
 }
 
-const useChat = (id = '') => {
-  const [store] = useStore()
+const useChat = (id = '', userId = '') => {
   const [chat, setChat] = useState({})
   const [createMessage] = useMutation(CreateMessage)
   const [updateMessage] = useMutation(UpdateMessage)
   const [deleteMessage] = useMutation(DeleteMessage)
   const { subscribeToMore, data } = useQuery(GetChat, {variables: { id }})
 
-  const owner = store.auth.data.attributes.sub
+  const owner = userId
 
   useEffect(() => {
     subscribeToMore({document: OnCreateMessage, variables: { owner }, updateQuery: subscriber(TYPE.onCreateMessage)})
@@ -76,7 +75,7 @@ const useChat = (id = '') => {
   }, [data])
 
   const chatItem = {...chat, messages: chat.messages ? chat.messages.items : [],}
-  const actions = chatActions(chat, owner, { createMessage, updateMessage, deleteMessage })
+  const actions = chatActions(owner, chat, { createMessage, updateMessage, deleteMessage })
   return [chatItem, actions]
 }
 

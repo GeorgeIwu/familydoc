@@ -5,10 +5,10 @@ import {useStore} from './hooks'
 const PublicRoute = ({ component: Component, ...rest }) => {
   const [store] = useStore()
 
-  const {data} = store.auth
-  const isRegistered = data && data === 'registered' && rest.path !== '/verify'
-  const isVerified = data && data === 'verified' && rest.path !== '/login'
-  const isAuthed = !!(data && data.attributes)
+  const {user} = store
+  const isRegistered = user && user.status === 'registered' && rest.path !== '/verify'
+  const isVerified = user && user.status === 'verified' && rest.path !== '/login'
+  const isAuthed = !!(user && user.id)
 
   return (
     <Route

@@ -1,23 +1,24 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import {combineReducers} from '../utils'
-import {authActions, authReducer} from './useAuth'
+import {formActions, formReducer} from './useForm'
+import {useUser} from './useUser'
+
+const localState = JSON.parse(localStorage.getItem('store'))
 
 const StoreContext = createContext();
 const useStore = () => useContext(StoreContext);
 
-const localState = JSON.parse(localStorage.getItem('store'))
-const rootReducer = combineReducers({auth: authReducer})
+const rootReducer = combineReducers({form: formReducer})
 const initialState = localState || rootReducer(undefined, {type: undefined});
 
 const StoreProvider = ({ children }) => {
+  const [user, userActions] = useUser()
   const [state, dispatch] = useReducer(rootReducer, initialState);
 
-  useEffect(() => localStorage.setItem("store", JSON.stringify(state)), [state]);
+  const store = {...state, user}
+  const actions = { ...formActions(dispatch), ...userActions }
 
-  const store = {auth: state.auth}
-  const actions = {
-    ...authActions(dispatch),
-  }
+  useEffect(() => localStorage.setItem("store", JSON.stringify(store)), [store]);
 
   return (
     <StoreContext.Provider value={[store, actions]}>

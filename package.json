@@ -23,7 +23,7 @@
     "aws-appsync-auth-link": "^2.0.2",
     "aws-appsync-react": "^1.2.7",
     "aws-appsync-subscription-link": "^2.1.0",
-    "aws-sdk": "^2.507.0",
+    "aws-sdk": "^2.690.0",
     "graphql-tag": "^2.10.1",
     "js-cookie": "^2.2.1",
     "localforage": "^1.7.3",

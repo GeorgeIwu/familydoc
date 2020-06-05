@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import {useStore} from '.'
 import {listChats} from '../graphql/queries'
 import {createChat, updateChat} from '../graphql/mutations'
 import {onCreateChat, onUpdateChat} from '../graphql/subscriptions'
@@ -15,12 +14,12 @@ const UpdateChat = gql(updateChat)
 const OnCreateChat = gql(onCreateChat);
 const OnUpdateChat = gql(onUpdateChat);
 
-const chatsActions = (owner, createChat, updateChat) => {
-  // const {id: chatChatId} = chat
+const chatsActions = (owner, actions) => {
+  const { createChat = () => {}, updateChat = () => {} } = actions
 
   const addChat = async ({ name }) => {
     const input = { name, createdAt: new Date() }
-    createChat({
+    return createChat({
       variables: { input },
       context: { serializationKey: 'CREATE_CHAT' },
       optimisticResponse: createdChat(input, owner),
@@ -30,7 +29,7 @@ const chatsActions = (owner, createChat, updateChat) => {
 
   const editChat = async (chat) => {
     const input = { id: chat.id }
-    updateChat({
+    return updateChat({
       variables: { input },
       context: { serializationKey: 'UPDATE_CHAT' },
       optimisticResponse: updatedChat(chat, chat),
@@ -41,14 +40,13 @@ const chatsActions = (owner, createChat, updateChat) => {
   return {addChat, editChat}
 }
 
-const useChats = () => {
-  const [store] = useStore()
+const useChats = (userId = '') => {
   const [chats, setChats] = useState({items: []})
   const [createChat] = useMutation(CreateChat)
   const [updateChat] = useMutation(UpdateChat)
   const { subscribeToMore, data } = useQuery(ListChats)
 
-  const owner = store.auth.data.attributes.sub
+  const owner = userId
 
   useEffect(() => {
     subscribeToMore({document: OnCreateChat, variables: { owner }, updateQuery: subscriber(TYPE.onCreateChat)})

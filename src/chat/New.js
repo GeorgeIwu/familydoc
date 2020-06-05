@@ -3,7 +3,7 @@ import React from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useChats, useForm } from '../components/hooks'
+import { useChats, useForm, useStore } from '../components/hooks'
 import Button from "../components/Button";
 import Input from "../components/Input";
 
@@ -14,7 +14,8 @@ const StyledGrid = styled(Grid)`
 `
 
 const ChatAdd = ({ history }) => {
-  const [_, chatsActions] = useChats()
+  const [store] = useStore()
+  const [_, chatsActions] = useChats(store.user.id)
   const [form, formActions] = useForm({ text: '' })
   const { values } = form
 

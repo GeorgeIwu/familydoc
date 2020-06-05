@@ -29,8 +29,8 @@ const authActions = dispatch => {
   return {signup, verify, login}
 }
 
-const initialState = {error: null, data: null, loading: null};
-const authReducer = (state = initialState, action = {type: undefined, data: null}) => {
+const initialAuthState = {error: null, data: null, loading: null};
+const authReducer = (state = initialAuthState, action = {type: undefined, data: null}) => {
   switch (action.type) {
     case "auth/loading":
       return {...state, loading: action.data}
@@ -41,13 +41,10 @@ const authReducer = (state = initialState, action = {type: undefined, data: null
   }
 }
 
-const useAuth = (initialValues = initialState) => {
+const useAuth = (initialValues = initialAuthState) => {
   const [state, dispatch] = useReducer(authReducer, initialValues, authReducer)
 
-  return {
-    ...state,
-    ...authActions(dispatch)
-  }
+  return [state, authActions(dispatch)]
 }
 
-export {authActions, authReducer, useAuth}
+export {initialAuthState, authActions, authReducer, useAuth}

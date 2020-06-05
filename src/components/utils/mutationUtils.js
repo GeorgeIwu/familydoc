@@ -1,5 +1,46 @@
 import { v4 as uuid } from 'uuid';
 
+
+const createUser = (store, item) => {
+  const newStore = {...store}
+  const user = newStore.getUser
+  if (user) {
+    newStore.getUser = item
+  } else {
+    newStore.getUser = item
+  }
+  return newStore
+}
+
+const updateUser = (store, item) => {
+  const newStore = {...store}
+  const user = newStore.getUser
+  if (user) {
+    newStore.getUser = item
+  } else {
+    newStore.getUser = item
+  }
+  return newStore
+}
+
+const createdUser = ({ email, username, phone_number, first_name, given_name, nickname }, id) => ({
+  __typename: "Mutation",
+  createdUser: {
+    __typename: "User",
+    email, username, phone_number, first_name, given_name, type: nickname,
+    id: id || uuid(),
+  }
+})
+
+const updatedUser = ({ id, email, username, phone_number, first_name, given_name, nickname }) => ({
+  __typename: "Mutation",
+  updatedUser: {
+    __typename: "User",
+    email, username, phone_number, first_name, given_name, type: nickname,
+    id,
+  }
+})
+
 const createChat = (store, item) => {
   const newStore = {...store}
   const itemIndex = newStore.listChats.items.findIndex(chat => chat.id === item.id)
@@ -95,6 +136,10 @@ const deletedMessage = ({ id, text, owner, type, createdAt, updatedAt }, chat) =
 })
 
 const actions = {
+  createUser: createUser,
+  updateUser: updateUser,
+  onCreateUser: createUser,
+  onUpdateUser: updateUser,
   createChat: createChat,
   updateChat: updateChat,
   onCreateChat: createChat,
@@ -108,8 +153,14 @@ const actions = {
 }
 
 const TYPE = {
+  createUser: 'createUser',
+  updateUser: 'updateUser',
+  onCreateUser: 'onCreateUser',
+  onUpdateUser: 'onUpdateUser',
   createChat: 'createChat',
   updateChat: 'updateChat',
+  onCreateChat: 'onCreateChat',
+  onUpdateChat: 'onUpdateChat',
   createMessage: 'createMessage',
   deleteMessage: 'deleteMessage',
   updateMessage: 'updateMessage',
@@ -144,6 +195,8 @@ export {
   TYPE,
   updater,
   subscriber,
+  createdUser,
+  updatedUser,
   createdChat,
   updatedChat,
   createdMessage,

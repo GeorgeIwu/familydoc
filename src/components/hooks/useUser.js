@@ -3,32 +3,17 @@ import { useState, useEffect, useReducer } from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import {initialAuthState, authActions, authReducer, chatActions, chatsActions} from './'
+import {initialAuthState, authActions, authReducer} from './'
 import {getUser} from '../graphql/queries'
-import {createUser, updateUser, createChat, createMessage} from '../graphql/mutations'
+import {createUser, updateUser} from '../graphql/mutations'
 import {onCreateUser, onUpdateUser} from '../graphql/subscriptions'
-import {updater, subscriber, createdUser, updatedUser, TYPE} from '../utils'
+import {updater, subscriber, initializeUser, createdUser, updatedUser, TYPE} from '../utils'
 
 const GetUser = gql(getUser);
 const CreateUser = gql(createUser)
 const UpdateUser = gql(updateUser)
 const OnCreateUser = gql(onCreateUser);
 const OnUpdateUser = gql(onUpdateUser);
-const CreateChat = gql(createChat)
-const CreateMessage = gql(createMessage)
-
-const initializeUser = async (attributes, actions, createChat, createMessage) => {
-  if (!attributes) return null
-  console.log({attributes})
-  const user = await actions.addUser(attributes)
-  console.log({user: user.data.createUser})
-  const chat = await chatsActions(user.data.createUser.id, {createChat}).addChat({name: 'Bot Man'})
-  console.log({chat: chat.data.createChat})
-  const message = await chatActions(user.id, chat.data.createChat, {createMessage}).addMessage({text: 'Welcome', type: 'DRUG'})
-  console.log({message})
-
-  return user
-}
 
 const userActions = (owner, actions) => {
   const userUserId = owner
@@ -68,12 +53,10 @@ const userActions = (owner, actions) => {
   return {addUser, editUser, removeUser}
 }
 
-const useUser = () => {
-  const [user, setUser] = useState({})
+const useUser = (initialState = {}) => {
+  const [user, setUser] = useState(initialState)
   const [createUser] = useMutation(CreateUser)
   const [updateUser] = useMutation(UpdateUser)
-  const [createChat] = useMutation(CreateChat)
-  const [createMessage] = useMutation(CreateMessage)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
   const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes.sub }})
 
@@ -85,18 +68,18 @@ const useUser = () => {
   }, [owner, subscribeToMore])
 
   useEffect(() => {
-    if (!loading && data.id) {
+    if (!loading && data && data.getUser.id) {
       setUser(data.getUser)
     }
   }, [loading, data])
 
   useEffect(() => {
     (async function() {
-      if (!loading && data.getUser) {
+      if (!loading && data && data.getUser) {
         setUser(data.getUser)
       }
-      if (!loading && !data.getUser && auth.data.attributes) {
-        const newuser = await initializeUser(auth.data.attributes, actions, createChat, createMessage)
+      if (!loading && data && !data.getUser && auth.data.attributes) {
+        const newuser = await initializeUser(auth.data.attributes)
         setUser(newuser.data.createUser)
       }
       })();

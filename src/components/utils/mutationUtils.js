@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-
+import initializeUser from './initializeUser'
 
 const createUser = (store, item) => {
   const newStore = {...store}
@@ -202,4 +202,5 @@ export {
   createdMessage,
   updatedMessage,
   deletedMessage,
+  initializeUser,
 }

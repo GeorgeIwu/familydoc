@@ -1,49 +1,64 @@
 
 import React from 'react'
-import { useForm } from '../../components/hooks'
+import { useForm, useUsers } from '../../components/hooks'
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 
-const ChatMessages = ({ chatApi }) => {
+const ChatMembers = ({ chatApi }) => {
   const [chat, chatActions] = chatApi
-  const [form, formActions] = useForm({ text: '' })
+  const [users, usersActions] = useUsers()
+  const [form, formActions] = useForm({ name: '' })
   const { values } = form
 
-  const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
-
-  const addMessage = async () => {
-    if (!values.text) return
-    const input = { text: values.text, type: 'DRUG' }
-    chatActions.addMessage(input)
-    formActions.reset()
+  const onChange = (e) => {
+    formActions.change({ name: e.target.name, value: e.target.value })
   }
 
-  const removeMessage = async (message) => {
-    chatActions.removeMessage(message)
+  const searchUser = async () => {
+    if (!values.name) return
+    usersActions.searchUser(values.name)
+  }
+
+  const removeMember = async (member) => {
+    chatActions.removeMember(member)
+  }
+
+  const addMember = async (user) => {
+    const input = { user }
+    chatActions.addMember(input)
+    formActions.reset()
   }
 
   return (
     <div style={{}}>
-      {chat.messages.map(message => (
-          <div key={message.id}>
-            <div style={{display: 'inline-block', marginRight: '20px'}}>
-              <p style={{}}>{message.text}</p>
-            </div>
-            <div style={{display: 'inline-block', backgroundColor: 'grey'}} onClick={() => removeMessage(message)}>X</div>
-          </div>
-        ))
-      }
       <div>
         <Input
           onChange={onChange}
-          name='text'
-          placeholder='add message'
-          value={values.text}
+          name='name'
+          placeholder='search user'
+          value={values.name}
         />
-        <Button onClick={addMessage}>Create Message</Button>
+        <Button onClick={searchUser}>Search</Button>
       </div>
+      {users.items.map(user => (
+        <div key={user.id}>
+          <div style={{display: 'inline-block', marginRight: '20px'}}>
+            <p style={{}}>{user.username}</p>
+          </div>
+          <div style={{display: 'inline-block', backgroundColor: 'grey'}} onClick={() => addMember(user)}>Add</div>
+        </div>
+      ))}
+      {<div>-------------------------------</div>}
+      {chat.members && chat.members.items.map(member => (
+        <div key={member.id}>
+          <div style={{display: 'inline-block', marginRight: '20px'}}>
+            <p style={{}}>{member.text}</p>
+          </div>
+          <div style={{display: 'inline-block', backgroundColor: 'grey'}} onClick={() => removeMember(member)}>X</div>
+        </div>
+      ))}
     </div>
   )
 }
 
-export default ChatMessages
+export default ChatMembers

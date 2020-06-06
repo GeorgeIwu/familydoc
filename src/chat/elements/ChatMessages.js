@@ -19,7 +19,7 @@ const ChatMessages = ({ chatApi }) => {
 
   return (
     <div style={{}}>
-      {chat.messages.map(message => {
+      {chat.messages && chat.messages.items.map(message => {
         return (editId  === message.id)
           ? <SendBox handleSend={saveMessage} message={message} />
           : (<div key={message.id}>

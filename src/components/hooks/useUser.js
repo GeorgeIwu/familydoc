@@ -5,30 +5,17 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import {initialAuthState, authActions, authReducer} from './'
 import {getUser} from '../graphql/queries'
-import {createUser, updateUser} from '../graphql/mutations'
-import {onCreateUser, onUpdateUser} from '../graphql/subscriptions'
-import {updater, subscriber, initializeUser, createdUser, updatedUser, TYPE} from '../utils'
+import {updateUser} from '../graphql/mutations'
+import {onUpdateUser} from '../graphql/subscriptions'
+import {updater, subscriber, initializeUser, updatedUser, TYPE} from '../utils'
 
 const GetUser = gql(getUser);
-const CreateUser = gql(createUser)
 const UpdateUser = gql(updateUser)
-const OnCreateUser = gql(onCreateUser);
 const OnUpdateUser = gql(onUpdateUser);
 
 const userActions = (owner, actions) => {
   const userUserId = owner
-  const { createUser = () => {}, updateUser = () => {} } = actions
-
-  const addUser = async ({ email, family_name, given_name, nickname, phone_number, sub  }) => {
-   const input = { email, username: email, phone_number, family_name, given_name, type: nickname, createdAt: new Date(), updatedAt: new Date() }
-    const userResponse = createdUser(input, sub)
-    return createUser({
-      variables: { input },
-      context: { serializationKey: 'CREATE_USER' },
-      optimisticResponse: userResponse,
-      update: updater(TYPE.createUser, { query: GetUser, variables: { id: userResponse.createdUser.id } }),
-    })
-  }
+  const { updateUser = () => {} } = actions
 
   const editUser = async ({ __typename, ...rest }) => {
     const input = { ...rest }
@@ -40,7 +27,7 @@ const userActions = (owner, actions) => {
     })
   }
 
-  const removeUser = async ({ __typename, ...rest }) => {
+  const disableUser = async ({ __typename, ...rest }) => {
     const input = { ...rest }
     return updateUser({
       variables: { input },
@@ -50,11 +37,10 @@ const userActions = (owner, actions) => {
     })
   }
 
-  return {addUser, editUser, removeUser}
+  return {editUser, disableUser}
 }
 
 const useUser = (initialState = {}) => {
-  const [createUser] = useMutation(CreateUser)
   const [updateUser] = useMutation(UpdateUser)
   const [user, setUser] = useState(initialState)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
@@ -63,8 +49,7 @@ const useUser = (initialState = {}) => {
   const owner = user && user.id
 
   useEffect(() => {
-    subscribeToMore({document: OnCreateUser, variables: { owner }, updateQuery: subscriber(TYPE.onCreateUser)})
-    subscribeToMore({document: OnUpdateUser, variables: { owner }, updateQuery: subscriber(TYPE.onUpdateUser)})
+   subscribeToMore({document: OnUpdateUser, variables: { owner }, updateQuery: subscriber(TYPE.onUpdateUser)})
   }, [owner, subscribeToMore])
 
   useEffect(() => {
@@ -88,7 +73,7 @@ const useUser = (initialState = {}) => {
   }, [loading, data, auth]);
 
   const userState = { ...user, status: auth.data && auth.data.attributes ? 'active' : auth.data }
-  const actions =  { ...userActions(owner, { createUser, updateUser }), ...authActions(dispatch) }
+  const actions =  { ...userActions(owner, { updateUser }), ...authActions(dispatch) }
 
   return [userState, actions]
 }

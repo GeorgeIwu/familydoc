@@ -1,100 +1,56 @@
 
-// import { useState, useEffect, useReducer } from 'react'
-// import gql from 'graphql-tag'
-// import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useState, useEffect } from 'react'
+import gql from 'graphql-tag'
+import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 
-// import {initialAuthState, authActions, authReducer, chatActions, chatsActions} from '.'
-// import {getUser} from '../graphql/queries'
-// import {createUser, updateUser, createChat, createMessage} from '../graphql/mutations'
-// import {onCreateUser, onUpdateUser} from '../graphql/subscriptions'
-// import {updater, subscriber, createdUser, updatedUser, TYPE} from '../utils'
+import {listUsers} from '../graphql/queries'
+import {createUser} from '../graphql/mutations'
+import {updater, createdUser, TYPE} from '../utils'
 
-// const GetUser = gql(getUser);
-// const CreateUser = gql(createUser)
-// const UpdateUser = gql(updateUser)
-// const OnCreateUser = gql(onCreateUser);
-// const OnUpdateUser = gql(onUpdateUser);
-// const CreateChat = gql(createChat)
-// const CreateMessage = gql(createMessage)
+const ListUsers = gql(listUsers);
+const CreateUser = gql(createUser)
 
-// const initializeUser = async (attributes, actions, createChat, createMessage) => {
-//   if (!attributes) return null
-//   console.log({attributes})
-//   const user = await actions.addUser(attributes)
-//   console.log({user})
-//   const chat = await chatsActions(user.id, {createChat}).addChat({name: 'Bot Man'})
-//   console.log({chat})
-//   const message = await chatActions(user.id, chat, {createMessage}).addMessage({text: 'Welcome', type: 'DRUG'})
-//   console.log({message})
-// }
+const usersActions = (owner, actions) => {
+  const { createUser = () => {}, getUser = () => {} } = actions
 
-// const userActions = (owner, actions) => {
-//   const userUserId = owner
-//   const { createUser = () => {}, updateUser = () => {} } = actions
+  const initUser = async ({ email, family_name, given_name, phone_number  }) => {
+   const input = { email, username: email, phone_number, family_name, given_name, type: 'USER', createdAt: new Date(), updatedAt: new Date() }
 
-//   const addUser = async ({ email, username, phone_number, first_name, given_name, nickname  }) => {
-//     const input = { email, username, phone_number, first_name, given_name, type: nickname }
-//     const userResponse = createdUser(input)
-//     createUser({
-//       variables: { input },
-//       context: { serializationKey: 'CREATE_USER' },
-//       optimisticResponse: userResponse,
-//       update: updater(TYPE.createUser, { query: GetUser, variables: { id: userResponse.createChat.id } }),
-//     })
-//   }
+   return createUser({
+      variables: { input },
+      context: { serializationKey: 'CREATE_USER' },
+      optimisticResponse: createdUser(input),
+      update: updater(TYPE.createUser, { query: ListUsers, variables: { owner } }),
+    })
+  }
 
-//   const editUser = async ({ __typename, ...rest }) => {
-//     const input = { ...rest }
-//     updateUser({
-//       variables: { input },
-//       context: { serializationKey: 'UPDATE_USER' },
-//       optimisticResponse: updatedUser(input),
-//       update: updater(TYPE.updateUser, { query: GetUser, variables: { id: userUserId } }),
-//     })
-//   }
+  const searchUser = async (name) => {
+    const input = { username: name }
+    return getUser({
+      variables: { input },
+      // context: { serializationKey: 'SEARCH_USER' },
+      // optimisticResponse: null,
+      // update: updater(TYPE.updateUser, { query: ListUsers, variables: { owner } }),
+    })
+  }
 
-//   const removeUser = async ({ __typename, ...rest }) => {
-//     const input = { ...rest }
-//     updateUser({
-//       variables: { input },
-//       context: { serializationKey: 'UPDATE_USER' },
-//       optimisticResponse: updatedUser(input),
-//       update: updater(TYPE.updateUser, { query: GetUser, variables: { id: userUserId } }),
-//     })
-//   }
+  return {initUser, searchUser}
+}
 
-//   return {addUser, editUser, removeUser}
-// }
+const useUsers = (owner) => {
+  const [createUser] = useMutation(CreateUser)
+  const [users, setUsers] = useState({items: []})
+  const [getUser, { loading, data }] = useLazyQuery(ListUsers);
 
-// const useUser = () => {
-//   const [user, setUser] = useState({})
-//   const [createUser] = useMutation(CreateUser)
-//   const [updateUser] = useMutation(UpdateUser)
-//   const [createChat] = useMutation(CreateChat)
-//   const [createMessage] = useMutation(CreateMessage)
-//   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
-//   const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes.sub }})
+  useEffect(() => {
+    if (!loading && data) {
+      setUsers(data.listUsers)
+    }
+  }, [loading, data])
 
-//   const owner = user.id
+  const actions =  usersActions(owner, { createUser, getUser })
 
-//   useEffect(() => {
-//     subscribeToMore({document: OnCreateUser, variables: { owner }, updateQuery: subscriber(TYPE.onCreateUser)})
-//     subscribeToMore({document: OnUpdateUser, variables: { owner }, updateQuery: subscriber(TYPE.onUpdateUser)})
-//   }, [owner, subscribeToMore])
+  return [users, actions]
+}
 
-//   useEffect(() => {
-//     if (!loading && data.id) {
-//       setUser(data.getUser)
-//     }
-//     if (!loading && !data.id && auth.data.attributes) {
-//       initializeUser(auth.data.attributes, actions, createChat, createMessage)
-//     }
-//   }, [loading, data, auth.data])
-
-//   const userState = { ...user, status: auth.data && auth.data.attributes ? 'active' : auth.data }
-//   const actions =  { ...userActions(owner, { createUser, updateUser }), ...authActions(dispatch) }
-
-//   return [userState, actions]
-// }
-
-// export {userActions, useUser}
+export {usersActions, useUsers}

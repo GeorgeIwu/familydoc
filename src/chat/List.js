@@ -23,7 +23,6 @@ const Chats = ({history}) => {
   const [chatId, setChatId] = useState()
   const [chats] = useChats(store.user.id)
   const chatApi = useChat(chatId, store.user.id)
-  console.log({chat: chatApi[0]})
 
   useEffect(() => {
     if (chats.items[0] && chats.items[0].id) {
@@ -42,8 +41,8 @@ const Chats = ({history}) => {
       <Grid item xs={8}>
         <Tabs>
           <ChatMessages tabName='Messages' chatApi={chatApi} />
+          <ChatMembers tabName='Members' chatApi={chatApi} />
           <ChatMedicals tabName='Medicals' chatApi={chatApi} />
-          <ChatMembers tabName='Memebers' chatApi={chatApi} />
         </Tabs>
       </Grid>
     </StyledGrid>

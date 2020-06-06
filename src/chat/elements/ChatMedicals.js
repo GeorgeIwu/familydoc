@@ -10,7 +10,7 @@ const ChatMessages = ({ chatApi }) => {
 
   return (
     <div style={{}}>
-      {chat.messages.map(message => (
+      {chat.messages && chat.messages.items.map(message => (
           <div key={message.id}>
             <div style={{display: 'inline-block', marginRight: '20px'}}>
               <p style={{}}>{message.text}</p>

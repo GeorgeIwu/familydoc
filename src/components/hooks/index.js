@@ -5,4 +5,5 @@ export * from './useTodos';
 export * from './useChat';
 export * from './useChats';
 export * from './useUser';
+export * from './useUsers';
 

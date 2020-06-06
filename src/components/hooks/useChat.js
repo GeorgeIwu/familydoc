@@ -74,7 +74,7 @@ const useChat = (id = '', userId = '') => {
     }
   }, [data])
 
-  const chatItem = {...chat, messages: chat.messages ? chat.messages.items : [],}
+  const chatItem = {...chat}
   const actions = chatActions(owner, chat, { createMessage, updateMessage, deleteMessage })
   return [chatItem, actions]
 }

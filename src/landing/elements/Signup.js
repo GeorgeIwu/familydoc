@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from '../../components/hooks';
 
 const Signup = ({ signup }) => {
-    const [form, formActions] = useForm({email: '', family_name: '', given_name: '', phone_number: '', password: ''})
+    const [form, formActions] = useForm({email: '', family_name: '', given_name: '', phone_number: '', password: '', nickname: ''})
 
     const {given_name, family_name, phone_number, email, password, nickname} = form.values
     const onSubmit = () => signup(form.values)

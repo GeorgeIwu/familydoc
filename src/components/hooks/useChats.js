@@ -18,11 +18,11 @@ const chatsActions = (owner, actions) => {
   const { createChat = () => {}, updateChat = () => {} } = actions
 
   const addChat = async ({ name }) => {
-    const input = { name, createdAt: new Date(), updatedAt: new Date() }
+    const input = { name, owner, createdAt: new Date(), updatedAt: new Date() }
     return createChat({
       variables: { input },
       context: { serializationKey: 'CREATE_CHAT' },
-      optimisticResponse: createdChat(input, owner),
+      optimisticResponse: createdChat(input),
       update: updater(TYPE.createChat, { query: ListChats }),
     })
   }
@@ -32,7 +32,7 @@ const chatsActions = (owner, actions) => {
     return updateChat({
       variables: { input },
       context: { serializationKey: 'UPDATE_CHAT' },
-      optimisticResponse: updatedChat(chat, chat),
+      optimisticResponse: updatedChat(chat),
       update: updater(TYPE.updateChat, { query: ListChats }),
     })
   }
@@ -55,7 +55,6 @@ const useChats = (userId = '') => {
 
   useEffect(() => {
     if (data) {
-      // data.listChats.items.length < 1 && createChat()
       setChats(data.listChats)
     }
   }, [data])

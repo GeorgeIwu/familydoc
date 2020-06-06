@@ -56,7 +56,7 @@ const getMessageInput = (chat) => ({
     id: uuid(),
     text: 'Welcome',
     messageChatId: chat.id,
-    type: 'DRUG',
+    type: 'ALL',
     owner: chat.owner,
     createdAt: new Date(),
     updatedAt: new Date(),

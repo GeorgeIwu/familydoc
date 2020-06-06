@@ -53,12 +53,12 @@ const chatActions = (owner, chat, actions) => {
   return {addMessage, editMessage, removeMessage}
 }
 
-const useChat = (id = '', userId = '') => {
+const useChat = (chatId = '', userId = '') => {
   const [chat, setChat] = useState({})
   const [createMessage] = useMutation(CreateMessage)
   const [updateMessage] = useMutation(UpdateMessage)
   const [deleteMessage] = useMutation(DeleteMessage)
-  const { subscribeToMore, data } = useQuery(GetChat, {variables: { id }})
+  const { subscribeToMore, data } = useQuery(GetChat, {variables: { id: chatId }})
 
   const owner = userId
 

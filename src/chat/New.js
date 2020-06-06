@@ -3,40 +3,39 @@ import React from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useChats, useForm, useStore } from '../components/hooks'
+import { useForm, useUsers } from '../components/hooks'
 import Button from "../components/Button";
-import Input from "../components/Input";
 
 const StyledGrid = styled(Grid)`
   .root: {
-    flex-grow: 1
+    padding: 90px
   }
 `
 
 const ChatAdd = ({ history }) => {
-  const [store] = useStore()
-  const [_, chatsActions] = useChats(store.user.id)
-  const [form, formActions] = useForm({ text: '' })
-  const { values } = form
+  const [users, usersActions] = useUsers()
+  const [form, formActions] = useForm({email: '', family_name: '', given_name: '', phone_number: ''})
 
+  const {given_name, family_name, phone_number, email} = form.values
+  const onSubmit = () => usersActions.initUser(form.values)
   const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
 
-  const addChat = async () => {
-    if (!values.text) return
-    const input = { text: values.text }
-    chatsActions.addChat(input)
-    formActions.reset()
-  }
 
   return (
     <StyledGrid container className={'root'} spacing={2}>
-      <Input
-        onChange={onChange}
-        name='text'
-        placeholder='add message'
-        value={values.text}
-      />
-      <Button onClick={addChat}>Create Message</Button>
+      <label htmlFor="given_name">First name</label>
+      <input name='given_name' type='text' onChange={onChange} value={given_name} />
+
+      <label htmlFor="family_name">Surname</label>
+      <input name='family_name' type='text' onChange={onChange} value={family_name} />
+
+      <label htmlFor="email">Email</label>
+      <input name='email' type='text' onChange={onChange} value={email} />
+
+      <label htmlFor="phone_number">Phone number</label>
+      <input name='phone_number' type='text' onChange={onChange} value={phone_number} />
+
+      <button className="pure-button" disabled={form.errors} onClick={onSubmit}>Sumbit</button>
     </StyledGrid>
   )
 }

@@ -1,6 +1,6 @@
 projects:
   familydoc:
-    schemaPath: src/components/graphql/schema.json
+    schemaPath: amplify/backend/api/familydoc/build/schema.graphql
     includes:
       - src/components/graphql/**/*.js
     excludes:

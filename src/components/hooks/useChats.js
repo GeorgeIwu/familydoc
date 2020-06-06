@@ -18,7 +18,7 @@ const chatsActions = (owner, actions) => {
   const { createChat = () => {}, updateChat = () => {} } = actions
 
   const addChat = async ({ name }) => {
-    const input = { name, createdAt: new Date() }
+    const input = { name, createdAt: new Date(), updatedAt: new Date() }
     return createChat({
       variables: { input },
       context: { serializationKey: 'CREATE_CHAT' },

@@ -12,7 +12,7 @@ const rootReducer = combineReducers({form: formReducer})
 const initialState = localState || rootReducer(undefined, {type: undefined});
 
 const StoreProvider = ({ children }) => {
-  const [user, userActions] = useUser(localState.user)
+  const [user, userActions] = useUser(localState && localState.user)
   const [state, dispatch] = useReducer(rootReducer, initialState);
 
   const store = { ...state, user }

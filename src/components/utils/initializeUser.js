@@ -26,7 +26,7 @@ const CreateMessage = gql(createMessage)
 //   })
 // })
 // attributes = await getUserAttributes(attributes.username)
-  
+
 const getUserInput = (attributes) => ({
   input: {
     id: attributes.sub || uuid(),
@@ -36,6 +36,8 @@ const getUserInput = (attributes) => ({
     family_name: attributes.family_name,
     given_name: attributes.given_name,
     type: attributes.nickname,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 })
 
@@ -44,7 +46,8 @@ const getChatInput = (user) => ({
     id: uuid(),
     name: user.given_name,
     owner: user.id,
-    createdAt: new Date()
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 })
 

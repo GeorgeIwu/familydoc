@@ -1,7 +1,6 @@
-# add notes, team to MessageType
-# add update and created at for user
-
 enum MessageType {
+    ALL
+    TEAM
     DRUG
     SCAN
     VITAL
@@ -40,6 +39,7 @@ type Chat
   messages: [Message]
     @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
   createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
 # Create a join model and disable queries as you don't need them
@@ -62,4 +62,6 @@ type User
   given_name: String!
   type: String!
   chats: [MemberChat] @connection(name: "UserMembers")
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }

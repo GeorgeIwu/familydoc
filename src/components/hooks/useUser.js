@@ -20,7 +20,7 @@ const userActions = (owner, actions) => {
   const { createUser = () => {}, updateUser = () => {} } = actions
 
   const addUser = async ({ email, family_name, given_name, nickname, phone_number, sub  }) => {
-   const input = { email, username: email, phone_number, family_name, given_name, type: nickname }
+   const input = { email, username: email, phone_number, family_name, given_name, type: nickname, createdAt: new Date(), updatedAt: new Date() }
     const userResponse = createdUser(input, sub)
     return createUser({
       variables: { input },
@@ -58,9 +58,9 @@ const useUser = (initialState = {}) => {
   const [updateUser] = useMutation(UpdateUser)
   const [user, setUser] = useState(initialState)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
-  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes.sub }})
+  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes && auth.data.attributes.sub }})
 
-  const owner = user.id
+  const owner = user && user.id
 
   useEffect(() => {
     subscribeToMore({document: OnCreateUser, variables: { owner }, updateQuery: subscriber(TYPE.onCreateUser)})
@@ -68,7 +68,7 @@ const useUser = (initialState = {}) => {
   }, [owner, subscribeToMore])
 
   useEffect(() => {
-    if (!loading && data && data.getUser.id) {
+    if (!loading && data && data.getUser && data.getUser.id) {
       setUser(data.getUser)
     }
   }, [loading, data])
@@ -76,9 +76,11 @@ const useUser = (initialState = {}) => {
   useEffect(() => {
     (async function() {
       if (!loading && data && data.getUser) {
+        console.log('data', data.getUser)
         setUser(data.getUser)
       }
       if (!loading && data && !data.getUser && auth.data.attributes) {
+        console.log('auth', auth.data.attributes)
         const newuser = await initializeUser(auth.data.attributes)
         setUser(newuser.data.createUser)
       }

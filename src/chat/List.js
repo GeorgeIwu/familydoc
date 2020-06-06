@@ -23,6 +23,7 @@ const Chats = ({history}) => {
   const [chatId, setChatId] = useState()
   const [chats] = useChats(store.user.id)
   const chatApi = useChat(chatId, store.user.id)
+  console.log({chat: chatApi[0]})
 
   useEffect(() => {
     if (chats.items[0] && chats.items[0].id) {

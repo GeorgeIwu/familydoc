@@ -14,8 +14,7 @@ const StyledItem = styled.div`
 `
 
 const ChatListItem = ({
-  
-  name = 'NA',
+  chat = {},
   isLast = false,
   onClick = () => {},
   lastestAppt = '23-09-2020',
@@ -29,7 +28,7 @@ const ChatListItem = ({
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
-          primary={name}
+          primary={chat.name}
           secondary={
             <React.Fragment>
               <Typography

@@ -52,7 +52,7 @@ const getApolloClient = async () => {
   const errorLink = onError(({networkError}) => {
     if (networkError && networkError.statusCode === 401) {
       Cookies.remove('token')
-      window.location.replace('/login')
+      window.location.replace('/')
     }
   })
 

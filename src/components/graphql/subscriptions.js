@@ -19,6 +19,7 @@ export const onCreateMessage = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -43,6 +44,7 @@ export const onUpdateMessage = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -67,6 +69,7 @@ export const onDeleteMessage = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -97,6 +100,7 @@ export const onCreateChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -124,6 +128,7 @@ export const onUpdateChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -151,6 +156,7 @@ export const onDeleteChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -169,6 +175,7 @@ export const onCreateMemberChat = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       member {
         id
@@ -181,6 +188,8 @@ export const onCreateMemberChat = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
     }
   }
@@ -200,6 +209,7 @@ export const onUpdateMemberChat = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       member {
         id
@@ -212,6 +222,8 @@ export const onUpdateMemberChat = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
     }
   }
@@ -231,6 +243,7 @@ export const onDeleteMemberChat = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       member {
         id
@@ -243,6 +256,8 @@ export const onDeleteMemberChat = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
     }
   }
@@ -263,6 +278,8 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -282,6 +299,8 @@ export const onUpdateUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -301,6 +320,8 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;

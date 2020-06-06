@@ -25,6 +25,7 @@ export const getChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -46,6 +47,7 @@ export const listChats = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       nextToken
     }
@@ -67,6 +69,8 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -88,6 +92,8 @@ export const listUsers = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
       nextToken
     }

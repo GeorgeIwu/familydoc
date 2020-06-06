@@ -22,6 +22,7 @@ export const createMessage = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -49,6 +50,7 @@ export const updateMessage = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -76,6 +78,7 @@ export const deleteMessage = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -109,6 +112,7 @@ export const createChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -139,6 +143,7 @@ export const updateChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -169,6 +174,7 @@ export const deleteChat = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -190,6 +196,7 @@ export const createMemberChat = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       member {
         id
@@ -202,6 +209,8 @@ export const createMemberChat = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
     }
   }
@@ -224,6 +233,7 @@ export const updateMemberChat = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       member {
         id
@@ -236,6 +246,8 @@ export const updateMemberChat = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
     }
   }
@@ -258,6 +270,7 @@ export const deleteMemberChat = /* GraphQL */ `
           nextToken
         }
         createdAt
+        updatedAt
       }
       member {
         id
@@ -270,6 +283,8 @@ export const deleteMemberChat = /* GraphQL */ `
         chats {
           nextToken
         }
+        createdAt
+        updatedAt
       }
     }
   }
@@ -293,6 +308,8 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -315,6 +332,8 @@ export const updateUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -337,6 +356,8 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;

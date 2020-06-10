@@ -6,22 +6,29 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { useForm } from '../../components/hooks'
 
-const SendBox = ({ handleSend, message }) => {
-  const [form, formActions] = useForm(message || { type: '', text: '' })
+const SendBox = ({ handleSend, handleSave, handleCancel, message = {} }) => {
+  const { chat, ...rest} = message
+  const [form, formActions] = useForm({ type: '', text: '', ...rest })
   const { values } = form
 
-  const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
-
-  const onSubmit = async () => {
-    if (!values.text || !values.type) return
-    const { chat, ...rest} = message || {}
-    const input = { ...rest, text: values.text, type: values.type }
-    handleSend(input)
-    formActions.reset()
+  const onChange = (e) => {
+    formActions.change(e.target)
   }
 
   const onCancel = () => {
-    handleSend(null)
+    handleCancel()
+    formActions.reset()
+  }
+
+  const onSubmit = async () => {
+    if (!values.text || !values.type) return
+    handleSend(values)
+    formActions.reset()
+  }
+
+  const onSave = async () => {
+    if (!values.text || !values.type) return
+    handleSave(values)
     formActions.reset()
   }
 
@@ -35,14 +42,12 @@ const SendBox = ({ handleSend, message }) => {
         <ControlLabel control={<Checkbox checked={values.type === 'LAB'} onChange={onChange} name="type" value='LAB'/>} label="Lab"/>
       </FormGroup>
       <FormGroup column='true'>
-        <Input
-          onChange={onChange}
-          name='text'
-          placeholder='add message'
-          value={values.text}
-        />
-        {!message && <Button onClick={onSubmit}>Add</Button>}
-        {message &&<div><Button onClick={onCancel}>Cancel</Button><Button onClick={onSubmit}>Save</Button></div>}
+        <Input onChange={onChange} name='text' placeholder='add message' value={values.text} />
+        {handleSend && <Button onClick={onSubmit}>Add</Button>}
+        <div>
+          {handleCancel && <Button onClick={onCancel}>Cancel</Button>}
+          {handleSave && <Button onClick={onSave}>Save</Button>}
+        </div>
       </FormGroup>
 
     </div>

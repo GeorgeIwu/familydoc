@@ -10,24 +10,16 @@ const ChatMembers = ({ chatApi }) => {
   const [form, formActions] = useForm({ name: '' })
   const { values } = form
 
-  const onChange = (e) => {
-    formActions.change({ name: e.target.name, value: e.target.value })
-  }
+  const onChange = (e) => formActions.change(e.target)
 
   const searchUser = async () => {
     if (!values.name) return
     usersActions.searchUser(values.name)
   }
 
-  const removeMember = async (member) => {
-    chatActions.removeMember(member)
-  }
+  const removeMember = async (member) => chatActions.removeMember(member)
 
-  const addMember = async (user) => {
-    const input = { user }
-    chatActions.addMember(input)
-    formActions.reset()
-  }
+  const addMember = async (user) => { chatActions.addMember({ user }); formActions.reset(); }
 
   return (
     <div style={{}}>

@@ -3,55 +3,49 @@ import { useState, useEffect } from 'react'
 import gql from 'graphql-tag'
 import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 
-import {listUsers, listChats, getChat} from '../graphql/queries'
+import {listUsers, listChats} from '../graphql/queries'
 import {createUser, createChat, createMessage} from '../graphql/mutations'
 import {createdUser, createdChat, createdMessage, updater, TYPE} from '../utils'
 
 const ListUsers = gql(listUsers);
 const ListChats = gql(listChats);
-const GetChat = gql(getChat)
 const CreateUser = gql(createUser)
 const CreateChat = gql(createChat)
 const CreateMessage = gql(createMessage)
 
 const usersActions = (owner, actions) => {
-  const { getUser = () => {}, createUser = () => {}, createChat = () => {}, createMessage = () => {} } = actions
+  const { getUsers = () => {}, createUser = () => {}, createChat = () => {}, createMessage = () => {} } = actions
 
-  const addUser = async ({ email, family_name, given_name, phone_number  }) => {
+  const addUser = async ({email, ...attributes}) => {
 
-    const input = { email, username: email, phone_number, family_name, given_name, type: 'USER', createdAt: new Date(), updatedAt: new Date() }
-    const newUser = createdUser(input)
-    const newChat = createdChat({ owner, name: newUser.createUser.given_name, createdAt: new Date(), updatedAt: new Date() })
-    const {__typename, ...chatInput} = newChat.createChat
-
-    await createUser({
+    const input = { email, username: email, ...attributes, type: 'USER', createdAt: new Date(), updatedAt: new Date() }
+    const { data } = await createUser({
       variables: { input },
       context: { serializationKey: 'CREATE_USER' },
-      optimisticResponse: newUser,
+      optimisticResponse: createdUser(input),
       update: updater(TYPE.createUser, { query: ListUsers, variables: { owner } }),
     })
-    await createChat({
+
+    const chatInput = { owner, name: data.createUser.given_name, createdAt: new Date(), updatedAt: new Date() }
+    const { data: chatData } = await createChat({
       variables: { input: chatInput },
       context: { serializationKey: 'CREATE_CHAT' },
-      optimisticResponse: newChat,
-      update: updater(TYPE.createChat, { query: ListChats }),
+      optimisticResponse: createdChat(chatInput),
+      update: updater(TYPE.createChat, { query: ListChats, variables: { owner }  }),
+    })
+
+    const messageInput = { text: 'Welcome', messageChatId: chatData.createChat.id, type: 'ALL', owner, createdAt: new Date(), updatedAt: new Date() }
+    return await createMessage({
+      variables: { input: messageInput },
+      context: { serializationKey: 'CREATE_MESSAGE' },
+      optimisticResponse: createdMessage(messageInput, chatData.createChat),
+      update: updater(TYPE.createMessage, { query: ListChats, variables: { owner } }),
     })
   }
 
-  const addMessage = async (chat) => {
-    const input = { text: 'Welcome', messageChatId: chat.id, type: 'ALL', owner, createdAt: new Date(), updatedAt: new Date() }
-
-    return createMessage({
-      variables: { input },
-      context: { serializationKey: 'CREATE_MESSAGE' },
-      optimisticResponse: createdMessage(input, chat),
-      update: updater(TYPE.createMessage, { query: GetChat, variables: { id: chat.id } }),
-    })
-   }
-
   const searchUser = async (name) => {
     const input = { username: name }
-    return getUser({
+    return getUsers({
       variables: { input },
       // context: { serializationKey: 'SEARCH_USER' },
       // optimisticResponse: null,
@@ -59,15 +53,15 @@ const usersActions = (owner, actions) => {
     })
   }
 
-  return {addUser, addMessage, searchUser}
+  return {addUser, searchUser}
 }
 
 const useUsers = (owner) => {
   const [users, setUsers] = useState({items: []})
-  const [getUser, { loading, data }] = useLazyQuery(ListUsers);
   const [createUser] = useMutation(CreateUser)
-  const [createChat, { data: chat }] = useMutation(CreateChat)
-  const [createMessage, { data: message }] = useMutation(CreateMessage)
+  const [createChat] = useMutation(CreateChat)
+  const [getUsers, { loading, data }] = useLazyQuery(ListUsers)
+  const [createMessage, { data: newMessage }] = useMutation(CreateMessage)
 
   useEffect(() => {
     if (!loading && data) {
@@ -75,14 +69,8 @@ const useUsers = (owner) => {
     }
   }, [loading, data])
 
-  useEffect(() => {
-    if (chat && chat.createChat) {
-      actions.addMessage(chat.createChat)
-    }
-  }, [chat])
-
-  const allusers =  {...users, message}
-  const actions =  usersActions(owner, { getUser, createUser, createChat, createMessage })
+  const allusers =  {...users, newMessage}
+  const actions =  usersActions(owner, { getUsers, createUser, createChat, createMessage })
   return [allusers, actions]
 }
 

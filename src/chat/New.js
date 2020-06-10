@@ -4,7 +4,6 @@ import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
 import { useForm, useStore, useUsers } from '../components/hooks'
-import Button from "../components/Button";
 
 const StyledGrid = styled(Grid)`
   .root: {
@@ -22,10 +21,10 @@ const ChatAdd = ({ history }) => {
   const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
 
   useEffect(() => {
-    if (users.message) {
+    if (users.newMessage) {
       history.push('/chat')
     }
-  }, [users.message])
+  }, [users.newMessage, history])
 
   return (
     <StyledGrid container className={'root'} spacing={2}>

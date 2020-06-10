@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import gql from 'graphql-tag'
 import initializeUser from './initializeUser'
 
 const createUser = (store, item) => {
@@ -24,20 +23,20 @@ const updateUser = (store, item) => {
   return newStore
 }
 
-const createdUser = ({ email, username, phone_number, family_name, given_name, type }, id) => ({
+const createdUser = ({ email, username, phone_number, family_name, given_name, type, createdAt, updatedAt }, id) => ({
   __typename: "Mutation",
   createUser: {
     __typename: "User",
-    email, username, phone_number, family_name, given_name, type,
+    email, username, phone_number, family_name, given_name, type, createdAt, updatedAt,
     id: id || uuid(),
   }
 })
 
-const updatedUser = ({ id, email, username, phone_number, family_name, given_name, type }) => ({
+const updatedUser = ({ id, email, username, phone_number, family_name, given_name, type, createdAt, updatedAt }) => ({
   __typename: "Mutation",
   updateUser: {
     __typename: "User",
-    email, username, phone_number, family_name, given_name, type,
+    email, username, phone_number, family_name, given_name, type, createdAt, updatedAt,
     id,
   }
 })
@@ -66,8 +65,17 @@ const createdChat = ({name, owner, createdAt, updatedAt}) => ({
   __typename: "Mutation",
   createChat: {
     __typename: "Chat",
-    name, owner, createdAt, updatedAt,
-    id: uuid(),
+    name, owner, createdAt, updatedAt, id: uuid(),
+    messages: {
+      items: []
+      , nextToken: null,
+      __typename: "ModelMessageConnection",
+    },
+    members: {
+      items: []
+      , nextToken: null,
+      __typename: "ModelMemberChatConnection",
+    }
   }
 })
 
@@ -81,6 +89,8 @@ const updatedChat = ({id, name, owner, createdAt, updatedAt}) => ({
 })
 
 const createMessage = (store, item) => {
+  if (!store.getChat) return {...store, getChat: item}
+
   const newStore = {...store}
   const itemIndex = newStore.getChat.messages.items.findIndex(message => message.id === item.id)
   if (itemIndex === -1) {

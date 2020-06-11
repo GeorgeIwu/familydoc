@@ -85,6 +85,120 @@ export const deleteMessage = /* GraphQL */ `
     }
   }
 `;
+export const createMemberChat = /* GraphQL */ `
+  mutation CreateMemberChat(
+    $input: CreateMemberChatInput!
+    $condition: ModelMemberChatConditionInput
+  ) {
+    createMemberChat(input: $input, condition: $condition) {
+      id
+      chat {
+        id
+        name
+        owner
+        members {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+    }
+  }
+`;
+export const updateMemberChat = /* GraphQL */ `
+  mutation UpdateMemberChat(
+    $input: UpdateMemberChatInput!
+    $condition: ModelMemberChatConditionInput
+  ) {
+    updateMemberChat(input: $input, condition: $condition) {
+      id
+      chat {
+        id
+        name
+        owner
+        members {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteMemberChat = /* GraphQL */ `
+  mutation DeleteMemberChat(
+    $input: DeleteMemberChatInput!
+    $condition: ModelMemberChatConditionInput
+  ) {
+    deleteMemberChat(input: $input, condition: $condition) {
+      id
+      chat {
+        id
+        name
+        owner
+        members {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+    }
+  }
+`;
 export const createChat = /* GraphQL */ `
   mutation CreateChat(
     $input: CreateChatInput!
@@ -97,6 +211,7 @@ export const createChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -128,6 +243,7 @@ export const updateChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -159,6 +275,7 @@ export const deleteChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -178,117 +295,6 @@ export const deleteChat = /* GraphQL */ `
     }
   }
 `;
-export const createMemberChat = /* GraphQL */ `
-  mutation CreateMemberChat(
-    $input: CreateMemberChatInput!
-    $condition: ModelMemberChatConditionInput
-  ) {
-    createMemberChat(input: $input, condition: $condition) {
-      id
-      chat {
-        id
-        name
-        owner
-        members {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        type
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
-export const updateMemberChat = /* GraphQL */ `
-  mutation UpdateMemberChat(
-    $input: UpdateMemberChatInput!
-    $condition: ModelMemberChatConditionInput
-  ) {
-    updateMemberChat(input: $input, condition: $condition) {
-      id
-      chat {
-        id
-        name
-        owner
-        members {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        type
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
-export const deleteMemberChat = /* GraphQL */ `
-  mutation DeleteMemberChat(
-    $input: DeleteMemberChatInput!
-    $condition: ModelMemberChatConditionInput
-  ) {
-    deleteMemberChat(input: $input, condition: $condition) {
-      id
-      chat {
-        id
-        name
-        owner
-        members {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        type
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -296,15 +302,16 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -320,15 +327,16 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -344,15 +352,16 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }

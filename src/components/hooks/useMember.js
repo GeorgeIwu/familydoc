@@ -19,14 +19,13 @@ const memberActions = (owner, chat, actions) => {
   const { createMember = () => {}, deleteMember = () => {} } = actions
 
   const addMember = async (user) => {
-    const input = { memberChatChatId, memberChatMemberId: user.id, } //createdAt: new Date() }
-    const result = await createMember({
+    const input = { memberChatChatId, memberChatMemberId: user.id, createdAt: new Date() }
+    return await createMember({
       variables: { input },
       context: { serializationKey: 'CREATE_MEMBER' },
       optimisticResponse: createdMember(chat, user),
       update: updater(TYPE.createMember, { query: GetChat, variables: { id: memberChatChatId } }),
     })
-    console.log({result})
   }
 
   const removeMember = async (member) => {
@@ -44,10 +43,11 @@ const memberActions = (owner, chat, actions) => {
 
 const useMember = (chatId = '', userId = '') => {
   const [chat, setChat] = useState({})
-  const [createMember] = useMutation(CreateMemberChat)
+  const [createMember, { data: newMber }] = useMutation(CreateMemberChat)
   const [deleteMember] = useMutation(DeleteMemberChat)
   const { subscribeToMore, data } = useQuery(GetChat, {variables: { id: chatId }})
 
+  console.log({data, newMber})
   const owner = userId
 
   useEffect(() => {

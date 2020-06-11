@@ -76,6 +76,111 @@ export const onDeleteMessage = /* GraphQL */ `
     }
   }
 `;
+export const onCreateMemberChat = /* GraphQL */ `
+  subscription OnCreateMemberChat {
+    onCreateMemberChat {
+      id
+      chat {
+        id
+        name
+        owner
+        members {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateMemberChat = /* GraphQL */ `
+  subscription OnUpdateMemberChat {
+    onUpdateMemberChat {
+      id
+      chat {
+        id
+        name
+        owner
+        members {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteMemberChat = /* GraphQL */ `
+  subscription OnDeleteMemberChat {
+    onDeleteMemberChat {
+      id
+      chat {
+        id
+        name
+        owner
+        members {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+    }
+  }
+`;
 export const onCreateChat = /* GraphQL */ `
   subscription OnCreateChat($owner: String!) {
     onCreateChat(owner: $owner) {
@@ -85,6 +190,7 @@ export const onCreateChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -113,6 +219,7 @@ export const onUpdateChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -141,6 +248,7 @@ export const onDeleteChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -160,121 +268,20 @@ export const onDeleteChat = /* GraphQL */ `
     }
   }
 `;
-export const onCreateMemberChat = /* GraphQL */ `
-  subscription OnCreateMemberChat {
-    onCreateMemberChat {
-      id
-      chat {
-        id
-        name
-        owner
-        members {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        type
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
-export const onUpdateMemberChat = /* GraphQL */ `
-  subscription OnUpdateMemberChat {
-    onUpdateMemberChat {
-      id
-      chat {
-        id
-        name
-        owner
-        members {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        type
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
-export const onDeleteMemberChat = /* GraphQL */ `
-  subscription OnDeleteMemberChat {
-    onDeleteMemberChat {
-      id
-      chat {
-        id
-        name
-        owner
-        members {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        type
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -287,15 +294,16 @@ export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -308,15 +316,16 @@ export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }

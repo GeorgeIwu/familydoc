@@ -10,58 +10,46 @@ enum MessageType {
 
 type Message
   @model(queries: null)
-  @auth(rules: [{ allow: owner, operations: [create, update, delete] }])
-{
-  id: ID!
-  text: String
-  owner: String
-  type: MessageType!
-  chat: Chat! @connection(name: "ChatMessages")
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+    id: ID!
+    text: String
+    owner: String
+    type: MessageType!
+    chat: Chat! @connection(name: "ChatMessages")
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+}
+
+type MemberChat
+  @model(queries: null) {
+    id: ID!
+    chat: Chat! @connection(name: "MemberChats")
+    member: User! @connection(name: "UserMembers")
+    createdAt: AWSDateTime!
 }
 
 type Chat
   @model
-  @auth(
-    rules: [
-      { allow: owner }
-      { allow: owner, ownerField: "members", operations: [read] }
-    ]
-  )
-{
-  id: ID!
-  name: String!
-  owner: String
-  # members: [String]
-  members: [MemberChat] @connection(name: "MemberChats")
-  # members: [MemberChat] @connection(name: "MemberChats", keyName: "byUser", fields: ["id"])
-  messages: [Message]
-    @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-}
-
-# Create a join model and disable queries as you don't need them
-# and can query through Chat.members and User.chats
-type MemberChat @model(queries: null) {
-  id: ID!
-  chat: Chat! @connection(name: "MemberChats")
-  member: User! @connection(name: "UserMembers")
+  @auth(rules: [ { allow: owner } { allow: owner, ownerField: "members", operations: [read] } ]) {
+    id: ID!
+    name: String!
+    owner: String
+    members: [MemberChat] @connection(name: "MemberChats", sortField: "createdAt", limit: 50)
+    messages: [Message] @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
 }
 
 type User
-  @model
-  # @key(name: "byUser", fields: ["username"])
-  {
-  id: ID!
-  email: String!
-  username: String!
-  phone_number: String!
-  family_name: String!
-  given_name: String!
-  type: String!
-  chats: [MemberChat] @connection(name: "UserMembers")
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+  @model {
+    id: ID!
+    type: String!
+    email: String!
+    username: String!
+    phone_number: String!
+    family_name: String!
+    given_name: String!
+    chats: [MemberChat] @connection(name: "UserMembers")
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
 }

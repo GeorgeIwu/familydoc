@@ -10,6 +10,7 @@ export const getChat = /* GraphQL */ `
       members {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -57,15 +58,16 @@ export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      type
       email
       username
       phone_number
       family_name
       given_name
-      type
       chats {
         items {
           id
+          createdAt
         }
         nextToken
       }
@@ -83,12 +85,12 @@ export const listUsers = /* GraphQL */ `
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        type
         email
         username
         phone_number
         family_name
         given_name
-        type
         chats {
           nextToken
         }

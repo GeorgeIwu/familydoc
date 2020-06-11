@@ -66,16 +66,16 @@ const createdChat = ({name, owner, createdAt, updatedAt}) => ({
   createChat: {
     __typename: "Chat",
     name, owner, createdAt, updatedAt, id: uuid(),
-    messages: {
-      items: []
-      , nextToken: null,
-      __typename: "ModelMessageConnection",
-    },
-    members: {
-      items: []
-      , nextToken: null,
-      __typename: "ModelMemberChatConnection",
-    }
+    // messages: {
+    //   items: []
+    //   , nextToken: null,
+    //   __typename: "ModelMessageConnection",
+    // },
+    // members: {
+    //   items: []
+    //   , nextToken: null,
+    //   __typename: "ModelMemberChatConnection",
+    // }
   }
 })
 
@@ -88,16 +88,18 @@ const updatedChat = ({id, name, owner, createdAt, updatedAt}) => ({
   }
 })
 
-const createMember = (store, item) => {
+const createMemberChat = (store, item) => {
   const newStore = {...store}
   const itemIndex = newStore.getChat.members.items.findIndex(member => member.id === item.id)
-  if (itemIndex !== -1) {
+  if (itemIndex === -1) {
+    newStore.getChat.members.items = [item, ...newStore.getChat.members.items]
+  } else {
     newStore.getChat.members.items[itemIndex] = item
   }
   return newStore
 }
 
-const deleteMember = (store, item) => {
+const deleteMemberChat = (store, item) => {
   const newStore = {...store}
   const itemIndex = newStore.getChat.members.items.findIndex(member => member.id === item.id)
   if (itemIndex !== -1) {
@@ -106,7 +108,7 @@ const deleteMember = (store, item) => {
   return newStore
 }
 
-const createdMember = (chat, user) => ({
+const createdMemberChat = (chat, user) => ({
   __typename: "Mutation",
   createMemberChat: {
     __typename: "MemberChat",
@@ -116,7 +118,7 @@ const createdMember = (chat, user) => ({
   }
 })
 
-const deletedMember = ({ id }, chat, user) => ({
+const deletedMemberChat = ({ id }, chat, user) => ({
   __typename: "Mutation",
   deleteMemberChat: {
     __typename: "MemberChat",
@@ -193,13 +195,13 @@ const actions = {
   updateChat: updateChat,
   onCreateChat: createChat,
   onUpdateChat: updateChat,
-  createMember: createMember,
-  deleteMember: deleteMember,
+  createMemberChat: createMemberChat,
+  deleteMemberChat: deleteMemberChat,
   createMessage: createMessage,
   updateMessage: updateMessage,
   deleteMessage: deleteMessage,
-  onCreateMember: createMember,
-  onDeleteMember: deleteMember,
+  onCreateMemberChat: createMemberChat,
+  onDeleteMemberChat: deleteMemberChat,
   onCreateMessage: createMessage,
   onUpdateMessage: updateMessage,
   onDeleteMessage: deleteMessage,
@@ -214,13 +216,13 @@ const TYPE = {
   updateChat: 'updateChat',
   onCreateChat: 'onCreateChat',
   onUpdateChat: 'onUpdateChat',
-  createMember: 'createMember',
-  deleteMember: 'deleteMember',
+  createMemberChat: 'createMemberChat',
+  deleteMemberChat: 'deleteMemberChat',
   createMessage: 'createMessage',
   deleteMessage: 'deleteMessage',
   updateMessage: 'updateMessage',
-  onCreateMember: 'onCreateMember',
-  onDeleteMember: 'onDeleteMember',
+  onCreateMemberChat: 'onCreateMemberChat',
+  onDeleteMemberChat: 'onDeleteMemberChat',
   onCreateMessage: 'onCreateMessage',
   onUpdateMessage: 'onUpdateMessage',
   onDeleteMessage: 'onDeleteMessage',
@@ -255,8 +257,8 @@ export {
   updatedUser,
   createdChat,
   updatedChat,
-  createdMember,
-  deletedMember,
+  createdMemberChat,
+  deletedMemberChat,
   createdMessage,
   updatedMessage,
   deletedMessage,

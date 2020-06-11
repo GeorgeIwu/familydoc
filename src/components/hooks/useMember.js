@@ -6,7 +6,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import {getChat} from '../graphql/queries'
 import {createMemberChat, deleteMemberChat} from '../graphql/mutations'
 import {onCreateMemberChat, onDeleteMemberChat} from '../graphql/subscriptions'
-import {updater, subscriber, createdMember, deletedMember, TYPE} from '../utils'
+import {updater, subscriber, createdMemberChat, deletedMemberChat, TYPE} from '../utils'
 
 const GetChat = gql(getChat);
 const CreateMemberChat = gql(createMemberChat)
@@ -16,25 +16,25 @@ const OnDeleteMemberChat = gql(onDeleteMemberChat)
 
 const memberActions = (owner, chat, actions) => {
   const {id: memberChatChatId} = chat
-  const { createMember = () => {}, deleteMember = () => {} } = actions
+  const { createMemberChat = () => {}, deleteMemberChat = () => {} } = actions
 
   const addMember = async (user) => {
     const input = { memberChatChatId, memberChatMemberId: user.id, createdAt: new Date() }
-    return await createMember({
+    return await createMemberChat({
       variables: { input },
       context: { serializationKey: 'CREATE_MEMBER' },
-      optimisticResponse: createdMember(chat, user),
-      update: updater(TYPE.createMember, { query: GetChat, variables: { id: memberChatChatId } }),
+      optimisticResponse: createdMemberChat(chat, user),
+      update: updater(TYPE.createMemberChat, { query: GetChat, variables: { id: memberChatChatId } }),
     })
   }
 
   const removeMember = async (member) => {
     const input = { id: member.id }
-    return await deleteMember({
+    return await deleteMemberChat({
       variables: { input },
       context: { serializationKey: 'DELETE_MEMBER' },
-      optimisticResponse: deletedMember(member, chat),
-      update: updater(TYPE.deleteMember, { query: GetChat, variables: { id: memberChatChatId } }),
+      optimisticResponse: deletedMemberChat(member, chat),
+      update: updater(TYPE.deleteMemberChat, { query: GetChat, variables: { id: memberChatChatId } }),
     })
   }
 
@@ -43,16 +43,15 @@ const memberActions = (owner, chat, actions) => {
 
 const useMember = (chatId = '', userId = '') => {
   const [chat, setChat] = useState({})
-  const [createMember, { data: newMber }] = useMutation(CreateMemberChat)
-  const [deleteMember] = useMutation(DeleteMemberChat)
+  const [createMemberChat] = useMutation(CreateMemberChat)
+  const [deleteMemberChat] = useMutation(DeleteMemberChat)
   const { subscribeToMore, data } = useQuery(GetChat, {variables: { id: chatId }})
 
-  console.log({data, newMber})
   const owner = userId
 
   useEffect(() => {
-    subscribeToMore({document: OnCreateMemberChat, variables: { owner }, updateQuery: subscriber(TYPE.onCreateMember)})
-    subscribeToMore({document: OnDeleteMemberChat, variables: { owner }, updateQuery: subscriber(TYPE.onDeleteMember)})
+    subscribeToMore({document: OnCreateMemberChat, variables: { owner }, updateQuery: subscriber(TYPE.onCreateMemberChat)})
+    subscribeToMore({document: OnDeleteMemberChat, variables: { owner }, updateQuery: subscriber(TYPE.onDeleteMemberChat)})
   }, [owner, subscribeToMore])
 
   useEffect(() => {
@@ -62,7 +61,7 @@ const useMember = (chatId = '', userId = '') => {
   }, [data])
 
   const members = chat && chat.members
-  const actions = memberActions(owner, chat, { createMember, deleteMember })
+  const actions = memberActions(owner, chat, { createMemberChat, deleteMemberChat })
   return [members, actions]
 }
 

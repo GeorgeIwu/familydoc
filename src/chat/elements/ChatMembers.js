@@ -38,7 +38,7 @@ const ChatMembers = ({ chat }) => {
       {members && members.items.map(member => (
         <div key={member.id}>
           <div style={{display: 'inline-block', marginRight: '20px'}}>
-            <p style={{}}>{member.text}</p>
+            <p style={{}}>{member.id}</p>
           </div>
           <div style={{display: 'inline-block', backgroundColor: 'grey'}} onClick={() => removeMember(member)}>X</div>
         </div>

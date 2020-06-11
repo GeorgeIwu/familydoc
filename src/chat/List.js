@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useChat, useChats, useStore } from '../components/hooks'
+import { useChats, useStore } from '../components/hooks'
 import ChatListItem from "../components/ChatListItem";
 import ChatList from "../components/ChatList";
 import Tabs from "../components/Tabs";
 
+import ChatMembers from "./elements/ChatMembers";
 import ChatMessages from "./elements/ChatMessages";
 import ChatMedicals from "./elements/ChatMedicals";
-import ChatMembers from "./elements/ChatMembers";
 
 const StyledGrid = styled(Grid)`
   .root: {
@@ -20,13 +20,12 @@ const StyledGrid = styled(Grid)`
 
 const Chats = ({history}) => {
   const [store] = useStore()
-  const [chatId, setChatId] = useState()
+  const [chat, setChat] = useState()
   const [chats] = useChats(store.user.id)
-  const chatApi = useChat(chatId, store.user.id)
 
   useEffect(() => {
     if (chats.items[0] && chats.items[0].id) {
-      setChatId(chats.items[0].id)
+      setChat(chats.items[0])
     }
   }, [chats.items])
 
@@ -35,14 +34,14 @@ const Chats = ({history}) => {
       <Grid item xs={4}>
         <ChatList >
           {chats.items.map(chat =>
-            <ChatListItem key={chat.id} chat={chat} isLast={false} onClick={() => setChatId(chat.id)} />)}
+            <ChatListItem key={chat.id} chat={chat} isLast={false} onClick={() => setChat(chat)} />)}
         </ChatList>
       </Grid>
       <Grid item xs={8}>
         <Tabs>
-          <ChatMessages tabName='Messages' chatApi={chatApi} />
-          <ChatMembers tabName='Members' chatApi={chatApi} />
-          <ChatMedicals tabName='Medicals' chatApi={chatApi} />
+          <ChatMessages tabName='Messages' chat={chat} />
+          <ChatMembers tabName='Members' chat={chat} />
+          {/*<ChatMedicals tabName='Medicals' chatApi={chatApi} /> */}
         </Tabs>
       </Grid>
     </StyledGrid>

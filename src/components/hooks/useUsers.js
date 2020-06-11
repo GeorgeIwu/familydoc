@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import gql from 'graphql-tag'
+import debounce from 'lodash/debounce'
 import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 
 import {listUsers, listChats} from '../graphql/queries'
@@ -43,15 +44,22 @@ const usersActions = (owner, actions) => {
     })
   }
 
-  const searchUser = async (name) => {
-    const input = { username: name }
+  const searchUser = debounce(async (name) => {
+    const filter = {
+      or: [
+        { given_name: { contains: `${name}` } },
+        { family_name: { contains: `${name}`} },
+        { username: { contains: `${name}`} },
+        { email: { contains: `${name}`} },
+      ]
+    }
     return getUsers({
-      variables: { input },
+      variables: { filter },
       // context: { serializationKey: 'SEARCH_USER' },
       // optimisticResponse: null,
       // update: updater(TYPE.updateUser, { query: ListUsers, variables: { owner } }),
     })
-  }
+  }, 250)
 
   return {addUser, searchUser}
 }

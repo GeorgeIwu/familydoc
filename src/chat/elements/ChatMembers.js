@@ -1,25 +1,20 @@
 
 import React from 'react'
-import { useForm, useUsers } from '../../components/hooks'
-import Button from "../../components/Button";
+import { useForm, useMember, useUsers, useStore } from '../../components/hooks'
 import Input from "../../components/Input";
 
-const ChatMembers = ({ chatApi }) => {
-  const [chat, chatActions] = chatApi
+const ChatMembers = ({ chat }) => {
+  const [store] = useStore()
   const [users, usersActions] = useUsers()
   const [form, formActions] = useForm({ name: '' })
+  const [members, memberActions] = useMember(chat.id, store.user.id)
   const { values } = form
 
-  const onChange = (e) => formActions.change(e.target)
+  const removeMember = async (member) => memberActions.removeMember(member)
 
-  const searchUser = async () => {
-    if (!values.name) return
-    usersActions.searchUser(values.name)
-  }
+  const addMember = async (user) => { memberActions.addMember(user); formActions.reset(); }
 
-  const removeMember = async (member) => chatActions.removeMember(member)
-
-  const addMember = async (user) => { chatActions.addMember({ user }); formActions.reset(); }
+  const onChange = (e) => { formActions.change(e.target); usersActions.searchUser(e.target.value) }
 
   return (
     <div style={{}}>
@@ -30,18 +25,17 @@ const ChatMembers = ({ chatApi }) => {
           placeholder='search user'
           value={values.name}
         />
-        <Button onClick={searchUser}>Search</Button>
       </div>
       {users.items.map(user => (
         <div key={user.id}>
           <div style={{display: 'inline-block', marginRight: '20px'}}>
-            <p style={{}}>{user.username}</p>
+            <p style={{}}>{user.given_name}</p>
           </div>
           <div style={{display: 'inline-block', backgroundColor: 'grey'}} onClick={() => addMember(user)}>Add</div>
         </div>
       ))}
       {<div>-------------------------------</div>}
-      {chat.members && chat.members.items.map(member => (
+      {members && members.items.map(member => (
         <div key={member.id}>
           <div style={{display: 'inline-block', marginRight: '20px'}}>
             <p style={{}}>{member.text}</p>

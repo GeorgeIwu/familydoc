@@ -88,6 +88,44 @@ const updatedChat = ({id, name, owner, createdAt, updatedAt}) => ({
   }
 })
 
+const createMember = (store, item) => {
+  const newStore = {...store}
+  const itemIndex = newStore.getChat.members.items.findIndex(member => member.id === item.id)
+  if (itemIndex !== -1) {
+    newStore.getChat.members.items[itemIndex] = item
+  }
+  return newStore
+}
+
+const deleteMember = (store, item) => {
+  const newStore = {...store}
+  const itemIndex = newStore.getChat.members.items.findIndex(member => member.id === item.id)
+  if (itemIndex !== -1) {
+    newStore.getChat.members.items.splice(itemIndex, 1)
+  }
+  return newStore
+}
+
+const createdMember = (chat, user) => ({
+  __typename: "Mutation",
+  createMemberChat: {
+    __typename: "MemberChat",
+    chat,
+    member: user,
+    id: uuid(),
+  }
+})
+
+const deletedMember = ({ id }, chat, user) => ({
+  __typename: "Mutation",
+  deleteMemberChat: {
+    __typename: "MemberChat",
+    chat,
+    member: user,
+    id,
+  }
+})
+
 const createMessage = (store, item) => {
   if (!store.getChat) return {...store, getChat: item}
 
@@ -155,9 +193,13 @@ const actions = {
   updateChat: updateChat,
   onCreateChat: createChat,
   onUpdateChat: updateChat,
+  createMember: createMember,
+  deleteMember: deleteMember,
   createMessage: createMessage,
   updateMessage: updateMessage,
   deleteMessage: deleteMessage,
+  onCreateMember: createMember,
+  onDeleteMember: deleteMember,
   onCreateMessage: createMessage,
   onUpdateMessage: updateMessage,
   onDeleteMessage: deleteMessage,
@@ -172,9 +214,13 @@ const TYPE = {
   updateChat: 'updateChat',
   onCreateChat: 'onCreateChat',
   onUpdateChat: 'onUpdateChat',
+  createMember: 'createMember',
+  deleteMember: 'deleteMember',
   createMessage: 'createMessage',
   deleteMessage: 'deleteMessage',
   updateMessage: 'updateMessage',
+  onCreateMember: 'onCreateMember',
+  onDeleteMember: 'onDeleteMember',
   onCreateMessage: 'onCreateMessage',
   onUpdateMessage: 'onUpdateMessage',
   onDeleteMessage: 'onDeleteMessage',
@@ -209,6 +255,8 @@ export {
   updatedUser,
   createdChat,
   updatedChat,
+  createdMember,
+  deletedMember,
   createdMessage,
   updatedMessage,
   deletedMessage,

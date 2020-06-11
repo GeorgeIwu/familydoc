@@ -1,23 +1,26 @@
 
 import React, { useState } from 'react'
+import { useMessage, useStore } from '../../components/hooks'
 import MessageBox from './MessageBox';
 import SendBox from "./SendBox";
 
-const ChatMessages = ({ chatApi }) => {
-  const [chat, chatActions] = chatApi
+const ChatMessages = ({ chat = {} }) => {
+  const [store] = useStore()
+  const [messages, messageActions] = useMessage(chat.id, store.user.id)
+
   const [toggledMessage, setToggledMessage] = useState()
 
   const toggleMessage = (message) => setToggledMessage(message)
 
-  const addMessage = async (message) => chatActions.addMessage(message)
+  const addMessage = async (message) => messageActions.addMessage(message)
 
-  const removeMessage = async (message) => chatActions.removeMessage(message)
+  const removeMessage = async (message) => messageActions.removeMessage(message)
 
-  const editMessage = async (message) => { chatActions.editMessage(message); toggleMessage(); }
+  const editMessage = async (message) => { messageActions.editMessage(message); toggleMessage(); }
 
   return (
     <div style={{}}>
-      {chat.messages && chat.messages.items.map(message =>
+      {messages && messages.items.map(message =>
         (message.id === (toggledMessage && toggledMessage.id))
           ? <SendBox handleSave={editMessage} handleCancel={toggleMessage} message={message} />
           : <MessageBox key={message.id} removeMessage={removeMessage} toggleMessage={toggleMessage} message={message} />

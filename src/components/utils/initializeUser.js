@@ -2,11 +2,12 @@ import { API, graphqlOperation } from 'aws-amplify'
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
 
-import {createUser, createChat, createMessage} from '../graphql/mutations'
+import {createUser, createChat, createMessage, createChatMember} from '../graphql/mutations'
 
 const CreateUser = gql(createUser);
 const CreateChat = gql(createChat)
 const CreateMessage = gql(createMessage)
+const CreateChatMember = gql(createChatMember)
 
 // import AppSyncConfig from '../../aws-exports'
 // const AWS = require('aws-sdk')
@@ -63,13 +64,23 @@ const getMessageInput = (chat) => ({
   }
 })
 
+const getChatMemberInput = (chat, user) => ({
+  input: {
+    id: uuid(),
+    chatID: chat.id,
+    memberID: user.id,
+    createdAt: new Date(),
+  }
+})
+
 const initializeUser = async (attributes) => {
   if (!attributes) return null
 
   const user = await API.graphql(graphqlOperation(CreateUser, getUserInput(attributes)))
   const chat = await API.graphql(graphqlOperation(CreateChat, getChatInput(user.data.createUser)))
   const message = await API.graphql(graphqlOperation(CreateMessage, getMessageInput(chat.data.createChat)))
-  console.log({message})
+  const member = await API.graphql(graphqlOperation(CreateChatMember, getChatMemberInput(chat.data.createChat, user.data.createUser)))
+  console.log({message, member})
 
   return user
 }

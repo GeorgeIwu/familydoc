@@ -1,6 +1,64 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      type
+      email
+      username
+      phone_number
+      family_name
+      given_name
+      chats {
+        items {
+          id
+          chatID
+          memberID
+          chat {
+            id
+            name
+            owner
+            createdAt
+            updatedAt
+          }
+          createdAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listUsers = /* GraphQL */ `
+  query ListUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getChat = /* GraphQL */ `
   query GetChat($id: ID!) {
     getChat(id: $id) {
@@ -10,6 +68,8 @@ export const getChat = /* GraphQL */ `
       members {
         items {
           id
+          chatID
+          memberID
           createdAt
         }
         nextToken
@@ -45,53 +105,6 @@ export const listChats = /* GraphQL */ `
           nextToken
         }
         messages {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getUser = /* GraphQL */ `
-  query GetUser($id: ID!) {
-    getUser(id: $id) {
-      id
-      type
-      email
-      username
-      phone_number
-      family_name
-      given_name
-      chats {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $filter: ModelUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        chats {
           nextToken
         }
         createdAt

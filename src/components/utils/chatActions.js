@@ -4,6 +4,26 @@ import {getChat, listChats} from '../graphql/queries'
 const GetChat = gql(getChat);
 const ListChats = gql(listChats);
 
+const subscriber = (dataType, ActionType) => (store, { subscriptionData }) => {
+  const oldData = store
+
+  const item = subscriptionData.data[dataType]
+  const action = actions[ActionType || dataType]
+  const newData = action(oldData, item)
+
+  return newData
+}
+
+const updater = ({query, variables}, dataType, ActionType) => (store, { data }) => {
+  const oldData = store.readQuery({ query, variables })
+
+  const item = data[dataType]
+  const action = actions[ActionType || dataType]
+  const newData = action(oldData, item)
+
+  return store.writeQuery({ query, variables, data: newData })
+}
+
 const saveChats = (store, chats) => {
   let newStore = {...store}
 
@@ -27,7 +47,7 @@ const saveChat = (store, chat) => {
 }
 
 const saveChatsItem = (store, chat) => {
-  let newStore = getChat(store, chat)
+  let newStore = saveChat(store, chat)
 
   const itemIndex = newStore.listChats.items.findIndex(item => item.id === chat.id)
   if (itemIndex === -1) {
@@ -134,36 +154,6 @@ const purgeMember = (store, member) => {
   return newStore
 }
 
-
-const getChatSchema = ({ id, name, owner, createdAt, updatedAt }) => ({
-  __typename: "Mutation",
-  createChat: {
-    __typename: "Chat",
-    id: id || uuid(),
-    name, owner, createdAt, updatedAt,
-    messages: {}, members: {},
-  }
-})
-
-const getMessageSchema = ({ id, text, owner, type, createdAt, updatedAt }, chat) => ({
-  __typename: "Mutation",
-  createMessage: {
-    __typename: "Message",
-    id: id || uuid(),
-    chat, owner, text, type, createdAt, updatedAt,
-  }
-})
-
-const getMemberSchema = ({ id }, chat, user) => ({
-  __typename: "Mutation",
-  createChatMember: {
-    __typename: "ChatMember",
-    id: id || uuid(),
-    chatID: chat.id, memberID: user.id, createdAt: new Date(),
-    chat, member: user,
-  }
-})
-
 const actions = {
   getChat: saveChat,
   listChats: saveChats,
@@ -220,147 +210,175 @@ const TYPE = {
   onDeleteChatMember: 'onDeleteChatMember',
 }
 
+export const getChatSchema = ({ id, name, owner, createdAt, updatedAt }) => ({
+  __typename: "Mutation",
+  createChat: {
+    __typename: "Chat",
+    id: id || uuid(),
+    messages: {},
+    members: {},
+    createdAt: createdAt || new Date(),
+    updatedAt: updatedAt || new Date(),
+    name, owner
+  }
+})
 
-const updater = ({query, variables}, dataType, ActionType) => (store, { data }) => {
-  const oldData = store.readQuery({ query, variables })
+export const getMessageSchema = ({ id, text, owner, type, createdAt, updatedAt }, chat) => ({
+  __typename: "Mutation",
+  createMessage: {
+    __typename: "Message",
+    id: id || uuid(),
+    createdAt: createdAt || new Date(),
+    updatedAt: updatedAt || new Date(),
+    chat, owner, text, type,
+  }
+})
 
-  const item = data[dataType]
-  const action = actions[ActionType || dataType]
-  const newData = action(oldData, item)
+export const getMemberSchema = ({ id , createdAt, updatedAt }, chat, user) => ({
+  __typename: "Mutation",
+  createChatMember: {
+    __typename: "ChatMember",
+    id: id || uuid(),
+    chat,
+    member: user,
+    chatID: chat.id,
+    memberID: user.id,
+    createdAt: createdAt || new Date(),
+    updatedAt: updatedAt || new Date(),
+  }
+})
 
-  return store.writeQuery({ query, variables, data: newData })
+export const updateAddChat = subscriber(TYPE.onCreateChat)
+export const updateEditChat = subscriber(TYPE.onUpdateChat)
+export const updateAddMessage = subscriber(TYPE.onCreateMessage)
+export const updateEditMessage = subscriber(TYPE.onUpdateMessage)
+export const updateRemoveMessage = subscriber(TYPE.onDeleteMessage)
+export const updateRemoveMedical = subscriber(TYPE.onDeleteMessage, TYPE.deleteMedical)
+export const updateAddMember = subscriber(TYPE.onCreateChatMember)
+export const updateEditMember = subscriber(TYPE.onUpdateChatMember)
+export const updateRemoveMember = subscriber(TYPE.onUpdateChatMember)
+
+export const getFetchChats = (listChats, owner) => async () => {
+  return await listChats({
+    variables: { owner },
+    context: { serializationKey: 'LIST_CHATS' },
+    optimisticResponse: null,
+    update: updater({ query: ListChats, variables: { owner } }, TYPE.listChats),
+  })
 }
 
-const chatActions = (owner, chat, actions) => {
-  const chatID = chat.id
-
-  const fetchChats = async () => {
-    return await actions.listChats({
-      variables: { owner },
-      context: { serializationKey: 'LIST_CHATS' },
-      optimisticResponse: null,
-      update: updater({ query: ListChats, variables: { owner } }, TYPE.listChats),
-    })
-  }
-
-  const fetchChat = async (id) => {
-    return await actions.getChat({
-      variables: { id },
-      context: { serializationKey: 'GET_CHAT' },
-      optimisticResponse: null,
-      update: updater({ query: GetChat, variables: { id } }, TYPE.getChat),
-    })
-  }
-
-  const fetchMessages = async (id) => {
-    return await actions.getChat({
-      variables: { id },
-      context: { serializationKey: 'GET_MESSAGES' },
-      optimisticResponse: null,
-      update: updater({ query: GetChat, variables: { id } }, TYPE.getChat, TYPE.listMessages),
-    })
-  }
-
-  const fetchMedicals = async (id) => {
-    return await actions.getChat({
-      variables: { id },
-      context: { serializationKey: 'GET_MEDICALS' },
-      optimisticResponse: null,
-      update: updater({ query: GetChat, variables: { id } }, TYPE.getChat, TYPE.listMedicals),
-    })
-  }
-
-  const fetchMembers = async (id) => {
-    return await actions.getChat({
-      variables: { id },
-      context: { serializationKey: 'GET_MEMBERS' },
-      optimisticResponse: null,
-      update: updater({ query: GetChat, variables: { id } }, TYPE.getChat, TYPE.listMembers),
-    })
-  }
-
-  const addChat = async (user) => {
-    const input = { owner, name: user.given_name, createdAt: new Date(), updatedAt: new Date() }
-    return await actions.createChat({
-      variables: { input },
-      context: { serializationKey: 'CREATE_CHAT' },
-      optimisticResponse: getChatSchema(input, chat),
-      update: updater({ query: ListChats, variables: { owner } }, TYPE.createChat),
-    })
-  }
-
-  const addMessage = async ({ text, type }) => {
-    const input = { text, messageChatId: chatID, type, owner, createdAt: new Date(), updatedAt: new Date() }
-    return await actions.createMessage({
-      variables: { input },
-      context: { serializationKey: 'CREATE_MESSAGE' },
-      optimisticResponse: getMessageSchema(input, chat),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.createMessage),
-    })
-  }
-
-  const editMessage = async ({ __typename, ...rest }) => {
-    const input = { ...rest, messageChatId: chatID, updatedAt: new Date() }
-    return await actions.updateMessage({
-      variables: { input },
-      context: { serializationKey: 'UPDATE_MESSAGE' },
-      optimisticResponse: getMessageSchema(input, chat),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.updateMessage),
-    })
-  }
-
-  const removeMessage = async (message) => {
-    const input = { id: message.id }
-    return await actions.deleteMessage({
-      variables: { input },
-      context: { serializationKey: 'DELETE_MESSAGE' },
-      optimisticResponse: getMessageSchema(message, chat),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.deleteMessage),
-    })
-  }
-
-  const removeMedical = async (message) => {
-    const input = { id: message.id }
-    return await actions.deleteMessage({
-      variables: { input },
-      context: { serializationKey: 'DELETE_MEDICAL' },
-      optimisticResponse: getMessageSchema(message, chat),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.deleteMessage, TYPE.deleteMedical),
-    })
-  }
-
-  const addMember = async (user) => {
-    const input = { chatID, memberID: user.id, createdAt: new Date() }
-    return await actions.createChatMember({
-      variables: { input },
-      context: { serializationKey: 'CREATE_MEMBER' },
-      optimisticResponse: getMemberSchema(chat, user),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.createChatMember),
-    })
-  }
-
-  const editMember = async (member) => {
-    const input = { ...member }
-    return await actions.updateChatMember({
-      variables: { input },
-      context: { serializationKey: 'CREATE_MEMBER' },
-      optimisticResponse: getMemberSchema(member, chat),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.updateChatMember),
-    })
-  }
-
-  const removeMember = async (member) => {
-    const input = { id: member.id }
-    return await actions.deleteChatMember({
-      variables: { input },
-      context: { serializationKey: 'DELETE_MEMBER' },
-      optimisticResponse: getMemberSchema(member, chat),
-      update: updater({ query: GetChat, variables: { id: chatID } }, TYPE.deleteChatMember),
-    })
-  }
-
-  return {fetchChats, fetchChat, fetchMessages, fetchMedicals, fetchMembers, addChat, addMessage, editMessage, removeMessage, removeMedical, addMember, editMember, removeMember}
+export const getFetchChat = (getChat) => async (id) => {
+  return await getChat({
+    variables: { id },
+    context: { serializationKey: 'GET_CHAT' },
+    optimisticResponse: null,
+    update: updater({ query: GetChat, variables: { id } }, TYPE.getChat),
+  })
 }
 
-export default chatActions
+export const getFetchMessages = (getChat) => async (id) => {
+  return await getChat({
+    variables: { id },
+    context: { serializationKey: 'GET_MESSAGES' },
+    optimisticResponse: null,
+    update: updater({ query: GetChat, variables: { id } }, TYPE.getChat, TYPE.listMessages),
+  })
+}
 
+export const getFetchMedicals = (getChat) => async (id) => {
+  return await getChat({
+    variables: { id },
+    context: { serializationKey: 'GET_MEDICALS' },
+    optimisticResponse: null,
+    update: updater({ query: GetChat, variables: { id } }, TYPE.getChat, TYPE.listMedicals),
+  })
+}
+
+export const getFetchMembers = (getChat) => async (id) => {
+  return await getChat({
+    variables: { id },
+    context: { serializationKey: 'GET_MEMBERS' },
+    optimisticResponse: null,
+    update: updater({ query: GetChat, variables: { id } }, TYPE.getChat, TYPE.listMembers),
+  })
+}
+
+export const getAddChat = (createChat, chat, owner) => async (user) => {
+  const input = { owner, name: user.given_name, createdAt: new Date(), updatedAt: new Date() }
+  return await createChat({
+    variables: { input },
+    context: { serializationKey: 'CREATE_CHAT' },
+    optimisticResponse: getChatSchema(input, chat),
+    update: updater({ query: ListChats, variables: { owner } }, TYPE.createChat),
+  })
+}
+
+export const getAddMessage = (createMessage, chat, owner) => async ({ text, type }) => {
+  const input = { text, messageChatId: chat.id, type, owner, createdAt: new Date(), updatedAt: new Date() }
+  return await createMessage({
+    variables: { input },
+    context: { serializationKey: 'CREATE_MESSAGE' },
+    optimisticResponse: getMessageSchema(input, chat),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.createMessage),
+  })
+}
+
+export const getEditMessage = (updateMessage, chat, owner) => async ({ __typename, ...rest }) => {
+  const input = { ...rest, messageChatId: chat.id, updatedAt: new Date() }
+  return await updateMessage({
+    variables: { input },
+    context: { serializationKey: 'UPDATE_MESSAGE' },
+    optimisticResponse: getMessageSchema(input, chat),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.updateMessage),
+  })
+}
+
+export const getRemoveMessage = (deleteMessage, chat, owner) => async (message) => {
+  const input = { id: message.id }
+  return await deleteMessage({
+    variables: { input },
+    context: { serializationKey: 'DELETE_MESSAGE' },
+    optimisticResponse: getMessageSchema(message, chat),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage),
+  })
+}
+
+export const getRemoveMedical = (deleteMessage, chat, owner) => async (message) => {
+  const input = { id: message.id }
+  return await deleteMessage({
+    variables: { input },
+    context: { serializationKey: 'DELETE_MEDICAL' },
+    optimisticResponse: getMessageSchema(message, chat),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage, TYPE.deleteMedical),
+  })
+}
+
+export const getAddMember = (createChatMember, chat, owner) => async (user) => {
+  const input = { chatID: chat.id, memberID: user.id, createdAt: new Date() }
+  return await createChatMember({
+    variables: { input },
+    context: { serializationKey: 'CREATE_MEMBER' },
+    optimisticResponse: getMemberSchema(chat, user),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.createChatMember),
+  })
+}
+
+export const getEditMember = (updateChatMember, chat, owner) => async (member) => {
+  const input = { ...member }
+  return await updateChatMember({
+    variables: { input },
+    context: { serializationKey: 'CREATE_MEMBER' },
+    optimisticResponse: getMemberSchema(member, chat),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.updateChatMember),
+  })
+}
+
+export const getRemoveMember = (deleteChatMember, chat, owner) => async (member) => {
+  const input = { id: member.id }
+  return await deleteChatMember({
+    variables: { input },
+    context: { serializationKey: 'DELETE_MEMBER' },
+    optimisticResponse: getMemberSchema(member, chat),
+    update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteChatMember),
+  })
+}

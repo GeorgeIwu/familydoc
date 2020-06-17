@@ -1,82 +1,38 @@
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import {getChat} from '../graphql/queries'
 import {createMessage, updateMessage, deleteMessage} from '../graphql/mutations'
-import {onCreateMessage, onUpdateMessage, onDeleteMessage} from '../graphql/subscriptions'
-import {updater, subscriber, createdMessage, updatedMessage, deletedMessage, TYPE} from '../utils'
+import * as Actions from '../graphql/apollo'
 
 const GetChat = gql(getChat);
 const CreateMessage = gql(createMessage)
 const UpdateMessage = gql(updateMessage)
 const DeleteMessage = gql(deleteMessage)
-const OnCreateMessage = gql(onCreateMessage);
-const OnUpdateMessage = gql(onUpdateMessage);
-const OnDeleteMessage = gql(onDeleteMessage);
 
-const messageActions = (owner, chat, actions) => {
-  const {id: messageChatId} = chat
-  const { createMessage = () => {}, updateMessage = () => {}, deleteMessage = () => {} } = actions
+const getMessageActions = (actions, chat, owner) => ({
+  addMessage: Actions.getAddMessage(actions.createMessage, chat, owner),
+  editMessage: Actions.getEditMessage(actions.updateMessage, chat, owner),
+  removeMessage: Actions.getRemoveMessage(actions.removeMessage, chat, owner),
+})
 
-  const addMessage = async ({ text, type }) => {
-    const input = { text, messageChatId, type, owner, createdAt: new Date(), updatedAt: new Date() }
-    return createMessage({
-      variables: { input },
-      context: { serializationKey: 'CREATE_MESSAGE' },
-      optimisticResponse: createdMessage(input, chat),
-      update: updater(TYPE.createMessage, { query: GetChat, variables: { id: messageChatId } }),
-    })
-  }
-
-  const editMessage = async ({ __typename, ...rest }) => {
-    const input = { ...rest, messageChatId, updatedAt: new Date() }
-    return updateMessage({
-      variables: { input },
-      context: { serializationKey: 'UPDATE_MESSAGE' },
-      optimisticResponse: updatedMessage(input, chat),
-      update: updater(TYPE.updateMessage, { query: GetChat, variables: { id: messageChatId } }),
-    })
-  }
-
-  const removeMessage = async (message) => {
-    const input = { id: message.id }
-    return deleteMessage({
-      variables: { input },
-      context: { serializationKey: 'DELETE_MESSAGE' },
-      optimisticResponse: deletedMessage(message, chat),
-      update: updater(TYPE.deleteMessage, { query: GetChat, variables: { id: messageChatId } }),
-    })
-  }
-
-  return {addMessage, editMessage, removeMessage}
-}
-
-const useMessage = (chatId = '', userId = '') => {
-  const [chat, setChat] = useState({})
+const useMessage = (chatId = '', userId = '', nextToken = '') => {
   const [createMessage] = useMutation(CreateMessage)
   const [updateMessage] = useMutation(UpdateMessage)
   const [deleteMessage] = useMutation(DeleteMessage)
-  const { subscribeToMore, data } = useQuery(GetChat, {variables: { id: chatId }})
-
-  const owner = userId
+  const { subscribeToMore, data: chat } = useQuery(GetChat, {variables: { id: chatId }} )
 
   useEffect(() => {
-    subscribeToMore({document: OnCreateMessage, variables: { owner }, updateQuery: subscriber(TYPE.onCreateMessage)})
-    subscribeToMore({document: OnUpdateMessage, variables: { owner }, updateQuery: subscriber(TYPE.onUpdateMessage)})
-    subscribeToMore({document: OnDeleteMessage, variables: { owner }, updateQuery: subscriber(TYPE.onDeleteMessage)})
-  }, [owner, subscribeToMore])
+    subscribeToMore(Actions.updateAddMessage(userId))
+    subscribeToMore(Actions.updateEditMessage(userId))
+    subscribeToMore(Actions.updateRemoveMessage(userId))
+  }, [userId, subscribeToMore])
 
-  useEffect(() => {
-    if (data) {
-      setChat(data.getChat)
-    }
-  }, [data])
-
-  const messages = chat && chat.messages
-  const actions = messageActions(owner, chat, { createMessage, updateMessage, deleteMessage })
-  return [messages, actions]
+  const messageData = chat && chat.getChat && chat.getChat.messages
+  const messageActions = getMessageActions({ createMessage, updateMessage, deleteMessage }, chat, userId)
+  return [messageData, messageActions]
 }
 
-export {messageActions, useMessage}
+export {getMessageActions, useMessage}

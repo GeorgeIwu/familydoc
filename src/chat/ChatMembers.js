@@ -1,20 +1,19 @@
 
 import React from 'react'
-import { useForm, useMember, useUsers, useStore } from '../../components/hooks'
-import Input from "../../components/Input";
+import { useForm, useChatMember, useStore } from '../components/hooks'
+import Input from "../components/Input";
 
 const ChatMembers = ({ chat }) => {
-  const [store] = useStore()
-  const [users, usersActions] = useUsers()
+  const [store, storeActions] = useStore()
   const [form, formActions] = useForm({ name: '' })
-  const [members, memberActions] = useMember(chat.id, store.user.id)
+  const [members, memberActions] = useChatMember(chat.id, store.user.id)
   const { values } = form
 
   const removeMember = async (member) => memberActions.removeMember(member)
 
   const addMember = async (user) => { memberActions.addMember(user); formActions.reset(); }
 
-  const onChange = (e) => { formActions.change(e.target); usersActions.searchUser(e.target.value) }
+  const onChange = (e) => { formActions.change(e.target); storeActions.searchUsers(e.target.value) }
 
   return (
     <div style={{}}>
@@ -26,7 +25,7 @@ const ChatMembers = ({ chat }) => {
           value={values.name}
         />
       </div>
-      {users.items.map(user => (
+      {store.providers.items.map(user => (
         <div key={user.id}>
           <div style={{display: 'inline-block', marginRight: '20px'}}>
             <p style={{}}>{user.given_name}</p>

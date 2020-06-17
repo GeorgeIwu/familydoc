@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react'
-import { useMessage, useStore } from '../../components/hooks'
-import MessageBox from './MessageBox';
-import SendBox from "./SendBox";
+import { useMessage, useStore } from '../components/hooks'
+import MessageBox from './elements/MessageBox';
+import SendBox from "./elements/SendBox";
 
 const ChatMessages = ({ chat = {} }) => {
   const [store] = useStore()
   const [messages, messageActions] = useMessage(chat.id, store.user.id)
+
+  console.log({messages, chat})
 
   const [toggledMessage, setToggledMessage] = useState()
 

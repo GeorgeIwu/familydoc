@@ -1,7 +1,7 @@
 
 import React from 'react'
 
-const ChatMessages = ({ chatApi }) => {
+const ChatMedicals = ({ chatApi }) => {
   const [chat, chatActions] = chatApi
 
   const removeMessage = async (message) => {
@@ -23,4 +23,4 @@ const ChatMessages = ({ chatApi }) => {
   )
 }
 
-export default ChatMessages
+export default ChatMedicals

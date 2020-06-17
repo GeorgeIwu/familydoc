@@ -13,17 +13,14 @@ const StyledGrid = styled(Grid)`
 
 const ChatAdd = ({ history }) => {
   const [store, storeActions] = useStore()
-  const [form, formActions] = useForm({email: '', family_name: '', given_name: '', phone_number: ''})
+  const [form, formActions] = useForm({ email: '', family_name: '', given_name: '', phone_number: '' })
 
   const {given_name, family_name, phone_number, email} = form.values
-  const onSubmit = () => storeActions.addReceiver(form.values)
   const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
-
-  useEffect(() => {
-    if (store.users.newMessage) {
-      history.push('/chat')
-    }
-  }, [store.users.newMessage, history])
+  const onSubmit = async () => {
+    const usex = await storeActions.addProvider(form.values)
+    history.push('/chat')
+  }
 
   return (
     <StyledGrid container className={'root'} spacing={2}>

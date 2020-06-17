@@ -13,7 +13,7 @@ const ChatMembers = ({ chat }) => {
 
   const addMember = async (user) => { memberActions.addMember(user); formActions.reset(); }
 
-  const onChange = (e) => { formActions.change(e.target); storeActions.searchUsers(e.target.value) }
+  const onChange = (e) => { formActions.change(e.target); storeActions.searchProviders(e.target.value) }
 
   return (
     <div style={{}}>

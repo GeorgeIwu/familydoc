@@ -15,7 +15,7 @@ const DeleteChatMember = gql(deleteChatMember)
 const getChatMemberActions = (actions, chat, owner) => ({
   addChatMember: Actions.getAddChatMember(actions.createChatMember, chat, owner),
   editChatMember: Actions.getEditChatMember(actions.updateChatMember, chat, owner),
-  removeChatMember: Actions.getRemoveChatMember(actions.removeChatMember, chat, owner),
+  removeChatMember: Actions.getRemoveChatMember(actions.deleteChatMember, chat, owner),
 })
 
 const useChatMember = (chatId = '', userId = '', nextToken = '') => {
@@ -31,7 +31,7 @@ const useChatMember = (chatId = '', userId = '', nextToken = '') => {
   }, [userId, subscribeToMore])
 
   const chatMemberData = chat && chat.getChat && chat.getChat.chatMembers
-  const chatMemberActions = getChatMemberActions({ createChatMember, updateChatMember, deleteChatMember }, chat, userId)
+  const chatMemberActions = getChatMemberActions({ createChatMember, updateChatMember, deleteChatMember }, chat.getChat, userId)
   return [chatMemberData, chatMemberActions]
 }
 

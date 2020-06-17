@@ -50,17 +50,6 @@ const updater = ({query, variables}, dataType, ActionType) => (store, { data }) 
   return store.writeQuery({ query, variables, data: newData })
 }
 
-const saveUsers = (store, users) => {
-  let newStore = {...store}
-
-  if (!newStore.listUsers) {
-    newStore = { ...newStore, listUsers: users }
-  } else {
-    newStore = [ ...users, ...newStore.listUsers.items ]
-  }
-  return newStore
-}
-
 const saveUser = (store, user) => {
   let newStore = {...store}
 
@@ -72,25 +61,28 @@ const saveUser = (store, user) => {
   return newStore
 }
 
-const saveUsersItem = (store, user) => {
-  let newStore = saveUser(store, user)
+const saveUsers = (store, users) => {
+  let newStore = {...store}
 
-  const itemIndex = newStore.listUsers.items.findIndex(item => item.id === user.id)
-  if (itemIndex === -1) {
-    newStore.listUsers.items = [user, ...newStore.listUsers.items]
+  if (!newStore.listUsers) {
+    newStore = { ...newStore, listUsers: users }
   } else {
-    newStore.listUsers.items[itemIndex] = user
+    newStore.listUsers.items = [ ...users.items, ...newStore.listUsers.items ]
   }
   return newStore
 }
 
-const saveChats = (store, chats) => {
-  let newStore = {...store}
+const saveUsersItem = (store, user) => {
+  let newStore = saveUser(store, user)
 
-  if (!newStore.listChats) {
-    newStore = { ...newStore, listChats: chats }
+  const itemIndex = newStore?.listUsers?.items.findIndex(item => item.id === user.id)
+
+  if (itemIndex === null) {
+    newStore = { ...newStore, listUsers: { items: [user] } }
+  } else if (itemIndex === -1) {
+    newStore.listUsers.items = [ user, ...newStore.listUsers.items ]
   } else {
-    newStore = [ ...chats, ...newStore.listChats.items ]
+    newStore.listUsers.items[itemIndex] = user
   }
   return newStore
 }
@@ -106,12 +98,25 @@ const saveChat = (store, chat) => {
   return newStore
 }
 
+const saveChats = (store, chats) => {
+  let newStore = {...store}
+
+  if (!newStore.listChats) {
+    newStore = { ...newStore, listChats: chats }
+  } else {
+    newStore.listChats.items = [ ...chats.items, ...newStore.listChats.items ]
+  }
+  return newStore
+}
+
 const saveChatsItem = (store, chat) => {
   let newStore = saveChat(store, chat)
+  const itemIndex = newStore?.listChats?.items.findIndex(item => item.id === chat.id)
 
-  const itemIndex = newStore.listChats.items.findIndex(item => item.id === chat.id)
-  if (itemIndex === -1) {
-    newStore.listChats.items = [chat, ...newStore.listChats.items]
+  if (itemIndex === null) {
+    newStore = { ...newStore, listChats: { items: [chat] } }
+  } else if (itemIndex === -1) {
+    newStore.listChats.items = [ chat, ...newStore.listChats.items ]
   } else {
     newStore.listChats.items[itemIndex] = chat
   }
@@ -124,18 +129,21 @@ const saveMessages = (store, messages) => {
   if (!newStore.getChat.messages) {
     newStore.getChat = { ...newStore.getChat, messages }
   } else {
-    newStore.getChat.messages = [ ...messages, ...newStore.getChat.messages ]
+    newStore.getChat.messages.items = [ ...messages.items, ...newStore.getChat.messages.items ]
   }
   return newStore
 }
 
 const saveMessage = (store, message) => {
   let newStore = {...store}
+  const itemIndex = newStore?.getChat?.messages?.items.findIndex(item => item.id === message.id)
 
-  if (!newStore.getChat.messages) {
-    newStore.getChat = { ...newStore.getChat, messages: [message] }
+  if (itemIndex === null) {
+    newStore.getChat = { ...newStore.getChat, messages: { items: [message] } }
+  } else if (itemIndex === -1) {
+    newStore.getChat.messages.items = [ message, ...newStore.getChat.messages.items ]
   } else {
-    newStore.getChat.messages = [ message, ...newStore.getChat.messages ]
+    newStore.getChat.messages.items[itemIndex] = message
   }
   return newStore
 }
@@ -156,7 +164,7 @@ const saveMedicals = (store, medicals) => {
   if (!newStore.getChat.medicals) {
     newStore.getChat = { ...newStore.getChat, medicals }
   } else {
-    newStore.getChat.medicals = [ ...medicals, ...newStore.getChat.medicals ]
+    newStore.getChat.medicals.items = [ ...medicals.items, ...newStore.getChat.medicals.items ]
   }
   return newStore
 }
@@ -164,10 +172,14 @@ const saveMedicals = (store, medicals) => {
 const saveMedical = (store, medical) => {
   let newStore = {...store}
 
-  if (!newStore.getChat.medical) {
-    newStore.getChat = { ...newStore.getChat, medicals: [medical] }
+  const itemIndex = newStore?.getChat?.medicals?.items.findIndex(item => item.id === medical.id)
+
+  if (itemIndex === null) {
+    newStore.getChat = { ...newStore.getChat, medicals: { items: [medical] } }
+  } else if (itemIndex === -1) {
+    newStore.getChat.medicals.items = [ medical, ...newStore.getChat.medicals.items ]
   } else {
-    newStore.getChat.medicals = [ medical, ...newStore.getChat.medicals ]
+    newStore.getChat.medicals.items[itemIndex] = medical
   }
   return newStore
 }
@@ -188,7 +200,7 @@ const saveChatMembers = (store, members) => {
   if (!newStore.getChat.members) {
     newStore.getChat = { ...newStore.getChat, members }
   } else {
-    newStore.getChat.members = [ ...members, ...newStore.getChat.members ]
+    newStore.getChat.members.items = [ ...members.items, ...newStore.getChat.members.items ]
   }
   return newStore
 }
@@ -196,10 +208,14 @@ const saveChatMembers = (store, members) => {
 const saveChatMember = (store, member) => {
   let newStore = {...store}
 
-  if (!newStore.getChat.medical) {
-    newStore.getChat = { ...newStore.getChat, members: [member] }
+  const itemIndex = newStore?.getChat?.members?.items.findIndex(item => item.id === member.id)
+
+  if (itemIndex === null) {
+    newStore.getChat = { ...newStore.getChat, members: { items: [member] } }
+  } else if (itemIndex === -1) {
+    newStore.getChat.members.items = [ member, ...newStore.getChat.members.items ]
   } else {
-    newStore.getChat.members = [ member, ...newStore.getChat.members ]
+    newStore.getChat.members.items[itemIndex] = member
   }
   return newStore
 }
@@ -214,9 +230,9 @@ const purgeChatMember = (store, member) => {
   return newStore
 }
 
-const getUserSchema = ({ id, sub, email, username, phone_number, family_name, given_name, nickname, type, createdAt, updatedAt }, owner) => ({
+const getUserSchema = ({ id, sub, email, username, phone_number, family_name, given_name, nickname, type, createdAt, updatedAt }, owner, typeName = 'createUser') => ({
   __typename: "Mutation",
-  createUser: {
+  [typeName]: {
     __typename: "User",
     id: id || sub || uuid(),
     type: type || nickname || 'USER',
@@ -227,9 +243,9 @@ const getUserSchema = ({ id, sub, email, username, phone_number, family_name, gi
   }
 })
 
-const getChatSchema = ({ id, name, owner, createdAt, updatedAt }, user) => ({
+const getChatSchema = ({ id, name, owner, createdAt, updatedAt }, user, typeName = 'createChat') => ({
   __typename: "Mutation",
-  createChat: {
+  [typeName]: {
     __typename: "Chat",
     id: id || uuid(),
     name: name || user.given_name,
@@ -239,9 +255,9 @@ const getChatSchema = ({ id, name, owner, createdAt, updatedAt }, user) => ({
   }
 })
 
-const getMessageSchema = ({ id, messageChatId, text, owner, type, createdAt, updatedAt }, chat) => ({
+const getMessageSchema = ({ id, messageChatId, text, owner, type, createdAt, updatedAt }, chat, typeName = 'createMessage') => ({
   __typename: "Mutation",
-  createMessage: {
+  [typeName]: {
     __typename: "Message",
     id: id || uuid(),
     text: text || 'Welcome',
@@ -253,9 +269,9 @@ const getMessageSchema = ({ id, messageChatId, text, owner, type, createdAt, upd
   }
 })
 
-const getChatMemberSchema = ({ id , createdAt, updatedAt }, chat, user) => ({
+const getChatMemberSchema = ({ id , createdAt, updatedAt }, chat, user, typeName = 'createChatMember') => ({
   __typename: "Mutation",
-  createChatMember: {
+  [typeName]: {
     __typename: "ChatMember",
     id: id || uuid(),
     chat,
@@ -339,6 +355,26 @@ const TYPE = {
 // const TYPEZ = Object.keys(actions).reduce((acc, key) => acc[key] = key , {})
 // console.log({TYPEZ})
 
+export const getInitUsersItem = (actions, owner) => async (attributes) => {
+  const { data: { createUser } } = await getAddUser(actions.createUser, owner)(attributes)
+  const { data: { createChat } } = await getAddUser(actions.createChat, owner)(createUser)
+  const { data: { createMessage } } = await getAddMessage(actions.createMessage, createChat, owner)({ type: 'ALL', text: 'Welcome' })
+  const { data: { createChatMember } } = await getAddChatMember(actions.createChatMember, createChat, owner)(createUser)
+
+  console.log({createUser, createChat, createMessage, createChatMember})
+  return createUser
+}
+
+export const getInitUser = async (attributes) => {
+  const user = await API.graphql(graphqlOperation(CreateUser, getUserSchema(attributes)))
+  const chat = await API.graphql(graphqlOperation( CreateChat, getInput(getChatSchema({}, user.data.createUser)) ))
+  const message = await API.graphql(graphqlOperation( CreateMessage, getInput(getMessageSchema({}, chat.data.createChat)) ))
+  const member = await API.graphql(graphqlOperation(CreateChatMember, getInput(getChatMemberSchema({}, chat.data.createChat, user.data.createUser)) ))
+
+  console.log({user, chat, message, member})
+  return user
+}
+
 export const getFetchUsers = (listUsers, owner) => async () => {
   return await listUsers({
     variables: { owner },
@@ -407,7 +443,7 @@ export const getAddUser = (createUser, owner) => async (user) => {
   return await createUser({
     variables: { input },
     context: { serializationKey: 'CREATE_USER' },
-    optimisticResponse: getUserSchema(input, owner),
+    optimisticResponse: getUserSchema(input, owner, TYPE.createUser),
     update: updater({ query: ListUsers, variables: { owner } }, TYPE.createUser),
   })
 }
@@ -417,29 +453,9 @@ export const getEditUser = (updateUser, owner) => async (user) => {
   return await updateUser({
     variables: { input },
     context: { serializationKey: 'UPDATE_USER' },
-    optimisticResponse: getUserSchema(input, owner),
+    optimisticResponse: getUserSchema(input, owner, TYPE.updateUser),
     update: updater({ query: ListUsers, variables: { owner } }, TYPE.updateUser),
   })
-}
-
-export const getInitUsersItem = (actions, owner) => async (attributes) => {
-  const { data: { createUser } } = await getAddUser(actions.createUser, owner)(attributes)
-  const { data: { createChat } } = await getAddUser(actions.createChat, owner)(createUser)
-  const { data: { createMessage } } = await getAddMessage(actions.createMessage, createChat, owner)({ type: 'ALL', text: 'Welcome' })
-  const { data: { createChatMember } } = await getAddChatMember(actions.createChatMember, createChat, owner)(createUser)
-
-  console.log({createUser, createChat, createMessage, createChatMember})
-  return createUser
-}
-
-export const getInitUser = async (attributes) => {
-  const user = await API.graphql(graphqlOperation(CreateUser, getUserSchema(attributes)))
-  const chat = await API.graphql(graphqlOperation( CreateChat, getInput(getChatSchema({}, user.data.createUser)) ))
-  const message = await API.graphql(graphqlOperation( CreateMessage, getInput(getMessageSchema({}, chat.data.createChat)) ))
-  const member = await API.graphql(graphqlOperation(CreateChatMember, getInput(getChatMemberSchema({}, chat.data.createChat, user.data.createUser)) ))
-
-  console.log({user, chat, message, member})
-  return user
 }
 
 export const getAddChat = (createChat, chat, owner) => async (user) => {
@@ -447,7 +463,7 @@ export const getAddChat = (createChat, chat, owner) => async (user) => {
   return await createChat({
     variables: { input },
     context: { serializationKey: 'CREATE_CHAT' },
-    optimisticResponse: getChatSchema(input, chat),
+    optimisticResponse: getChatSchema(input, chat, TYPE.createChat),
     update: updater({ query: ListChats, variables: { owner } }, TYPE.createChat),
   })
 }
@@ -457,7 +473,7 @@ export const getAddMessage = (createMessage, chat, owner) => async ({ text, type
   return await createMessage({
     variables: { input },
     context: { serializationKey: 'CREATE_MESSAGE' },
-    optimisticResponse: getMessageSchema(input, chat),
+    optimisticResponse: getMessageSchema(input, chat, TYPE.createMessage),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.createMessage),
   })
 }
@@ -467,7 +483,7 @@ export const getEditMessage = (updateMessage, chat, owner) => async ({ __typenam
   return await updateMessage({
     variables: { input },
     context: { serializationKey: 'UPDATE_MESSAGE' },
-    optimisticResponse: getMessageSchema(input, chat),
+    optimisticResponse: getMessageSchema(input, chat, TYPE.updateMessage),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.updateMessage),
   })
 }
@@ -477,7 +493,7 @@ export const getRemoveMessage = (deleteMessage, chat, owner) => async (message) 
   return await deleteMessage({
     variables: { input },
     context: { serializationKey: 'DELETE_MESSAGE' },
-    optimisticResponse: getMessageSchema(message, chat),
+    optimisticResponse: getMessageSchema(message, chat, TYPE.deleteMessage),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage),
   })
 }
@@ -487,7 +503,7 @@ export const getRemoveMedical = (deleteMessage, chat, owner) => async (message) 
   return await deleteMessage({
     variables: { input },
     context: { serializationKey: 'DELETE_MEDICAL' },
-    optimisticResponse: getMessageSchema(message, chat),
+    optimisticResponse: getMessageSchema(message, chat, TYPE.deleteMessage),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage, TYPE.deleteMedical),
   })
 }
@@ -497,7 +513,7 @@ export const getAddChatMember = (createChatMember, chat, owner) => async (user) 
   return await createChatMember({
     variables: { input },
     context: { serializationKey: 'CREATE_MEMBER' },
-    optimisticResponse: getChatMemberSchema(chat, user),
+    optimisticResponse: getChatMemberSchema(chat, user, TYPE.createChatMember),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.createChatMember),
   })
 }
@@ -507,7 +523,7 @@ export const getEditChatMember = (updateChatMember, chat, owner) => async (membe
   return await updateChatMember({
     variables: { input },
     context: { serializationKey: 'CREATE_MEMBER' },
-    optimisticResponse: getChatMemberSchema(member, chat),
+    optimisticResponse: getChatMemberSchema(member, chat, TYPE.updateChatMember),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.updateChatMember),
   })
 }
@@ -517,7 +533,7 @@ export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (mem
   return await deleteChatMember({
     variables: { input },
     context: { serializationKey: 'DELETE_MEMBER' },
-    optimisticResponse: getChatMemberSchema(member, chat),
+    optimisticResponse: getChatMemberSchema(member, chat, TYPE.deleteChatMember),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteChatMember),
   })
 }

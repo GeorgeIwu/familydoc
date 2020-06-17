@@ -15,7 +15,7 @@ const DeleteMessage = gql(deleteMessage)
 const getMessageActions = (actions, chat, owner) => ({
   addMessage: Actions.getAddMessage(actions.createMessage, chat, owner),
   editMessage: Actions.getEditMessage(actions.updateMessage, chat, owner),
-  removeMessage: Actions.getRemoveMessage(actions.removeMessage, chat, owner),
+  removeMessage: Actions.getRemoveMessage(actions.deleteMessage, chat, owner),
 })
 
 const useMessage = (chatId = '', userId = '', nextToken = '') => {
@@ -31,7 +31,7 @@ const useMessage = (chatId = '', userId = '', nextToken = '') => {
   }, [userId, subscribeToMore])
 
   const messageData = chat && chat.getChat && chat.getChat.messages
-  const messageActions = getMessageActions({ createMessage, updateMessage, deleteMessage }, chat, userId)
+  const messageActions = getMessageActions({ createMessage, updateMessage, deleteMessage }, chat.getChat, userId)
   return [messageData, messageActions]
 }
 

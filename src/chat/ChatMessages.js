@@ -8,8 +8,6 @@ const ChatMessages = ({ chat = {} }) => {
   const [store] = useStore()
   const [messages, messageActions] = useMessage(chat.id, store.user.id)
 
-  console.log({messages, chat})
-
   const [toggledMessage, setToggledMessage] = useState()
 
   const toggleMessage = (message) => setToggledMessage(message)
@@ -22,11 +20,11 @@ const ChatMessages = ({ chat = {} }) => {
 
   return (
     <div style={{}}>
-      {messages && messages.items.map(message =>
-        (message.id === (toggledMessage && toggledMessage.id))
+      {messages && messages.items.map(message => (
+        message.id === (toggledMessage && toggledMessage.id)
           ? <SendBox handleSave={editMessage} handleCancel={toggleMessage} message={message} />
           : <MessageBox key={message.id} removeMessage={removeMessage} toggleMessage={toggleMessage} message={message} />
-      )}
+      ))}
       <SendBox handleSend={addMessage} />
     </div>
   )

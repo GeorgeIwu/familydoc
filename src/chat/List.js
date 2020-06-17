@@ -34,7 +34,7 @@ const Chats = ({history}) => {
       <Grid item xs={8}>
         <Tabs>
           <ChatMessages tabName='Messages' chat={chat} />
-          {/*<ChatMembers tabName='Members' chat={chat} />*/}
+          <ChatMembers tabName='Members' chat={chat} />
           {/*<ChatMedicals tabName='Medicals' chatApi={chatApi} /> */}
         </Tabs>
       </Grid>

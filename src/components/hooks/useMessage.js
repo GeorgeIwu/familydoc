@@ -31,7 +31,7 @@ const useMessage = (chatId = '', userId = '', nextToken = '') => {
   }, [userId, subscribeToMore])
 
   const messageData = chat && chat.getChat && chat.getChat.messages
-  const messageActions = getMessageActions({ createMessage, updateMessage, deleteMessage }, chat.getChat, userId)
+  const messageActions = getMessageActions({ createMessage, updateMessage, deleteMessage }, chat?.getChat, userId)
   return [messageData, messageActions]
 }
 

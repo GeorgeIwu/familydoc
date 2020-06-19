@@ -206,12 +206,15 @@ const purgeChatMember = (store, member) => {
 }
 
 const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => ({
+  email,
+  given_name,
+  family_name,
+  phone_number,
   id: id || sub || uuid(),
   type: type || nickname,
   username: username || email,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),
-  email, phone_number, family_name, given_name,
 })
 
 const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
@@ -232,26 +235,28 @@ const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, upda
   updatedAt: updatedAt || new Date(),
 })
 
-const getChatMemberInput = ({ id, chatID, memberID, createdAt, updatedAt, chat, user, owner }) => ({
+const getChatMemberInput = ({ id, chatID, memberID, status, priviledges, createdAt, updatedAt, chat, user, owner }) => ({
   id: id || uuid(),
   chatID: chatID || chat.id,
   memberID: memberID || user.id || owner,
+  status: status || 'APPROVED',
+  priviledges: priviledges || ['ALL'],
   createdAt: createdAt || new Date(),
-  // updatedAt: updatedAt || new Date(),
+  updatedAt: updatedAt || new Date(),
 })
 
 export const getCreateUser = async (attributes) => {
   const userInput = getUserInput(attributes)
-  const user = await API.graphql(graphqlOperation(CreateUser, buildSchema(userInput, TYPE.User, TYPE.createUser) ))
+  const user = await API.graphql(graphqlOperation(CreateUser, {input: userInput}))
 
   const chatInput = getChatInput({user: user.data.createUser})
-  const chat = await API.graphql(graphqlOperation(CreateChat, buildSchema(chatInput, TYPE.Chat, TYPE.createChat) ))
+  const chat = await API.graphql(graphqlOperation(CreateChat, {input: chatInput}))
 
   const messageInput = getMessageInput({chat: chat.data.createChat})
-  const message = await API.graphql(graphqlOperation(CreateMessage, buildSchema(messageInput, TYPE.Message, TYPE.createMessage) ))
+  const message = await API.graphql(graphqlOperation(CreateMessage, {input: messageInput}))
 
   const memberInput = getChatMemberInput({chat: chat.data.createChat, user: user.data.createUser})
-  const member = await API.graphql(graphqlOperation(CreateChatMember, buildSchema(memberInput, TYPE.ChatMember, TYPE.createChatMember) ))
+  const member = await API.graphql(graphqlOperation(CreateChatMember, {input: memberInput}))
 
   console.log({user, chat, message, member})
   return user

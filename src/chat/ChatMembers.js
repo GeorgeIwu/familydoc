@@ -6,7 +6,7 @@ import Input from "../components/Input";
 const ChatMembers = ({ chat }) => {
   const [store, storeActions] = useStore()
   const [form, formActions] = useForm({ name: '' })
-  const [members, memberActions] = useChatMember(chat.id, store.user.id)
+  const [members, memberActions] = useChatMember(chat?.id, store.user.id)
   const { values } = form
 
   const removeMember = async (member) => memberActions.removeMember(member)

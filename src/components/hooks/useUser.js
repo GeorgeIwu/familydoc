@@ -36,9 +36,8 @@ const useUser = (init = {}, chatPage = '') => {
   const [listProviders, { data: providers }] = useLazyQuery(ListUsers)
   const [listReceivers, { data: receivers }] = useLazyQuery(ListUsers)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
-  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes && auth.data.attributes.sub }})
+  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth?.data?.attributes?.sub }})
 
-  console.log({providers})
   useEffect(() => {
    subscribeToMore(Actions.updateAddUser())
   }, [user, subscribeToMore])
@@ -51,8 +50,7 @@ const useUser = (init = {}, chatPage = '') => {
 
   useEffect(() => {
     (async function() {
-      if (!loading && data?.getUser && auth?.data?.attributes) {
-        console.log('init user')
+      if (auth?.data?.attributes && !loading && !data.getUser) {
         const newuser = await Actions.getCreateUser(auth.data.attributes)
         setUser(newuser.data.createUser)
       }

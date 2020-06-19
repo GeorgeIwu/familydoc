@@ -70,6 +70,16 @@ export const getChat = /* GraphQL */ `
           id
           chatID
           memberID
+          member {
+            id
+            type
+            email
+            username
+            phone_number
+            family_name
+            given_name
+            owner
+          }
           createdAt
         }
         nextToken

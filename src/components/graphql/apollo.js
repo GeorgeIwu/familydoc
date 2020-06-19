@@ -24,10 +24,14 @@ const OnCreateChatMember = gql(onCreateChatMember)
 const OnUpdateChatMember = gql(onUpdateChatMember)
 const OnDeleteChatMember = gql(onDeleteChatMember)
 
-const getInput = (data, typeName) => {
-  const { __typename, ...input } = typeName ? data[typeName] : data
-  return input
-}
+const buildSchema = (input, type, action, additionalInput = {} ) => ({
+  __typename: "Mutation",
+  [action]: {
+    ...input,
+    __typename: type,
+    ...additionalInput
+  }
+})
 
 const getUserFilter = (name, type) => ({
   type: { eq: type },
@@ -240,64 +244,53 @@ const purgeChatMember = (store, member) => {
   return newStore
 }
 
-const getUserSchema = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }, owner, typeName = 'createUser') => ({
-  __typename: "Mutation",
-  [typeName]: {
-    __typename: "User",
-    id: id || sub || uuid(),
-    type: type || nickname,
-    username: username || email,
-    createdAt: createdAt || new Date(),
-    updatedAt: updatedAt || new Date(),
-    email, phone_number, family_name, given_name,
-  }
+const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => ({
+  id: id || sub || uuid(),
+  type: type || nickname,
+  username: username || email,
+  createdAt: createdAt || new Date(),
+  updatedAt: updatedAt || new Date(),
+  email, phone_number, family_name, given_name,
 })
 
-const getChatSchema = ({ id, name, owner, createdAt, updatedAt }, user, typeName = 'createChat') => ({
-  __typename: "Mutation",
-  [typeName]: {
-    __typename: "Chat",
-    id: id || uuid(),
-    name: name || user.given_name,
-    owner: owner || user.id,
-    createdAt: createdAt || new Date(),
-    updatedAt: updatedAt || new Date(),
-  }
+const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
+  id: id || uuid(),
+  name: name || user.given_name,
+  owner: owner || user.id,
+  createdAt: createdAt || new Date(),
+  updatedAt: updatedAt || new Date(),
 })
 
-const getMessageSchema = ({ id, messageChatId, text, owner, type, createdAt, updatedAt }, chat, typeName = 'createMessage') => ({
-  __typename: "Mutation",
-  [typeName]: {
-    __typename: "Message",
-    id: id || uuid(),
-    text: text || 'Welcome',
-    type: type || 'ALL',
-    messageChatId: messageChatId || chat.id,
-    owner: owner || chat.owner,
-    createdAt: createdAt || new Date(),
-    updatedAt: updatedAt || new Date(),
-  }
+const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, updatedAt, chat }) => ({
+  id: id || uuid(),
+  text: text || 'Welcome',
+  type: type || 'ALL',
+  messageChatId: messageChatId || chat.id,
+  owner: owner || chat.owner,
+  createdAt: createdAt || new Date(),
+  updatedAt: updatedAt || new Date(),
 })
 
-const getChatMemberSchema = ({ id , createdAt, updatedAt }, chat, user, typeName = 'createChatMember') => ({
-  __typename: "Mutation",
-  [typeName]: {
-    __typename: "ChatMember",
-    id: id || uuid(),
-    chat,
-    member: user,
-    chatID: chat.id,
-    memberID: user.id,
-    createdAt: createdAt || new Date(),
-    updatedAt: updatedAt || new Date(),
-  }
+const getChatMemberInput = ({ id, chatID, memberID, createdAt, updatedAt, chat, user, owner }) => ({
+  id: id || uuid(),
+  chatID: chatID || chat.id,
+  memberID: memberID || user.id || owner,
+  createdAt: createdAt || new Date(),
+  // updatedAt: updatedAt || new Date(),
 })
 
 export const getCreateUser = async (attributes) => {
-  const user = await API.graphql(graphqlOperation(CreateUser, getUserSchema(attributes)))
-  const chat = await API.graphql(graphqlOperation( CreateChat, getInput(getChatSchema({}, user.data.createUser)) ))
-  const message = await API.graphql(graphqlOperation( CreateMessage, getInput(getMessageSchema({}, chat.data.createChat)) ))
-  const member = await API.graphql(graphqlOperation(CreateChatMember, getInput(getChatMemberSchema({}, chat.data.createChat, user.data.createUser)) ))
+  const userInput = getUserInput(attributes)
+  const user = await API.graphql(graphqlOperation(CreateUser, buildSchema(userInput, TYPE.User, TYPE.createUser) ))
+
+  const chatInput = getChatInput({user: user.data.createUser})
+  const chat = await API.graphql(graphqlOperation(CreateChat, buildSchema(chatInput, TYPE.Chat, TYPE.createChat) ))
+
+  const messageInput = getMessageInput({chat: chat.data.createChat})
+  const message = await API.graphql(graphqlOperation(CreateMessage, buildSchema(messageInput, TYPE.Message, TYPE.createMessage) ))
+
+  const memberInput = getChatMemberInput({chat: chat.data.createChat, user: user.data.createUser})
+  const member = await API.graphql(graphqlOperation(CreateChatMember, buildSchema(memberInput, TYPE.ChatMember, TYPE.createChatMember) ))
 
   console.log({user, chat, message, member})
   return user
@@ -379,102 +372,102 @@ export const getFetchChatMembers = (getChatMembers) => async (id) => {
   })
 }
 
-export const getAddUser = (createUser, owner) => async (user) => {
-  const optimisticResponse = getUserSchema(user, owner, TYPE.createUser)
+export const getAddUser = (createUser, owner) => async (attributes) => {
+  const userInput = getUserInput(attributes)
   return await createUser({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.createUser) },
+    variables: { input: userInput },
     context: { serializationKey: 'CREATE_USER' },
-    update: updater({ query: ListUsers, variables: { type: user.type } }, TYPE.createUser),
+    optimisticResponse: buildSchema(userInput, TYPE.User, TYPE.createUser),
+    update: updater({ query: ListUsers, variables: { type: attributes.type } }, TYPE.createUser),
   })
 }
 
-export const getEditUser = (updateUser, owner) => async (user) => {
-  const optimisticResponse = getUserSchema(user, owner, TYPE.updateUser)
+export const getEditUser = (updateUser, owner) => async (attributes) => {
+  const userInput = getUserInput(attributes)
   return await updateUser({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.updateUser) },
+    variables: { input: userInput },
     context: { serializationKey: 'UPDATE_USER' },
-    update: updater({ query: GetUser, variables: { id: user.id } }, TYPE.updateUser),
+    optimisticResponse: buildSchema(userInput, TYPE.User, TYPE.updateUser),
+    update: updater({ query: GetUser, variables: { id: attributes.id } }, TYPE.updateUser),
   })
 }
 
-export const getAddChat = (createChat, chat, owner) => async (user) => {
-  const optimisticResponse = getChatSchema(chat, user, TYPE.createChat)
+export const getAddChat = (createChat, chat, owner) => async (attributes) => {
+  const chatInput = getChatInput(attributes)
   return await createChat({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.createChat) },
+    variables: { input: chatInput },
     context: { serializationKey: 'CREATE_CHAT' },
+    optimisticResponse: buildSchema(chatInput, TYPE.Chat, TYPE.createChat),
     update: updater({ query: ListChats, variables: { owner } }, TYPE.createChat),
   })
 }
 
-export const getAddMessage = (createMessage, chat, owner) => async (message) => {
-  const optimisticResponse = getMessageSchema({...message, owner}, chat, TYPE.createMessage)
+export const getAddMessage = (createMessage, chat, owner) => async (attributes) => {
+  const messageInput = getMessageInput({...attributes, owner, chat})
   return await createMessage({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.createMessage) },
+    variables: { input: messageInput },
     context: { serializationKey: 'CREATE_MESSAGE' },
+    optimisticResponse: buildSchema(messageInput, TYPE.Message, TYPE.createMessage, {chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.createMessage),
   })
 }
 
-export const getEditMessage = (updateMessage, chat, owner) => async (message) => {
-  const optimisticResponse = getMessageSchema(message, chat, TYPE.updateMessage)
+export const getEditMessage = (updateMessage, chat, owner) => async (attributes) => {
+  const messageInput = getMessageInput({...attributes, owner, chat})
   return await updateMessage({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.updateMessage) },
+    variables: { input: messageInput },
     context: { serializationKey: 'UPDATE_MESSAGE' },
+    optimisticResponse: buildSchema(messageInput, TYPE.Message, TYPE.updateMessage, {chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.updateMessage),
   })
 }
 
-export const getRemoveMessage = (deleteMessage, chat, owner) => async (message) => {
-  const optimisticResponse = getMessageSchema(message, chat, TYPE.deleteMessage)
+export const getRemoveMessage = (deleteMessage, chat, owner) => async (attributes) => {
+  const messageInput = getMessageInput({...attributes, owner, chat})
   return await deleteMessage({
-    optimisticResponse,
-    variables: { input: { id: getInput(optimisticResponse, TYPE.deleteMessage).id } },
+    variables: { input: { id: messageInput.id } },
     context: { serializationKey: 'DELETE_MESSAGE' },
+    optimisticResponse: buildSchema(messageInput, TYPE.Message, TYPE.deleteMessage, {chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage),
   })
 }
 
-export const getRemoveMedical = (deleteMessage, chat, owner) => async (medical) => {
-  const optimisticResponse = getMessageSchema(medical, chat, TYPE.deleteMessage)
+export const getRemoveMedical = (deleteMessage, chat, owner) => async (attributes) => {
+  const medicalInput = getMessageInput({...attributes, owner, chat})
   return await deleteMessage({
-    optimisticResponse,
-    variables: { input: { id: getInput(optimisticResponse, TYPE.deleteMessage).id } },
+    variables: { input: { id: medicalInput.id } },
     context: { serializationKey: 'DELETE_MEDICAL' },
+    optimisticResponse: buildSchema(medicalInput, TYPE.Message, TYPE.deleteMessage, {chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage, TYPE.deleteMedical),
   })
 }
 
-export const getAddChatMember = (createChatMember, chat, owner) => async (user) => {
-  const optimisticResponse = getChatMemberSchema(chat, user, TYPE.createChatMember)
+export const getAddChatMember = (createChatMember, chat, owner) => async (attributes) => {
+  const memberInput = getChatMemberInput({chat, owner, user: attributes})
   return await createChatMember({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.createChatMember) },
+    variables: { input: memberInput },
     context: { serializationKey: 'CREATE_MEMBER' },
+    optimisticResponse: buildSchema(memberInput, TYPE.ChatMember, TYPE.createChatMember, {user: attributes, chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.createChatMember),
   })
 }
 
-export const getEditChatMember = (updateChatMember, chat, owner) => async (member) => {
-  const optimisticResponse = getChatMemberSchema(member, chat, TYPE.updateChatMember)
+export const getEditChatMember = (updateChatMember, chat, owner) => async (attributes) => {
+  const memberInput = getChatMemberInput({...attributes, chat, owner})
   return await updateChatMember({
-    optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.updateChatMember) },
-    context: { serializationKey: 'CREATE_MEMBER' },
+    variables: { input: memberInput },
+    context: { serializationKey: 'UPDATE_MEMBER' },
+    optimisticResponse: buildSchema(memberInput, TYPE.ChatMember, TYPE.updateChatMember, {...attributes, chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.updateChatMember),
   })
 }
 
-export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (member) => {
-  const optimisticResponse = getChatMemberSchema(member, chat, TYPE.deleteChatMember)
+export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (attributes) => {
+  const memberInput = getChatMemberInput({...attributes, chat, owner})
   return await deleteChatMember({
-    optimisticResponse,
-    variables: { input: { id: getInput(optimisticResponse, TYPE.deleteChatMember).id } },
+    variables: { input: { id: memberInput.id } },
     context: { serializationKey: 'DELETE_MEMBER' },
+    optimisticResponse: buildSchema(memberInput, TYPE.ChatMember, TYPE.deleteChatMember, {...attributes, chat}),
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteChatMember),
   })
 }
@@ -492,6 +485,10 @@ export const updateEditChatMember = (owner) => ({ document: OnUpdateChatMember, 
 export const updateRemoveChatMember = (owner) => ({ document: OnDeleteChatMember, variables: { owner }, updateQuery: subscriber(TYPE.onDeleteChatMember) })
 
 const actions = {
+  User: () => {},
+  Chat: () => {},
+  Message: () => {},
+  ChatMember: () => {},
   getUser: saveUser,
   listUsers: saveUsers,
   createUser: saveUsersItem,

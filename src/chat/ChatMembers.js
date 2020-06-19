@@ -8,7 +8,6 @@ const ChatMembers = ({ chat }) => {
   const [form, formActions] = useForm({ name: '' })
   const [members, memberActions] = useChatMember(chat.id, store.user.id)
   const { values } = form
-  console.log({members})
 
   const removeMember = async (member) => memberActions.removeMember(member)
 
@@ -26,7 +25,7 @@ const ChatMembers = ({ chat }) => {
           value={values.name}
         />
       </div>
-      {store?.user?.providers?.items.map(user => (
+      {values.name && store?.user?.providers?.items.map(user => (
         <div key={user.id}>
           <div style={{display: 'inline-block', marginRight: '20px'}}>
             <p style={{}}>{user.given_name}</p>

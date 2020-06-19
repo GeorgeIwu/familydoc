@@ -1,12 +1,11 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
 import { API, graphqlOperation } from 'aws-amplify'
-import { getUser, listUsers, getChat, listChats } from './queries'
+import { getUser, listUsers, getChat } from './queries'
 import { createUser, createChat, createMessage, createChatMember } from './mutations'
-import { onCreateUser, onUpdateUser, onCreateChat, onUpdateChat, onCreateMessage, onUpdateMessage, onDeleteMessage, onCreateChatMember, onUpdateChatMember, onDeleteChatMember } from './subscriptions'
+import { onCreateUser, onUpdateUser, onCreateMessage, onUpdateMessage, onDeleteMessage, onCreateChatMember, onUpdateChatMember, onDeleteChatMember } from './subscriptions'
 
 const GetChat = gql(getChat);
-const ListChats = gql(listChats);
 const GetUser = gql(getUser)
 const ListUsers = gql(listUsers)
 const CreateUser = gql(createUser)
@@ -15,8 +14,6 @@ const CreateMessage = gql(createMessage)
 const CreateChatMember = gql(createChatMember)
 const OnCreateUser = gql(onCreateUser)
 const OnUpdateUser = gql(onUpdateUser)
-const OnCreateChat = gql(onCreateChat)
-const OnUpdateChat = gql(onUpdateChat)
 const OnCreateMessage = gql(onCreateMessage)
 const OnUpdateMessage = gql(onUpdateMessage)
 const OnDeleteMessage = gql(onDeleteMessage)
@@ -97,42 +94,6 @@ const saveUsersItem = (store, user) => {
     newStore.listUsers.items = [ user, ...newStore.listUsers.items ]
   } else {
     newStore.listUsers.items[itemIndex] = user
-  }
-  return newStore
-}
-
-const saveChat = (store, chat) => {
-  let newStore = {...store}
-
-  if (!newStore.getChat) {
-    newStore = { ...newStore, getChat: chat }
-  } else {
-    newStore.getChat = { ...newStore.getChat, ...chat }
-  }
-  return newStore
-}
-
-const saveChats = (store, chats) => {
-  let newStore = {...store}
-
-  if (!newStore.listChats) {
-    newStore = { ...newStore, listChats: chats }
-  } else {
-    newStore.listChats.items = [ ...chats.items, ...newStore.listChats.items ]
-  }
-  return newStore
-}
-
-const saveChatsItem = (store, chat) => {
-  let newStore = saveChat(store, chat)
-  const itemIndex = newStore?.listChats?.items.findIndex(item => item.id === chat.id)
-
-  if (itemIndex === null) {
-    newStore = { ...newStore, listChats: { items: [chat] } }
-  } else if (itemIndex === -1) {
-    newStore.listChats.items = [ chat, ...newStore.listChats.items ]
-  } else {
-    newStore.listChats.items[itemIndex] = chat
   }
   return newStore
 }
@@ -332,14 +293,6 @@ export const getFetchUser = (getUser) => async (id) => {
   })
 }
 
-export const getFetchChats = (listChats, owner) => async () => {
-  return await listChats({
-    variables: { owner },
-    context: { serializationKey: 'LIST_CHATS' },
-    update: updater({ query: ListChats, variables: { owner } }, TYPE.listChats),
-  })
-}
-
 export const getFetchChat = (getChat) => async (id) => {
   return await getChat({
     variables: { id },
@@ -398,7 +351,7 @@ export const getAddChat = (createChat, chat, owner) => async (attributes) => {
     variables: { input: chatInput },
     context: { serializationKey: 'CREATE_CHAT' },
     optimisticResponse: buildSchema(chatInput, TYPE.Chat, TYPE.createChat),
-    update: updater({ query: ListChats, variables: { owner } }, TYPE.createChat),
+    // update: updater({ query: GetUser, variables: { owner } }, TYPE.createChat),
   })
 }
 
@@ -474,8 +427,6 @@ export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (att
 
 export const updateAddUser = () => ({ document: OnCreateUser, updateQuery: subscriber(TYPE.onCreateUser) })
 export const updateEditUser = () => ({ document: OnUpdateUser, updateQuery: subscriber(TYPE.onUpdateUser) })
-export const updateAddChat = (owner) => ({ document: OnCreateChat, variables: { owner }, updateQuery: subscriber(TYPE.onCreateChat) })
-export const updateEditChat = (owner) => ({ document: OnUpdateChat, variables: { owner }, updateQuery: subscriber(TYPE.onUpdateChat) })
 export const updateAddMessage = (owner) => ({ document: OnCreateMessage, variables: { owner }, updateQuery: subscriber(TYPE.onCreateMessage) })
 export const updateEditMessage = (owner) => ({ document: OnUpdateMessage, variables: { owner }, updateQuery: subscriber(TYPE.onUpdateMessage) })
 export const updateRemoveMessage = (owner) => ({ document: OnDeleteMessage, variables: { owner }, updateQuery: subscriber(TYPE.onDeleteMessage) })
@@ -495,15 +446,9 @@ const actions = {
   onCreateUser: saveUsersItem,
   updateUser: saveUser,
   onUpdateUser: saveUser,
-  getChat: saveChat,
-  listChats: saveChats,
   listMessages: saveMessages,
   listMedicals: saveMedicals,
   listChatMembers: saveChatMembers,
-  createChat: saveChatsItem,
-  updateChat: saveChat,
-  onCreateChat: saveChatsItem,
-  onUpdateChat: saveChat,
   createMessage: saveMessage,
   updateMessage: saveMessage,
   onCreateMessage: saveMessage,

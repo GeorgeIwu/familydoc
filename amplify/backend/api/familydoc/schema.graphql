@@ -20,13 +20,16 @@ type ChatMember
     id: ID!
     chatID: ID!
     memberID: ID!
+    status: StatusType!
+    priviledges: [MessageType]
     chat: Chat @connection(fields: ["chatID"])
     member: User! @connection(fields: ["memberID"])
     createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
 }
 
 type Chat
-  @model
+  @model(queries: null)
   @auth(rules: [ { allow: owner }, { allow: owner, ownerField: "members", operations: [read] } ]) {
     id: ID!
     name: String!
@@ -57,4 +60,10 @@ enum MessageType {
     VITAL
     FINANCE
     LAB
+}
+
+enum StatusType {
+    OFFERED
+    REQUESTED
+    APPROVED
 }

@@ -19,7 +19,10 @@ export const createUser = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -47,7 +50,10 @@ export const updateUser = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -75,7 +81,10 @@ export const deleteUser = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -94,6 +103,8 @@ export const createChatMember = /* GraphQL */ `
       id
       chatID
       memberID
+      status
+      priviledges
       chat {
         id
         name
@@ -123,6 +134,7 @@ export const createChatMember = /* GraphQL */ `
         owner
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -135,6 +147,8 @@ export const updateChatMember = /* GraphQL */ `
       id
       chatID
       memberID
+      status
+      priviledges
       chat {
         id
         name
@@ -164,6 +178,7 @@ export const updateChatMember = /* GraphQL */ `
         owner
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -176,6 +191,8 @@ export const deleteChatMember = /* GraphQL */ `
       id
       chatID
       memberID
+      status
+      priviledges
       chat {
         id
         name
@@ -205,6 +222,7 @@ export const deleteChatMember = /* GraphQL */ `
         owner
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -222,7 +240,10 @@ export const createChat = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -256,7 +277,10 @@ export const updateChat = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -290,7 +314,10 @@ export const deleteChat = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }

@@ -16,7 +16,10 @@ export const onCreateUser = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -41,7 +44,10 @@ export const onUpdateUser = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -66,7 +72,10 @@ export const onDeleteUser = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -82,6 +91,8 @@ export const onCreateChatMember = /* GraphQL */ `
       id
       chatID
       memberID
+      status
+      priviledges
       chat {
         id
         name
@@ -111,6 +122,7 @@ export const onCreateChatMember = /* GraphQL */ `
         owner
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -120,6 +132,8 @@ export const onUpdateChatMember = /* GraphQL */ `
       id
       chatID
       memberID
+      status
+      priviledges
       chat {
         id
         name
@@ -149,6 +163,7 @@ export const onUpdateChatMember = /* GraphQL */ `
         owner
       }
       createdAt
+      updatedAt
     }
   }
 `;
@@ -158,6 +173,8 @@ export const onDeleteChatMember = /* GraphQL */ `
       id
       chatID
       memberID
+      status
+      priviledges
       chat {
         id
         name
@@ -187,12 +204,13 @@ export const onDeleteChatMember = /* GraphQL */ `
         owner
       }
       createdAt
+      updatedAt
     }
   }
 `;
 export const onCreateChat = /* GraphQL */ `
-  subscription OnCreateChat {
-    onCreateChat {
+  subscription OnCreateChat($owner: String!) {
+    onCreateChat(owner: $owner) {
       id
       name
       owner
@@ -201,7 +219,10 @@ export const onCreateChat = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -222,8 +243,8 @@ export const onCreateChat = /* GraphQL */ `
   }
 `;
 export const onUpdateChat = /* GraphQL */ `
-  subscription OnUpdateChat {
-    onUpdateChat {
+  subscription OnUpdateChat($owner: String!) {
+    onUpdateChat(owner: $owner) {
       id
       name
       owner
@@ -232,7 +253,10 @@ export const onUpdateChat = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }
@@ -253,8 +277,8 @@ export const onUpdateChat = /* GraphQL */ `
   }
 `;
 export const onDeleteChat = /* GraphQL */ `
-  subscription OnDeleteChat {
-    onDeleteChat {
+  subscription OnDeleteChat($owner: String!) {
+    onDeleteChat(owner: $owner) {
       id
       name
       owner
@@ -263,7 +287,10 @@ export const onDeleteChat = /* GraphQL */ `
           id
           chatID
           memberID
+          status
+          priviledges
           createdAt
+          updatedAt
         }
         nextToken
       }

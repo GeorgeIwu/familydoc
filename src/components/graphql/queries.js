@@ -62,3 +62,37 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
+export const getChat = /* GraphQL */ `
+  query GetChat($id: ID!) {
+    getChat(id: $id) {
+      id
+      name
+      owner
+      members {
+        items {
+          id
+          chatID
+          memberID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      messages {
+        items {
+          id
+          text
+          owner
+          type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

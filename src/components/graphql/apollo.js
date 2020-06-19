@@ -322,11 +322,12 @@ export const getAddProvider = (actions, owner) => async (attributes) => {
   return createUser
 }
 
-export const getFetchUsers = (listUsers, owner) => async (name, type = 'RECEIVER') => {
-  return await listUsers({
+export const getFetchUsers = (listProviders, owner) => async (name, type = 'RECEIVER') => {
+  return await listProviders({
     variables: { filter: getUserFilter(name, type) },
     context: { serializationKey: 'LIST_USERS' },
-    update: updater({ query: ListUsers, variables: { owner } }, TYPE.listUsers),
+    // optimisticResponse: null,
+    update: updater({ query: ListUsers, variables: { type } }, TYPE.listUsers)
   })
 }
 
@@ -384,7 +385,7 @@ export const getAddUser = (createUser, owner) => async (user) => {
     optimisticResponse,
     variables: { input: getInput(optimisticResponse, TYPE.createUser) },
     context: { serializationKey: 'CREATE_USER' },
-    update: updater({ query: ListUsers, variables: { owner } }, TYPE.createUser),
+    update: updater({ query: ListUsers, variables: { type: user.type } }, TYPE.createUser),
   })
 }
 
@@ -394,7 +395,7 @@ export const getEditUser = (updateUser, owner) => async (user) => {
     optimisticResponse,
     variables: { input: getInput(optimisticResponse, TYPE.updateUser) },
     context: { serializationKey: 'UPDATE_USER' },
-    update: updater({ query: ListUsers, variables: { owner } }, TYPE.updateUser),
+    update: updater({ query: GetUser, variables: { id: user.id } }, TYPE.updateUser),
   })
 }
 
@@ -432,7 +433,7 @@ export const getRemoveMessage = (deleteMessage, chat, owner) => async (message) 
   const optimisticResponse = getMessageSchema(message, chat, TYPE.deleteMessage)
   return await deleteMessage({
     optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.deleteMessage) },
+    variables: { input: { id: getInput(optimisticResponse, TYPE.deleteMessage).id } },
     context: { serializationKey: 'DELETE_MESSAGE' },
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage),
   })
@@ -442,7 +443,7 @@ export const getRemoveMedical = (deleteMessage, chat, owner) => async (medical) 
   const optimisticResponse = getMessageSchema(medical, chat, TYPE.deleteMessage)
   return await deleteMessage({
     optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.deleteMessage) },
+    variables: { input: { id: getInput(optimisticResponse, TYPE.deleteMessage).id } },
     context: { serializationKey: 'DELETE_MEDICAL' },
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteMessage, TYPE.deleteMedical),
   })
@@ -472,7 +473,7 @@ export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (mem
   const optimisticResponse = getChatMemberSchema(member, chat, TYPE.deleteChatMember)
   return await deleteChatMember({
     optimisticResponse,
-    variables: { input: getInput(optimisticResponse, TYPE.deleteChatMember) },
+    variables: { input: { id: getInput(optimisticResponse, TYPE.deleteChatMember).id } },
     context: { serializationKey: 'DELETE_MEMBER' },
     update: updater({ query: GetChat, variables: { id: chat.id } }, TYPE.deleteChatMember),
   })
@@ -494,8 +495,8 @@ const actions = {
   getUser: saveUser,
   listUsers: saveUsers,
   createUser: saveUsersItem,
-  updateUser: saveUser,
   onCreateUser: saveUsersItem,
+  updateUser: saveUser,
   onUpdateUser: saveUser,
   getChat: saveChat,
   listChats: saveChats,

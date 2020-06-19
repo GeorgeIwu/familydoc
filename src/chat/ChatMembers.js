@@ -25,7 +25,7 @@ const ChatMembers = ({ chat }) => {
           value={values.name}
         />
       </div>
-      {store?.providers?.items.map(user => (
+      {store?.user?.providers?.items.map(user => (
         <div key={user.id}>
           <div style={{display: 'inline-block', marginRight: '20px'}}>
             <p style={{}}>{user.given_name}</p>

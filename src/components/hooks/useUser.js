@@ -22,7 +22,7 @@ const getUserActions = (actions, owner) => ({
   addReceiver: Actions.getAddReceiver(actions, owner),
   editUser: Actions.getEditUser(actions.updateUser, owner),
   disableUser: Actions.getEditUser(actions.updateUser, owner),
-  searchProviders: debounce(async (name) => Actions.getFetchUsers(actions.listProviders, owner)(name, 'PROVIDER'), 250),
+  searchProviders: debounce(async (name) => Actions.getFetchUsers(actions.listProviders, owner)(name, 'PROVIDER'), 100),
   searchReceivers: debounce(async (name) => Actions.getFetchUsers(actions.listReceivers, owner)(name, 'RECEIVER'), 250),
 })
 
@@ -38,6 +38,7 @@ const useUser = (init = {}, chatPage = '') => {
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
   const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth.data && auth.data.attributes && auth.data.attributes.sub }})
 
+  console.log({providers})
   useEffect(() => {
    subscribeToMore(Actions.updateAddUser())
   }, [user, subscribeToMore])
@@ -59,7 +60,7 @@ const useUser = (init = {}, chatPage = '') => {
   }, [loading, data, auth]);
 
   const status = auth.data && auth.data.attributes ? 'active' : auth.data
-  const userData = { ...user, providers, receivers, status }
+  const userData = { ...user, status, providers: providers?.listUsers, receivers: receivers?.listUsers }
   const userActions =  { ...getUserActions({ listProviders, listReceivers, updateUser, createUser, createChat, createMessage, createChatMember }, user?.id), ...authActions(dispatch) }
 
   return [userData, userActions]

@@ -75,6 +75,15 @@ export const getChat = /* GraphQL */ `
           memberID
           status
           priviledges
+          member {
+            id
+            type
+            email
+            username
+            phone_number
+            family_name
+            given_name
+          }
           createdAt
           updatedAt
         }

@@ -6,6 +6,7 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(owner: $owner) {
       id
       type
+      owner
       email
       username
       phone_number
@@ -25,7 +26,6 @@ export const onCreateUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -34,6 +34,7 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(owner: $owner) {
       id
       type
+      owner
       email
       username
       phone_number
@@ -53,7 +54,6 @@ export const onUpdateUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -62,6 +62,7 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(owner: $owner) {
       id
       type
+      owner
       email
       username
       phone_number
@@ -81,7 +82,6 @@ export const onDeleteUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -109,6 +109,7 @@ export const onCreateChatMember = /* GraphQL */ `
       member {
         id
         type
+        owner
         email
         username
         phone_number
@@ -119,7 +120,6 @@ export const onCreateChatMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt
@@ -150,6 +150,7 @@ export const onUpdateChatMember = /* GraphQL */ `
       member {
         id
         type
+        owner
         email
         username
         phone_number
@@ -160,7 +161,6 @@ export const onUpdateChatMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt
@@ -191,6 +191,7 @@ export const onDeleteChatMember = /* GraphQL */ `
       member {
         id
         type
+        owner
         email
         username
         phone_number
@@ -201,7 +202,6 @@ export const onDeleteChatMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt

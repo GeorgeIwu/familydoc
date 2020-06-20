@@ -36,7 +36,7 @@ const useUser = (init = {}, nextToken = '') => {
   const [listProviders, { data: providers }] = useLazyQuery(ListUsers)
   const [listReceivers, { data: receivers }] = useLazyQuery(ListUsers)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
-  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth?.data?.attributes?.sub }})
+  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: user?.id || auth?.data?.attributes?.sub }})
 
   useEffect(() => {
    subscribeToMore(Actions.updateAddUser())

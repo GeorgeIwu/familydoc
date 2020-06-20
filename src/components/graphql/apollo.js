@@ -279,7 +279,9 @@ export const getAddReceiver = (actions, provider) => async (attributes) => {
 }
 
 export const getAddProvider = (actions) => async (attributes) => {
+  console.log({attributes})
   const { data: { createUser: user } } = await getAddUser(actions.createUser)({ type: 'PROVIDER', ...attributes })
+  console.log({user})
   const { data: { createChat: chat } } = await getAddChat(actions.createChat, user)()
   const { data: { createMessage: message } } = await getAddMessage(actions.createMessage, chat)({ type: 'ALL', text: 'Welcome' })
 

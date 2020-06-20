@@ -1,9 +1,8 @@
 type User
   @model
-  @auth(rules: [ { allow: owner, ownerField: "owner", operations: [create, update, delete] } ]) {
+  @auth(rules: [ { allow: owner, ownerField: "id", operations: [create, update, delete] } ]) {
     id: ID!
     type: String!
-    owner: String!
     email: String!
     username: String!
     phone_number: String!
@@ -46,10 +45,9 @@ type Chat
 
 type Message
   @model(queries: null)
-  @auth(rules: [{ allow: owner, ownerField: "owner", operations: [create, update, delete] }]) {
+  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
     id: ID!
     text: String
-    owner: String
     type: MessageType!
     chat: Chat! @connection
     createdAt: AWSDateTime!

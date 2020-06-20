@@ -205,21 +205,17 @@ const purgeChatMember = (store, member) => {
   return newStore
 }
 
-const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => {
-  const ID = id || sub || uuid()
-  return {
-    id: ID,
+const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => ({
     email,
-    owner: ID,
     given_name,
     family_name,
     phone_number,
     type: type || nickname,
+    id:  id || sub || uuid(),
     username: username || email,
     createdAt: createdAt || new Date(),
     updatedAt: updatedAt || new Date(),
-  }
-}
+})
 
 const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   id: id || uuid(),
@@ -229,12 +225,11 @@ const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   updatedAt: updatedAt || new Date(),
 })
 
-const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, updatedAt, chat }) => ({
+const getMessageInput = ({ id, messageChatId, text, type, createdAt, updatedAt, chat }) => ({
   id: id || uuid(),
   text: text || 'Welcome',
   type: type || 'ALL',
   messageChatId: messageChatId || chat.id,
-  owner: owner || chat.owner,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),
 })
@@ -257,6 +252,7 @@ export const getCreateUser = async (attributes) => {
   const chat = await API.graphql(graphqlOperation(CreateChat, {input: chatInput}))
 
   const messageInput = getMessageInput({chat: chat.data.createChat})
+  console.log({chat, user, messageInput})
   const message = await API.graphql(graphqlOperation(CreateMessage, {input: messageInput}))
 
   const memberInput = getChatMemberInput({chat: chat.data.createChat, user: user.data.createUser})

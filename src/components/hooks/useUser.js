@@ -17,16 +17,16 @@ const CreateChat = gql(createChat)
 const CreateMessage = gql(createMessage)
 const CreateChatMember = gql(createChatMember)
 
-const getUserActions = (actions, owner) => ({
-  addProvider: Actions.getAddProvider(actions, owner),
-  addReceiver: Actions.getAddReceiver(actions, owner),
-  editUser: Actions.getEditUser(actions.updateUser, owner),
-  disableUser: Actions.getEditUser(actions.updateUser, owner),
-  searchProviders: debounce(async (name) => Actions.getFetchUsers(actions.listProviders, owner)(name, 'PROVIDER'), 100),
-  searchReceivers: debounce(async (name) => Actions.getFetchUsers(actions.listReceivers, owner)(name, 'RECEIVER'), 250),
+const getUserActions = (actions, provider) => ({
+  addProvider: Actions.getAddProvider(actions),
+  addReceiver: Actions.getAddReceiver(actions, provider),
+  editUser: Actions.getEditUser(actions.updateUser),
+  disableUser: Actions.getEditUser(actions.updateUser),
+  searchProviders: debounce(async (name) => Actions.getFetchUsers(actions.listProviders)(name, 'PROVIDER'), 100),
+  searchReceivers: debounce(async (name) => Actions.getFetchUsers(actions.listReceivers)(name, 'RECEIVER'), 250),
 })
 
-const useUser = (init = {}, chatPage = '') => {
+const useUser = (init = {}, nextToken = '') => {
   const [user, setUser] = useState(init)
   const [updateUser] = useMutation(UpdateUser)
   const [createUser] = useMutation(CreateUser)
@@ -36,7 +36,7 @@ const useUser = (init = {}, chatPage = '') => {
   const [listProviders, { data: providers }] = useLazyQuery(ListUsers)
   const [listReceivers, { data: receivers }] = useLazyQuery(ListUsers)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
-  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: user?.id || auth?.data?.attributes?.sub }})
+  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: auth?.data?.attributes?.sub }})
 
   useEffect(() => {
    subscribeToMore(Actions.updateAddUser())

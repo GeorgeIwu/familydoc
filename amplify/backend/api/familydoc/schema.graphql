@@ -46,7 +46,7 @@ type Chat
 
 type Message
   @model(queries: null)
-  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+  @auth(rules: [{ allow: owner, ownerField: "owner", operations: [create, update, delete] }]) {
     id: ID!
     text: String
     owner: String

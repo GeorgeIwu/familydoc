@@ -17,13 +17,6 @@ export const getUser = /* GraphQL */ `
           id
           chatID
           memberID
-          chat {
-            id
-            name
-            owner
-            createdAt
-            updatedAt
-          }
           status
           priviledges
           createdAt
@@ -73,15 +66,6 @@ export const getChat = /* GraphQL */ `
           id
           chatID
           memberID
-          member {
-            id
-            type
-            email
-            username
-            phone_number
-            family_name
-            given_name
-          }
           status
           priviledges
           createdAt

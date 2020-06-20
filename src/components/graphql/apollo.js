@@ -205,18 +205,21 @@ const purgeChatMember = (store, member) => {
   return newStore
 }
 
-const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => ({
-  email,
-  given_name,
-  family_name,
-  phone_number,
-  id: id || sub || uuid(),
-  owner: id || sub || uuid(),
-  type: type || nickname,
-  username: username || email,
-  createdAt: createdAt || new Date(),
-  updatedAt: updatedAt || new Date(),
-})
+const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => {
+  const ID = id || sub || uuid()
+  return {
+    id: ID,
+    email,
+    owner: ID,
+    given_name,
+    family_name,
+    phone_number,
+    type: type || nickname,
+    username: username || email,
+    createdAt: createdAt || new Date(),
+    updatedAt: updatedAt || new Date(),
+  }
+}
 
 const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   id: id || uuid(),
@@ -279,9 +282,7 @@ export const getAddReceiver = (actions, provider) => async (attributes) => {
 }
 
 export const getAddProvider = (actions) => async (attributes) => {
-  console.log({attributes})
   const { data: { createUser: user } } = await getAddUser(actions.createUser)({ type: 'PROVIDER', ...attributes })
-  console.log({user})
   const { data: { createChat: chat } } = await getAddChat(actions.createChat, user)()
   const { data: { createMessage: message } } = await getAddMessage(actions.createMessage, chat)({ type: 'ALL', text: 'Welcome' })
 

@@ -29,12 +29,7 @@ type ChatMember
 }
 
 type Chat
-  @model
-  @auth(rules: [
-    { allow: owner },
-    { allow: owner, ownerField: "members", operations: [read] }
-    { allow: owner, ownerField: "owner", operations: [create, update, delete] },
-  ]) {
+  @model {
     id: ID!
     name: String!
     owner: String!

@@ -203,8 +203,8 @@ export const onDeleteChatMember = /* GraphQL */ `
   }
 `;
 export const onCreateChat = /* GraphQL */ `
-  subscription OnCreateChat($owner: String!) {
-    onCreateChat(owner: $owner) {
+  subscription OnCreateChat {
+    onCreateChat {
       id
       name
       owner
@@ -237,8 +237,8 @@ export const onCreateChat = /* GraphQL */ `
   }
 `;
 export const onUpdateChat = /* GraphQL */ `
-  subscription OnUpdateChat($owner: String!) {
-    onUpdateChat(owner: $owner) {
+  subscription OnUpdateChat {
+    onUpdateChat {
       id
       name
       owner
@@ -271,8 +271,8 @@ export const onUpdateChat = /* GraphQL */ `
   }
 `;
 export const onDeleteChat = /* GraphQL */ `
-  subscription OnDeleteChat($owner: String!) {
-    onDeleteChat(owner: $owner) {
+  subscription OnDeleteChat {
+    onDeleteChat {
       id
       name
       owner

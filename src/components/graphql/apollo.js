@@ -252,7 +252,6 @@ export const getCreateUser = async (attributes) => {
   const chat = await API.graphql(graphqlOperation(CreateChat, {input: chatInput}))
 
   const messageInput = getMessageInput({chat: chat.data.createChat})
-  console.log({chat, user, messageInput})
   const message = await API.graphql(graphqlOperation(CreateMessage, {input: messageInput}))
 
   const memberInput = getChatMemberInput({chat: chat.data.createChat, user: user.data.createUser})

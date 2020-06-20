@@ -9,7 +9,6 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -40,7 +39,6 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -71,7 +69,6 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -121,7 +118,6 @@ export const createChatMember = /* GraphQL */ `
       member {
         id
         type
-        owner
         email
         username
         phone_number
@@ -165,7 +161,6 @@ export const updateChatMember = /* GraphQL */ `
       member {
         id
         type
-        owner
         email
         username
         phone_number
@@ -209,7 +204,6 @@ export const deleteChatMember = /* GraphQL */ `
       member {
         id
         type
-        owner
         email
         username
         phone_number
@@ -251,10 +245,10 @@ export const createChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -288,10 +282,10 @@ export const updateChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -325,10 +319,10 @@ export const deleteChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -345,7 +339,6 @@ export const createMessage = /* GraphQL */ `
     createMessage(input: $input, condition: $condition) {
       id
       text
-      owner
       type
       chat {
         id
@@ -362,6 +355,7 @@ export const createMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -373,7 +367,6 @@ export const updateMessage = /* GraphQL */ `
     updateMessage(input: $input, condition: $condition) {
       id
       text
-      owner
       type
       chat {
         id
@@ -390,6 +383,7 @@ export const updateMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -401,7 +395,6 @@ export const deleteMessage = /* GraphQL */ `
     deleteMessage(input: $input, condition: $condition) {
       id
       text
-      owner
       type
       chat {
         id
@@ -418,6 +411,7 @@ export const deleteMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;

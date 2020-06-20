@@ -6,7 +6,6 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -46,7 +45,6 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         type
-        owner
         email
         username
         phone_number
@@ -93,10 +91,10 @@ export const getChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }

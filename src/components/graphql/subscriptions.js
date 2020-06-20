@@ -2,11 +2,10 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($owner: String!) {
-    onCreateUser(owner: $owner) {
+  subscription OnCreateUser($id: String!) {
+    onCreateUser(id: $id) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -30,11 +29,10 @@ export const onCreateUser = /* GraphQL */ `
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($owner: String!) {
-    onUpdateUser(owner: $owner) {
+  subscription OnUpdateUser($id: String!) {
+    onUpdateUser(id: $id) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -58,11 +56,10 @@ export const onUpdateUser = /* GraphQL */ `
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($owner: String!) {
-    onDeleteUser(owner: $owner) {
+  subscription OnDeleteUser($id: String!) {
+    onDeleteUser(id: $id) {
       id
       type
-      owner
       email
       username
       phone_number
@@ -109,7 +106,6 @@ export const onCreateChatMember = /* GraphQL */ `
       member {
         id
         type
-        owner
         email
         username
         phone_number
@@ -150,7 +146,6 @@ export const onUpdateChatMember = /* GraphQL */ `
       member {
         id
         type
-        owner
         email
         username
         phone_number
@@ -191,7 +186,6 @@ export const onDeleteChatMember = /* GraphQL */ `
       member {
         id
         type
-        owner
         email
         username
         phone_number
@@ -230,10 +224,10 @@ export const onCreateChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -264,10 +258,10 @@ export const onUpdateChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -298,10 +292,10 @@ export const onDeleteChat = /* GraphQL */ `
         items {
           id
           text
-          owner
           type
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -315,7 +309,6 @@ export const onCreateMessage = /* GraphQL */ `
     onCreateMessage(owner: $owner) {
       id
       text
-      owner
       type
       chat {
         id
@@ -332,6 +325,7 @@ export const onCreateMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -340,7 +334,6 @@ export const onUpdateMessage = /* GraphQL */ `
     onUpdateMessage(owner: $owner) {
       id
       text
-      owner
       type
       chat {
         id
@@ -357,6 +350,7 @@ export const onUpdateMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -365,7 +359,6 @@ export const onDeleteMessage = /* GraphQL */ `
     onDeleteMessage(owner: $owner) {
       id
       text
-      owner
       type
       chat {
         id
@@ -382,6 +375,7 @@ export const onDeleteMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;

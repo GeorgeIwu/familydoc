@@ -237,7 +237,7 @@ const getMessageInput = ({ id, messageChatId, text, type, createdAt, updatedAt, 
 const getChatMemberInput = ({ id, chatID, memberID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
   id: id || uuid(),
   chatID: chatID || chat.id,
-  memberID: memberID || user.id,
+  memberID: memberID || user.memberID || user.id,
   status: status || 'APPROVED',
   priviledges: priviledges || ['ALL'],
   createdAt: createdAt || new Date(),

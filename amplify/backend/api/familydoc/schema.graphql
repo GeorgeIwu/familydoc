@@ -1,8 +1,5 @@
 type User
-  @model
-  @auth(rules: [
-    { allow: public, provider: userPools, operations: [read] }
-    { allow: owner, ownerField: "id", operations: [create, update, delete] } ]) {
+  @model {
     id: ID!
     type: String!
     email: String!

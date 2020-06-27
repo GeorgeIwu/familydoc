@@ -32,12 +32,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"familydoc0cbdd99a",
+						"familydoc64500400",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"familydoc0cbdd99a",
+									"familydoc64500400",
 									"-",
 									{
 										"Ref": "env"
@@ -96,7 +96,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-familydoc-dev-155346-deployment",
-					"S3Key": "amplify-builds/familydoc0cbdd99a-6d3478486a667a56794a-build.zip"
+					"S3Key": "amplify-builds/familydoc64500400-4751584a4c74666a5038-build.zip"
 				}
 			}
 		},
@@ -106,12 +106,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"familydocLambdaRole86abaf3e",
+						"familydocLambdaRole1b707c6e",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"familydocLambdaRole86abaf3e",
+									"familydocLambdaRole1b707c6e",
 									"-",
 									{
 										"Ref": "env"

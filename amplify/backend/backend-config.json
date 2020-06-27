@@ -22,5 +22,21 @@
 				}
 			}
 		}
+	},
+	"function": {
+		"familydoceb9c7987": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"dependsOn": [
+				{
+					"category": "api",
+					"resourceName": "familydoc",
+					"attributes": [
+						"GraphQLAPIIdOutput"
+					]
+				}
+			]
+		}
 	}
 }

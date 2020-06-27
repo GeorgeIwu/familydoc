@@ -23,6 +23,7 @@ const useMessage = (chatId = '', nextToken = '') => {
   const [updateMessage] = useMutation(UpdateMessage)
   const [deleteMessage] = useMutation(DeleteMessage)
   const { subscribeToMore, data: chat } = useQuery(GetChat, {variables: { id: chatId }} )
+  console.log({chatId, chat})
 
   useEffect(() => {
     subscribeToMore(Actions.updateAddMessage(chat?.owner))
@@ -30,7 +31,7 @@ const useMessage = (chatId = '', nextToken = '') => {
     subscribeToMore(Actions.updateRemoveMessage(chat?.owner))
   }, [chat, subscribeToMore])
 
-  const messageData = chat && chat.getChat && chat.getChat.messages
+  const messageData = chat?.getChat?.messages
   const messageActions = getMessageActions({ createMessage, updateMessage, deleteMessage }, chat?.getChat)
   return [messageData, messageActions]
 }

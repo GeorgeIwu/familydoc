@@ -30,8 +30,8 @@ const useChatMember = (chatId = '', nextToken = '') => {
     subscribeToMore(Actions.updateRemoveChatMember(chat?.owner))
   }, [chat, subscribeToMore])
 
-  const chatMemberData = chat && chat.getChat && chat.getChat.members
-  const chatMemberActions = getChatMemberActions({ createChatMember, updateChatMember, deleteChatMember }, chat.getChat)
+  const chatMemberData = chat?.getChat?.members
+  const chatMemberActions = getChatMemberActions({ createChatMember, updateChatMember, deleteChatMember }, chat?.getChat)
   return [chatMemberData, chatMemberActions]
 }
 

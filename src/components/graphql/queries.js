@@ -20,6 +20,13 @@ export const getUser = /* GraphQL */ `
           priviledges
           createdAt
           updatedAt
+          chat {
+            id
+            name
+            owner
+            createdAt
+            updatedAt
+          }
         }
         nextToken
       }
@@ -68,6 +75,15 @@ export const getChat = /* GraphQL */ `
           priviledges
           createdAt
           updatedAt
+          member {
+            id
+            type
+            email
+            username
+            phone_number
+            family_name
+            given_name
+          }
         }
         nextToken
       }

@@ -1,9 +1,6 @@
 {
     "permissions": {
         "storage": {
-            "Chat:@model(appsync)": [
-                "read"
-            ],
             "Message:@model(appsync)": [
                 "read"
             ]

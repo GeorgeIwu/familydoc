@@ -24,7 +24,7 @@
 		}
 	},
 	"function": {
-		"familydoceb9c7987": {
+		"familydoc0cbdd99a": {
 			"build": true,
 			"providerPlugin": "awscloudformation",
 			"service": "Lambda",

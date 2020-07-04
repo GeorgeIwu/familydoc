@@ -33,7 +33,7 @@ type Chat
     name: String!
     owner: String!
     members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
-    messages: [Message] @connection
+    messages: [Message] @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
@@ -44,7 +44,7 @@ type Message
     id: ID!
     text: String
     type: MessageType!
-    chat: Chat! @connection
+    chat: Chat! @connection(name: "ChatMessages")
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }

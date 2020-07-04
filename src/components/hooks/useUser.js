@@ -50,7 +50,7 @@ const useUser = (init = {}, nextToken = '') => {
 
   useEffect(() => {
     (async function() {
-      if (auth?.data?.attributes && !loading && !data.getUser) {
+      if (auth?.data?.attributes && !loading && !data?.getUser) {
         const newuser = await Actions.getCreateUser(auth.data.attributes)
         setUser(newuser.data.createUser)
       }

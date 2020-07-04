@@ -112,6 +112,7 @@ export const createChatMember = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }
@@ -155,6 +156,7 @@ export const updateChatMember = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }
@@ -198,6 +200,7 @@ export const deleteChatMember = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }
@@ -252,6 +255,7 @@ export const createChat = /* GraphQL */ `
         }
         nextToken
       }
+      massages
       createdAt
       updatedAt
     }
@@ -289,6 +293,7 @@ export const updateChat = /* GraphQL */ `
         }
         nextToken
       }
+      massages
       createdAt
       updatedAt
     }
@@ -326,6 +331,7 @@ export const deleteChat = /* GraphQL */ `
         }
         nextToken
       }
+      massages
       createdAt
       updatedAt
     }
@@ -350,6 +356,7 @@ export const createMessage = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }
@@ -378,6 +385,7 @@ export const updateMessage = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }
@@ -406,6 +414,7 @@ export const deleteMessage = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }

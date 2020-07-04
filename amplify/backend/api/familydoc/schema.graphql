@@ -34,6 +34,7 @@ type Chat
     owner: String!
     members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
     messages: [Message] @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
+    massages: String @function(name: "familydocf7331a63-${env}")
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }

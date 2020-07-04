@@ -83,6 +83,32 @@
 						},
 						"API_FAMILYDOC_GRAPHQLAPIIDOUTPUT": {
 							"Ref": "apifamilydocGraphQLAPIIdOutput"
+						},
+						"API_FAMILYDOC_CHATMEMBERTABLE_NAME": {
+							"Fn::ImportValue": {
+								"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+							}
+						},
+						"API_FAMILYDOC_CHATMEMBERTABLE_ARN": {
+							"Fn::Join": [
+								"",
+								[
+									"arn:aws:dynamodb:",
+									{
+										"Ref": "AWS::Region"
+									},
+									":",
+									{
+										"Ref": "AWS::AccountId"
+									},
+									":table/",
+									{
+										"Fn::ImportValue": {
+											"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+										}
+									}
+								]
+							]
 						}
 					}
 				},
@@ -96,7 +122,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-familydoc-dev-155346-deployment",
-					"S3Key": "amplify-builds/familydocf7331a63-5933354169592f4c7551-build.zip"
+					"S3Key": "amplify-builds/familydocf7331a63-676d6e7041464f344a4e-build.zip"
 				}
 			}
 		},
@@ -197,6 +223,118 @@
 				"PolicyDocument": {
 					"Version": "2012-10-17",
 					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:Get*",
+								"dynamodb:BatchGetItem",
+								"dynamodb:List*",
+								"dynamodb:Describe*",
+								"dynamodb:Scan",
+								"dynamodb:Query"
+							],
+							"Resource": [
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/",
+											{
+												"Fn::ImportValue": {
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+												}
+											}
+										]
+									]
+								},
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/",
+											{
+												"Fn::ImportValue": {
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+												}
+											},
+											"/index/*"
+										]
+									]
+								}
+							]
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:Get*",
+								"dynamodb:BatchGetItem",
+								"dynamodb:List*",
+								"dynamodb:Describe*",
+								"dynamodb:Scan",
+								"dynamodb:Query"
+							],
+							"Resource": [
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/",
+											{
+												"Fn::ImportValue": {
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+												}
+											}
+										]
+									]
+								},
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/",
+											{
+												"Fn::ImportValue": {
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+												}
+											},
+											"/index/*"
+										]
+									]
+								}
+							]
+						},
 						{
 							"Effect": "Allow",
 							"Action": [

@@ -98,6 +98,7 @@ export const getChat = /* GraphQL */ `
         }
         nextToken
       }
+      massages
       createdAt
       updatedAt
     }
@@ -120,6 +121,7 @@ export const listChats = /* GraphQL */ `
         messages {
           nextToken
         }
+        massages
         createdAt
         updatedAt
       }

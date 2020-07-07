@@ -1,13 +1,43 @@
-type User
-  @model {
+enum StatusType {
+  OFFERED
+  REQUESTED
+  APPROVED
+}
+
+enum MessageType {
+  ALL
+  TEAM
+  DRUG
+  SCAN
+  VITAL
+  FINANCE
+  LAB
+}
+
+type ModelMessageConnection {
+  nextToken: String
+  items: [Message]
+}
+
+type Message
+  @model(queries: null)
+  @key(name: "byMessageChatId", fields: ["messageChatId"])
+  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
     id: ID!
-    type: String!
-    email: String!
-    username: String!
-    phone_number: String!
-    family_name: String!
-    given_name: String!
-    chats: [ChatMember] @connection(keyName: "byMember", fields: ["id"])
+    text: String
+    messageChatId: ID!
+    type: MessageType!
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+}
+
+type Chat
+  @model(queries: { get: "getChat" }) {
+    id: ID!
+    name: String!
+    owner: String!
+    members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
+    messages(nextToken: String): ModelMessageConnection @function(name: "familydocf7331a63-${env}")
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
@@ -27,53 +57,19 @@ type ChatMember
     updatedAt: AWSDateTime!
 }
 
-type Chat
+type User
   @model {
     id: ID!
-    name: String!
-    owner: String!
-    members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
-    messages: [Message] @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
-    massages: MessagesConnection @function(name: "familydocf7331a63-${env}")
+    type: String!
+    email: String!
+    username: String!
+    phone_number: String!
+    family_name: String!
+    given_name: String!
+    chats: [ChatMember] @connection(keyName: "byMember", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
 
-type Message
-  @model(queries: null)
-  @key(name: "byMessageChatId", fields: ["messageChatId"])
-  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
-    id: ID!
-    text: String
-    messageChatId: ID!
-    type: MessageType!
-    chat: Chat! @connection(name: "ChatMessages")
-    createdAt: AWSDateTime!
-    updatedAt: AWSDateTime!
-}
 
-type MessagesConnection {
-  nextToken: String
-  items: [Message]
-}
 
-enum MessageType {
-    ALL
-    TEAM
-    DRUG
-    SCAN
-    VITAL
-    FINANCE
-    LAB
-}
-
-enum StatusType {
-    OFFERED
-    REQUESTED
-    APPROVED
-}
-
-type Query {
-  getPost(id: ID!): Post
-  listPosts(filter: ModelPostFilterInput, limit: Int, nextToken: String): ModelPostConnection
-}

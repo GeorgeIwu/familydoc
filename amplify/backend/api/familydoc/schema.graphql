@@ -34,20 +34,27 @@ type Chat
     owner: String!
     members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
     messages: [Message] @connection(name: "ChatMessages", sortField: "createdAt", limit: 50)
-    massages: String @function(name: "familydocf7331a63-${env}")
+    massages: MessagesConnection @function(name: "familydocf7331a63-${env}")
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
 
 type Message
   @model(queries: null)
+  @key(name: "byMessageChatId", fields: ["messageChatId"])
   @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
     id: ID!
     text: String
+    messageChatId: ID!
     type: MessageType!
     chat: Chat! @connection(name: "ChatMessages")
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
+}
+
+type MessagesConnection {
+  nextToken: String
+  items: [Message]
 }
 
 enum MessageType {
@@ -64,4 +71,9 @@ enum StatusType {
     OFFERED
     REQUESTED
     APPROVED
+}
+
+type Query {
+  getPost(id: ID!): Post
+  listPosts(filter: ModelPostFilterInput, limit: Int, nextToken: String): ModelPostConnection
 }

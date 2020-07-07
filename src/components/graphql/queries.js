@@ -61,7 +61,9 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getChat = /* GraphQL */ `
-  query GetChat($id: ID!) {
+  query GetChat(
+    $id: ID!
+  ) {
     getChat(id: $id) {
       id
       name
@@ -98,7 +100,17 @@ export const getChat = /* GraphQL */ `
         }
         nextToken
       }
-      massages
+      massages {
+        items {
+          id
+          text
+          type
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -118,10 +130,6 @@ export const listChats = /* GraphQL */ `
         members {
           nextToken
         }
-        messages {
-          nextToken
-        }
-        massages
         createdAt
         updatedAt
       }

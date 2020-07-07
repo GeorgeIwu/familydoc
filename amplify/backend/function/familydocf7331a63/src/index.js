@@ -21,22 +21,41 @@ const memberTable = process.env.API_FAMILYDOC_CHATMEMBERTABLE_NAME
 const messageTable = process.env.API_FAMILYDOC_MESSAGETABLE_NAME
 
 exports.handler = async (event, context) => {
-    var params = {
-        KeyConditionExpression: '#chatID = :chatID AND #memberID = :memberID',
-        ExpressionAttributeNames: {
-            "#chatID": "chatID",
-            "#memberID": "memberID"
-        },
+    let params = {
+        TableName: memberTable,
+        IndexName: "byChat",
+        KeyConditionExpression: 'chatID = :chatID AND memberID = :memberID',
         ExpressionAttributeValues: {
             ':chatID': event.source.id,
             ':memberID': event.identity.sub
         },
-        TableName: memberTable
     };
-    var result = await dbClient.query(params).promise()
-    console.log({event, context, result})
+    let result = await dbClient.query(params).promise()
 
+    const priviledges = result.Items[0].priviledges
+    const priveledgesObject = priviledges.reduce((obj, value, i) => {
+        obj[":priviledge"+i+""] = value
+        return obj
+    }, {})
 
-    return 'Obins'
+    params = {
+        TableName: messageTable,
+        IndexName: "byMessageChatId",
+        KeyConditionExpression: 'messageChatId = :chatID',
+        FilterExpression: "#type in ("+Object.keys(priveledgesObject).toString()+ ")",
+        ExpressionAttributeNames: { "#type": "type" },
+        ExpressionAttributeValues: {
+            ...priveledgesObject,
+            ':chatID': event.source.id,
+        },
+    };
+    result = await dbClient.query(params).promise()
+
+    const messages = {
+        nextToken: '2',
+        items: result.Items
+    }
+    console.log({messages})
+    return messages
 };
 

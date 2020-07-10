@@ -225,10 +225,11 @@ const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   updatedAt: updatedAt || new Date(),
 })
 
-const getMessageInput = ({ id, messageChatId, text, type, createdAt, updatedAt, chat }) => ({
+const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, updatedAt, chat }) => ({
   id: id || uuid(),
-  text: text || 'Welcome',
   type: type || 'ALL',
+  text: text || 'Welcome',
+  owner: owner || chat.owner,
   messageChatId: messageChatId || chat.id,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),

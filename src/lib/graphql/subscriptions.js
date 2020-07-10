@@ -6,11 +6,11 @@ export const onCreateMessage = /* GraphQL */ `
     onCreateMessage(owner: $owner) {
       id
       text
+      owner
       messageChatId
       type
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -19,11 +19,11 @@ export const onUpdateMessage = /* GraphQL */ `
     onUpdateMessage(owner: $owner) {
       id
       text
+      owner
       messageChatId
       type
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -32,11 +32,11 @@ export const onDeleteMessage = /* GraphQL */ `
     onDeleteMessage(owner: $owner) {
       id
       text
+      owner
       messageChatId
       type
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -63,11 +63,11 @@ export const onCreateChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt
@@ -98,11 +98,11 @@ export const onUpdateChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt
@@ -133,11 +133,11 @@ export const onDeleteChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt

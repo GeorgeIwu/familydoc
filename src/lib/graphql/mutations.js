@@ -9,11 +9,11 @@ export const createMessage = /* GraphQL */ `
     createMessage(input: $input, condition: $condition) {
       id
       text
+      owner
       messageChatId
       type
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -25,11 +25,11 @@ export const updateMessage = /* GraphQL */ `
     updateMessage(input: $input, condition: $condition) {
       id
       text
+      owner
       messageChatId
       type
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -41,11 +41,11 @@ export const deleteMessage = /* GraphQL */ `
     deleteMessage(input: $input, condition: $condition) {
       id
       text
+      owner
       messageChatId
       type
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -75,11 +75,11 @@ export const createChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt
@@ -113,11 +113,11 @@ export const updateChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt
@@ -151,11 +151,11 @@ export const deleteChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt

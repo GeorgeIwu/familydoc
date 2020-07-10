@@ -33,6 +33,7 @@ export const getChat = /* GraphQL */ `
         items {
           id
           text
+          owner
           messageChatId
           type
           createdAt

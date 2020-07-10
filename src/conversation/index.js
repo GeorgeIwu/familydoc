@@ -5,8 +5,8 @@ import New from './New'
 
 const Chat = () => (
   <div>
-    <PrivateRoute exact path="/chat" component={List} />
-    <PrivateRoute exact path="/chat/new" component={New} />
+    <PrivateRoute exact path="/conversation" component={List} />
+    <PrivateRoute exact path="/conversation/new" component={New} />
   </div>
 );
 

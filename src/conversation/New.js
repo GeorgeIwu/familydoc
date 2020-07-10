@@ -17,7 +17,7 @@ const ChatAdd = ({ history }) => {
 
   const {given_name, family_name, phone_number, email} = form.values
   const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
-  const onSubmit = async () => { await storeActions.addReceiver(form.values); history.push('/chat') }
+  const onSubmit = async () => { await storeActions.addReceiver(form.values); history.push('/conversation') }
 
   return (
     <StyledGrid container className={'root'} spacing={2}>

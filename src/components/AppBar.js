@@ -34,7 +34,7 @@ const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
             <MenuIcon />
           </IconButton>
 
-          <Link to="/chat/new" className={'link'}>
+          <Link to="/conversation/new" className={'link'}>
             <IconButton color="inherit" aria-label="add">
               <AddIcon />
             </IconButton>

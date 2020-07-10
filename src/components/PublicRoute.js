@@ -16,7 +16,7 @@ const PublicRoute = ({ component: Component, ...rest }) => {
       render={props =>
         isRegistered ? <Redirect to={{ pathname: `/verify`, state: { from: props.location } }}/>
           : isVerified ? <Redirect to={{ pathname: `/`, state: { from: props.location } }}/>
-          : isAuthed ? <Redirect to={{ pathname: (props.state && props.state.from) || `/chat`, state: { from: props.location } }}/>
+          : isAuthed ? <Redirect to={{ pathname: (props.state && props.state.from) || `/conversation`, state: { from: props.location } }}/>
           : <Component {...props} />
       }
     />

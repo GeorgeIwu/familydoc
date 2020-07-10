@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm } from '../../components/hooks';
+import { useForm } from '../../lib/hooks';
 
 const Signup = ({ signup }) => {
     const [form, formActions] = useForm({email: '', family_name: '', given_name: '', phone_number: '', password: '', nickname: ''})

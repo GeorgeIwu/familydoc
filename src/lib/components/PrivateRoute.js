@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import {useStore} from './hooks'
+import {useStore} from '../hooks'
 import AppBar from './AppBar'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useForm, useStore } from '../components/hooks'
+import { useForm, useStore } from '../lib/hooks'
 
 const StyledGrid = styled(Grid)`
   .root: {

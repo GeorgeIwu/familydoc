@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useStore } from '../components/hooks'
-import ChatListItem from "../components/ChatListItem";
-import ChatList from "../components/ChatList";
-import Tabs from "../components/Tabs";
+import { useStore } from '../lib/hooks'
+import ChatListItem from "../lib/components/ChatListItem";
+import ChatList from "../lib/components/ChatList";
+import Tabs from "../lib/components/Tabs";
 
 import ChatMembers from "./ChatMembers";
 import ChatMessages from "./ChatMessages";

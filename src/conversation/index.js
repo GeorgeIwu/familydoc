@@ -1,5 +1,5 @@
 import React from 'react';
-import {PrivateRoute} from '../components'
+import {PrivateRoute} from '../lib/components'
 import List from './List'
 import New from './New'
 

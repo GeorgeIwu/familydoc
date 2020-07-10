@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore, useForm } from '../components/hooks';
+import { useStore, useForm } from '../lib/hooks';
 
 const Recover = () => {
   const [store, storeActions] = useStore()

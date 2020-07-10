@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore } from '../components/hooks';
+import { useStore } from '../lib/hooks';
 
 import Content from './elements/Content'
 import Footer from './elements/Footer'

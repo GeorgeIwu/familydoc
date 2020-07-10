@@ -1,5 +1,5 @@
 import React from 'react';
-import {PublicRoute} from '../components'
+import {PublicRoute} from '../lib/components'
 import Welcome from './Welcome';
 import Recover from './Recover';
 import Verify from './Verify';

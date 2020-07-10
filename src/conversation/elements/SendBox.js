@@ -2,9 +2,9 @@ import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import ControlLabel from '@material-ui/core/FormControlLabel';
-import Button from "../../components/Button";
-import Input from "../../components/Input";
-import { useForm } from '../../components/hooks'
+import Button from "../../lib/components/Button";
+import Input from "../../lib/components/Input";
+import { useForm } from '../../lib/hooks'
 
 const SendBox = ({ handleSend, handleSave, handleCancel, message = {} }) => {
   const { chat, ...rest} = message

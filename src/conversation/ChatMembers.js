@@ -1,7 +1,7 @@
 
 import React from 'react'
-import { useForm, useChatMember, useStore } from '../components/hooks'
-import Input from "../components/Input";
+import { useForm, useChatMember, useStore } from '../lib/hooks'
+import Input from "../lib/components/Input";
 
 const ChatMembers = ({ chat }) => {
   const [store, storeActions] = useStore()

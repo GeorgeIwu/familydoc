@@ -6,7 +6,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import {getUser} from '../graphql/queries'
 import {updateUser} from '../graphql/mutations'
 import * as Actions from '../graphql/apollo'
-import {initialAuthState, authActions, authReducer} from './'
+import {initialAuthState, authActions, authReducer} from '.'
 
 const GetUser = gql(getUser);
 const UpdateUser = gql(updateUser)

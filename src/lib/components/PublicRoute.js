@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import {useStore} from './hooks'
+import {useStore} from '../hooks'
 
 const PublicRoute = ({ component: Component, ...rest }) => {
   const [store] = useStore()

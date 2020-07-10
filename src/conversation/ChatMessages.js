@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react'
-import { useMessage, useStore } from '../components/hooks'
+import { useMessage, useStore } from '../lib/hooks'
 import MessageBox from './elements/MessageBox';
 import SendBox from "./elements/SendBox";
 

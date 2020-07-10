@@ -9,7 +9,7 @@ import Signup from './elements/Signup'
 import PageStyle from './elements/style'
 
 const Welcome = () => {
-  const [_, storeActions] = useStore()
+  const [store, storeActions] = useStore()
 
   const onLinkClick = (id) => (e) => {
     e.preventDefault()
@@ -50,7 +50,7 @@ const Welcome = () => {
       <div className="content-wrapper">
         <Content />
         <Ribbon />
-        <Login login={storeActions.login} />
+        <Login login={storeActions.login} loading={store.user.loading}/>
         <Signup signup={storeActions.signup} />
         <Footer />
       </div>

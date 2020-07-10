@@ -10,8 +10,7 @@ const ChatMembers = ({ chat }) => {
   const [form, formActions] = useForm({ name: '' })
   const [search, searchActions] = useSearch(store.user.id)
   const [members, memberActions] = useChatMember(chat?.id)
-  const { values } = form
-
+  
   const removeMember = async (member) => memberActions.removeMember(member)
 
   const addMember = async (user) => { memberActions.addMember(user); formActions.reset(); }
@@ -20,7 +19,7 @@ const ChatMembers = ({ chat }) => {
 
   return (
     <div style={{}}>
-      <SearchBar value={values.name} onChange={handleChange} >
+      <SearchBar value={form.values.name} onChange={handleChange} >
         <div>
           {search && search.items.map(user => (
             <div key={user.id}>

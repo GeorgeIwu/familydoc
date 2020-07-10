@@ -37,7 +37,6 @@ export const getChat = /* GraphQL */ `
           type
           createdAt
           updatedAt
-          owner
         }
       }
       createdAt

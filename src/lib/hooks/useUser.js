@@ -12,13 +12,13 @@ const GetUser = gql(getUser);
 const UpdateUser = gql(updateUser)
 
 const getUserActions = (actions) => ({
-  ...actions.authActions,
+  ...actions.getAuthUser,
   editUser: Actions.getEditUser(actions.updateUser),
   disableUser: Actions.getEditUser(actions.updateUser),
-  logoutUser: actions.authActions.logout(actions.setUser),
+  logoutUser: () => actions.getAuthUser.logout(actions.setUser),
 })
 
-const useUser = (init = {}, nextToken = '') => {
+const useUser = (init = {}, chatPage = '') => {
   const [user, setUser] = useState(init)
   const [updateUser] = useMutation(UpdateUser)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
@@ -44,8 +44,9 @@ const useUser = (init = {}, nextToken = '') => {
   }, [loading, data, auth]);
 
   const status = auth?.data?.attributes ? 'active' : auth.data
-  const userData = { ...user, status }
-  const userActions =  getUserActions({ updateUser, setUser, authActions: authActions(dispatch) })
+  const userData = { ...user, loading, status }
+  const getAuthUser = authActions(dispatch)
+  const userActions =  getUserActions({ updateUser, setUser, getAuthUser })
 
   return [userData, userActions]
 }

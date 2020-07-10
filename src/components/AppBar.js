@@ -6,6 +6,7 @@ import MuAppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Popover from '@material-ui/core/Popover';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -22,9 +23,22 @@ const StyledAppBar = styled(MuAppBar)`
   .link {
     color: white
   }
+  .popover {
+    pointer-events: 'none',
+    padding: 10px,
+  }
 `
 
 const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const handleAvatarOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAvatarClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
@@ -40,9 +54,28 @@ const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
             </IconButton>
           </Link>
 
-          <Typography variant="h6" className={'title'}>
-            {user.name}
-          </Typography>
+          <div>
+            <Typography variant="h6" className={'title'} onClick={handleAvatarOpen}>
+              {user.name}
+            </Typography>
+            <Popover
+              className={'popover'}
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              onClose={handleAvatarClose}
+              disableRestoreFocus
+            >
+              <Typography onClick={logout} >Logout</Typography>
+            </Popover>
+          </div>
         </Toolbar>
       </StyledAppBar>
       {children}

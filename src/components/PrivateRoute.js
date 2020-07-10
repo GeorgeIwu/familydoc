@@ -4,7 +4,7 @@ import {useStore} from './hooks'
 import AppBar from './AppBar'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const [store] = useStore()
+  const [store, storeActions] = useStore()
 
   const {user} = store
   const isAuthed = !!(user && user.id)
@@ -13,7 +13,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        isAuthed ? <AppBar><Component {...props} /></AppBar>
+        isAuthed ? <AppBar logout={storeActions.logoutUser} ><Component {...props} /></AppBar>
           : <Redirect to={{ pathname: `/`, state: { from: props.location } }}/>
       }
     />

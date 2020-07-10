@@ -1,40 +1,30 @@
 
 import { useState, useEffect, useReducer } from 'react'
 import gql from 'graphql-tag'
-import debounce from 'lodash/debounce'
-import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import {getUser, listUsers} from '../graphql/queries'
-import {updateUser, createUser, createChat, createMessage, createChatMember} from '../graphql/mutations'
+import {getUser} from '../graphql/queries'
+import {updateUser} from '../graphql/mutations'
 import * as Actions from '../graphql/apollo'
 import {initialAuthState, authActions, authReducer} from './'
 
 const GetUser = gql(getUser);
-const ListUsers = gql(listUsers);
 const UpdateUser = gql(updateUser)
-const CreateUser = gql(createUser)
-const CreateChat = gql(createChat)
-const CreateMessage = gql(createMessage)
-const CreateChatMember = gql(createChatMember)
 
-const getUserActions = (actions, provider) => ({
-  addProvider: Actions.getAddProvider(actions),
-  addReceiver: Actions.getAddReceiver(actions, provider),
+const getUserActions = (actions) => ({
+  ...actions.authActions,
   editUser: Actions.getEditUser(actions.updateUser),
   disableUser: Actions.getEditUser(actions.updateUser),
-  searchProviders: debounce(async (name) => Actions.getFetchUsers(actions.listProviders)(name, 'PROVIDER'), 100),
-  searchReceivers: debounce(async (name) => Actions.getFetchUsers(actions.listReceivers)(name, 'RECEIVER'), 250),
+  logoutUser: async () => {
+    console.log('dey')
+    await actions.authActions.logout()
+    actions.setUser(null)
+  }
 })
 
 const useUser = (init = {}, nextToken = '') => {
   const [user, setUser] = useState(init)
   const [updateUser] = useMutation(UpdateUser)
-  const [createUser] = useMutation(CreateUser)
-  const [createChat] = useMutation(CreateChat)
-  const [createMessage] = useMutation(CreateMessage)
-  const [createChatMember] = useMutation(CreateChatMember)
-  const [listProviders, { data: providers }] = useLazyQuery(ListUsers)
-  const [listReceivers, { data: receivers }] = useLazyQuery(ListUsers)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
   const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: user?.id || auth?.data?.attributes?.sub }})
 
@@ -57,9 +47,9 @@ const useUser = (init = {}, nextToken = '') => {
     })();
   }, [loading, data, auth]);
 
-  const status = auth.data && auth.data.attributes ? 'active' : auth.data
-  const userData = { ...user, status, providers: providers?.listUsers, receivers: receivers?.listUsers }
-  const userActions =  { ...getUserActions({ listProviders, listReceivers, updateUser, createUser, createChat, createMessage, createChatMember }, user?.id), ...authActions(dispatch) }
+  const status = auth?.data?.attributes ? 'active' : auth.data
+  const userData = { ...user, status }
+  const userActions =  getUserActions({ updateUser, setUser, authActions: authActions(dispatch) })
 
   return [userData, userActions]
 }

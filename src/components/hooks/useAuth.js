@@ -26,7 +26,15 @@ const authActions = dispatch => {
     dispatch({type: "auth/update", data})
   }
 
-  return {signup, verify, login}
+  const logout = async () => {
+    console.log('kilo')
+    dispatch({type: "auth/loading", data: true})
+
+    const data = await Auth.signOut()
+    dispatch({type: "auth/update", data})
+  }
+
+  return {signup, verify, login, logout}
 }
 
 const initialAuthState = {error: null, data: null, loading: null};

@@ -15,11 +15,7 @@ const getUserActions = (actions) => ({
   ...actions.authActions,
   editUser: Actions.getEditUser(actions.updateUser),
   disableUser: Actions.getEditUser(actions.updateUser),
-  logoutUser: async () => {
-    console.log('dey')
-    await actions.authActions.logout()
-    actions.setUser(null)
-  }
+  logoutUser: actions.authActions.logout(actions.setUser),
 })
 
 const useUser = (init = {}, nextToken = '') => {

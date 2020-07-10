@@ -14,11 +14,10 @@ const CreateChat = gql(createChat)
 const CreateMessage = gql(createMessage)
 const CreateChatMember = gql(createChatMember)
 
-const getSearchActions = (provider, actions) => ({
+const getSearchActions = (actions, userId) => ({
   addProvider: Actions.getAddProvider(actions),
-  addReceiver: Actions.getAddReceiver(actions, provider),
-  searchProviders: debounce(async (name) => Actions.getFetchUsers(actions.listProviders)(name, 'PROVIDER'), 100),
-  searchReceivers: debounce(async (name) => Actions.getFetchUsers(actions.listReceivers)(name, 'RECEIVER'), 250),
+  addReceiver: Actions.getAddReceiver(actions, userId),
+  search: debounce(async (name, type = 'RECEIVER') => Actions.getFetchUsers(actions.listUsers)(name, type), 100),
 })
 
 const useSearch = (userId, nextToken = '') => {
@@ -26,11 +25,10 @@ const useSearch = (userId, nextToken = '') => {
   const [createChat] = useMutation(CreateChat)
   const [createMessage] = useMutation(CreateMessage)
   const [createChatMember] = useMutation(CreateChatMember)
-  const [listProviders, { data: providers }] = useLazyQuery(ListUsers)
-  const [listReceivers, { data: receivers }] = useLazyQuery(ListUsers)
+  const [listUsers, { data: users }] = useLazyQuery(ListUsers)
 
-  const searchData = { providers: providers?.listUsers, receivers: receivers?.listUsers }
-  const userActions =  getSearchActions(userId, { listProviders, listReceivers, createUser, createChat, createMessage, createChatMember })
+  const searchData = users?.listUsers
+  const userActions =  getSearchActions({ listUsers, createUser, createChat, createMessage, createChatMember }, userId)
 
   return [searchData, userActions]
 }

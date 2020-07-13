@@ -73,39 +73,39 @@ const getSubscriber = (processor) => (store, { subscriptionData }) => {
   return newData
 }
 
-const getUpdater = (docNode, processor) => (store, { data }) => {
+const getUpdater = (processor, type, docNode) => (store, { data }) => {
   const oldData = store.readQuery(docNode)
 
-  const item = data[Object.keys(data)[0]]
-  const newData = processor(oldData, item)
+  const item = data[type]
+  const newData = item && processor(oldData, item)
 
-  return store.writeQuery({ ...docNode, data: newData })
+  return store.writeQuery({ ...docNode, data: newData || oldData})
 }
 
 const updateStoreProp = (store, storeType, data, dataType) => {
   if (!store[storeType]) return store
 
   let newStore = {...store}
-  const itemIndex = newStore.getChat[dataType]?.items.findIndex(item => item.id === data.id)
+  const itemIndex = newStore[storeType][dataType]?.items.findIndex(item => item.id === data.id)
 
   if (itemIndex === null) {
-    newStore.getChat = { ...newStore.getChat, [dataType]: { items: [data] } }
+    newStore[storeType] = { ...newStore[storeType], [dataType]: { items: [data] } }
   } else if (itemIndex === -1) {
-    newStore.getChat[dataType].items = [ data, ...newStore.getChat[dataType].items ]
+    newStore[storeType][dataType].items = [ data, ...newStore[storeType][dataType].items ]
   } else {
-    newStore.getChat[dataType].items[itemIndex] = data
+    newStore[storeType][dataType].items[itemIndex] = data
   }
   return newStore
 }
 
-const removeStoreProp = (store, data, prop) => {
-  if (!store.getChat) return store
+const removeStoreProp = (store, storeType, data, dataType) => {
+  if (!store[storeType]) return store
 
   let newStore = {...store}
 
-  const itemIndex = newStore.getChat[prop]?.items.findIndex(item => item.id === data.id)
+  const itemIndex = newStore[storeType][dataType]?.items.findIndex(item => item.id === data.id)
   if (itemIndex !== -1) {
-    newStore.getChat.members.items.splice(itemIndex, 1)
+    newStore[storeType][dataType].items.splice(itemIndex, 1)
   }
   return newStore
 }
@@ -151,7 +151,7 @@ export const getFetchUser = (getUser) => async (id) => {
   return await getUser({
     variables: { id },
     context: { serializationKey: 'GET_USER' },
-    update: getUpdater({ query: GetUser, variables: { id } }, updateStoreUser),
+    update: getUpdater(updateStoreUser, TYPES.updateUser, { query: GetUser, variables: { id } }),
   })
 }
 
@@ -170,7 +170,7 @@ export const getEditUser = (updateUser) => async (params) => {
     variables: { input: userInput },
     context: { serializationKey: 'UPDATE_USER' },
     optimisticResponse: buildSchema(userInput, TYPES.User, TYPES.updateUser),
-    update: getUpdater({ query: GetUser, variables: { id: params.id } }, updateStoreUser),
+    update: getUpdater(updateStoreUser, TYPES.updateUser, { query: GetUser, variables: { id: params.id } }),
   })
 }
 
@@ -184,7 +184,7 @@ export const getCreateUser = (actions, provider) => async (attributes, type = 'R
     variables: { input: memberInput },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
     optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { user, chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id  } }, updateStoreUserMember)
+    update: getUpdater(updateStoreUserMember, TYPES.createChatMember, { query: GetChat, variables: { id: chat.id  } })
   })
 }
 
@@ -204,7 +204,6 @@ export const initializeUser = async (attributes) => {
   member.chat = chat
   user.chats = { items: [member], nextToken: null, } // __typename: "ModelChatMemberConnection"
 
-  console.log({user})
   return user
 }
 //////////////////////////////////////////////////////////////////
@@ -233,7 +232,7 @@ export const getFetchChat = (getChat) => async (id) => {
   return await getChat({
     variables: { id },
     context: { serializationKey: 'GET_CHAT' },
-    update: getUpdater({ query: GetChat, variables: { id } }, updateStoreChat),
+    update: getUpdater(updateStoreChat, TYPES.getChat, { query: GetChat, variables: { id } }),
   })
 }
 
@@ -268,7 +267,7 @@ export const getFetchChatMembers = (getChat) => async (id) => {
   return await getChat({
     variables: { id },
     context: { serializationKey: 'GET_CHAT_MEMBERS' },
-    update: getUpdater({ query: GetChat, variables: { id } }, updateStoreChatMember),
+    update: getUpdater(updateStoreChatMember, TYPES.getChat, { query: GetChat, variables: { id } }),
   })
 }
 
@@ -278,7 +277,7 @@ export const getAddChatMember = (createChatMember, chat) => async (user) => {
     variables: { input: memberInput },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
     optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { user, chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id  } }, updateStoreChatMember),
+    update: getUpdater(updateStoreChatMember, TYPES.createChatMember, { query: GetChat, variables: { id: chat.id  } }),
   })
 }
 
@@ -288,7 +287,7 @@ export const getEditChatMember = (updateChatMember, chat) => async (member) => {
     variables: { input: memberInput },
     context: { serializationKey: 'UPDATE_CHAT_MEMBER' },
     optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.updateChatMember, { chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id  } }, updateStoreChatMember),
+    update: getUpdater(updateStoreChatMember, TYPES.updateChatMember, { query: GetChat, variables: { id: chat.id  } }),
   })
 }
 
@@ -298,7 +297,7 @@ export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (mem
     variables: { input: { id: memberInput.id } },
     context: { serializationKey: 'DELETE_CHAT_MEMBER' },
     optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.deleteChatMember, { chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id  } }, removeStoreChatMember),
+    update: getUpdater(removeStoreChatMember, TYPES.deleteChatMember, { query: GetChat, variables: { id: chat.id  } }),
   })
 }
 //////////////////////////////////////////////////////////////////
@@ -320,11 +319,11 @@ const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, upda
   updatedAt: updatedAt || new Date(),
 })
 
-export const getFetchChatMessages = (getChat) => async (id) => {
+export const getFetchMessages = (getChat) => async (id) => {
   return await getChat({
     variables: { id },
-    context: { serializationKey: 'GET_CHAT_MESSAGES' },
-    update: getUpdater({ query: GetChat, variables: { id } }, updateStoreChatMessage),
+    context: { serializationKey: 'GET_MESSAGES' },
+    update: getUpdater(updateStoreChatMessage, TYPES.getChat, { query: GetChat, variables: { id } }),
   })
 }
 
@@ -334,7 +333,7 @@ export const getAddMessage = (createMessage, chat) => async (params) => {
     variables: { input: messageInput },
     context: { serializationKey: 'CREATE_MESSAGE' },
     optimisticResponse: buildSchema(messageInput, TYPES.Message, TYPES.createMessage, { chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id } }, updateStoreChatMessage),
+    update: getUpdater(updateStoreChatMessage, TYPES.createMessage, { query: GetChat, variables: { id: chat.id } }),
   })
 }
 
@@ -344,7 +343,7 @@ export const getEditMessage = (updateMessage, chat) => async (message) => {
     variables: { input: messageInput },
     context: { serializationKey: 'UPDATE_MESSAGE' },
     optimisticResponse: buildSchema(messageInput, TYPES.Message, TYPES.updateMessage, { chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id } }, updateStoreChatMessage),
+    update: getUpdater(updateStoreChatMessage, TYPES.updateMessage, { query: GetChat, variables: { id: chat.id } }),
   })
 }
 
@@ -354,7 +353,7 @@ export const getRemoveMessage = (deleteMessage, chat) => async (message) => {
     variables: { input: { id: messageInput.id } },
     context: { serializationKey: 'DELETE_MESSAGE' },
     optimisticResponse: buildSchema(messageInput, TYPES.Message, TYPES.deleteMessage, { chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id } }, removeStoreChatMessage),
+    update: getUpdater(removeStoreChatMessage, TYPES.deleteMessage, { query: GetChat, variables: { id: chat.id } }),
   })
 }
 //////////////////////////////////////////////////////////////////
@@ -376,11 +375,11 @@ const getMedicalInput = ({ id, messageChatId, text, owner, type, createdAt, upda
   updatedAt: updatedAt || new Date(),
 })
 
-export const getFetchChatMedicals = (getChat) => async (id) => {
+export const getFetchMedicals = (getChat) => async (id) => {
   return await getChat({
     variables: { id },
-    context: { serializationKey: 'GET_CHAT_MEDICALS' },
-    update: getUpdater({ query: GetChat, variables: { id } }, updateStoreChatMedical),
+    context: { serializationKey: 'GET_MEDICALS' },
+    update: getUpdater(updateStoreChatMedical, TYPES.getChat, { query: GetChat, variables: { id } }),
   })
 }
 
@@ -390,6 +389,6 @@ export const getRemoveMedical = (deleteMessage, chat) => async (medical) => {
     variables: { input: { id: medicalInput.id } },
     context: { serializationKey: 'DELETE_MEDICAL' },
     optimisticResponse: buildSchema(medicalInput, TYPES.Message, TYPES.deleteMessage, { chat }),
-    update: getUpdater({ query: GetChat, variables: { id: chat.id } }, removeStoreChatMedical),
+    update: getUpdater(removeStoreChatMedical, TYPES.deleteMessage, { query: GetChat, variables: { id: chat.id } }),
   })
 }

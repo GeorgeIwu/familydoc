@@ -10,7 +10,7 @@ import * as Actions from '../graphql/apollo'
 const GetChat = gql(getChat);
 const CreateMessage = gql(createMessage)
 const UpdateMessage = gql(updateMessage)
-const DeleteMessage = gql(deleteMessage)
+const  DeleteMessage = gql(deleteMessage)
 
 const getMessageActions = (actions, chat) => ({
   addMessage: Actions.getAddMessage(actions.createMessage, chat),
@@ -23,7 +23,6 @@ const useMessage = (chatId = '', nextToken = '') => {
   const [updateMessage] = useMutation(UpdateMessage)
   const [deleteMessage] = useMutation(DeleteMessage)
   const { subscribeToMore, data: chat } = useQuery(GetChat, {variables: { id: chatId }} )
-  console.log({chatId, chat})
 
   useEffect(() => {
     subscribeToMore(Actions.updateAddMessage(chat?.owner))

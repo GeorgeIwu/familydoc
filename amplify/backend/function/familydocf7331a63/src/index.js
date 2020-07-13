@@ -32,7 +32,8 @@ exports.handler = async (event, context) => {
     };
     let result = await dbClient.query(params).promise()
 
-    const priviledges = result.Items[0].priviledges
+    const member = result.Items[0]
+    const priviledges = member ? member.priviledges : ['']
     const priveledgesObject = priviledges.reduce((obj, value, i) => {
         obj[":priviledge"+i+""] = value
         return obj

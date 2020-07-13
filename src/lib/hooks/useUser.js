@@ -37,8 +37,8 @@ const useUser = (init = {}, chatPage = '') => {
   useEffect(() => {
     (async function() {
       if (auth?.data?.attributes && !loading && !data?.getUser) {
-        const newuser = await Actions.getCreateUser(auth.data.attributes)
-        setUser(newuser.data.createUser)
+        const newuser = await Actions.initializeUser(auth.data.attributes)
+        setUser(newuser)
       }
     })();
   }, [loading, data, auth]);

@@ -15,8 +15,8 @@ const CreateMessage = gql(createMessage)
 const CreateChatMember = gql(createChatMember)
 
 const getSearchActions = (actions, userId) => ({
-  addProvider: Actions.getAddProvider(actions),
-  addReceiver: Actions.getAddReceiver(actions, userId),
+  addProvider: Actions.getCreateUser(actions),
+  addReceiver: Actions.getCreateUser(actions, userId),
   search: debounce(async (name, type = 'RECEIVER') => Actions.getFetchUsers(actions.listUsers)(name, type), 100),
 })
 

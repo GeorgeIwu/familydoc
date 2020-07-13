@@ -31,6 +31,7 @@ const authActions = dispatch => {
 
     const data = await Auth.signOut()
     dispatch({type: "auth/update", data})
+    localStorage.clear()
     callback()
   }
 

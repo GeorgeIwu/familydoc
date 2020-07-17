@@ -40,6 +40,7 @@ const SendBox = ({ handleSend, handleSave, handleCancel, message = {} }) => {
         <ControlLabel control={<Checkbox checked={values.type === 'VITAL'} onChange={onChange} name="type" value='VITAL'/>} label="Vital"/>
         <ControlLabel control={<Checkbox checked={values.type === 'FINANCE'} onChange={onChange} name="type" value='FINANCE'/>} label="Finance"/>
         <ControlLabel control={<Checkbox checked={values.type === 'LAB'} onChange={onChange} name="type" value='LAB'/>} label="Lab"/>
+        <ControlLabel control={<Checkbox checked={values.type === 'ALL'} onChange={onChange} name="type" value='ALL'/>} label="All"/>
       </FormGroup>
       <FormGroup column='true'>
         <Input onChange={onChange} name='text' placeholder='add message' value={values.text} />

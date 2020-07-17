@@ -6,13 +6,14 @@ import SendBox from "./elements/SendBox";
 
 const ChatMessages = ({ chat = {} }) => {
   const [store] = useStore()
-  const [messages, messageActions] = useMessage(chat.id, store.user.id)
+  const [messages, messageActions] = useMessage(chat.id)
+  const owner = store.user.id
 
   const [toggledMessage, setToggledMessage] = useState()
 
   const toggleMessage = (message) => setToggledMessage(message)
 
-  const addMessage = async (message) => messageActions.addMessage(message)
+  const addMessage = async (message) => messageActions.addMessage({owner, ...message})
 
   const removeMessage = async (message) => messageActions.removeMessage(message)
 

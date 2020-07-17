@@ -26,8 +26,10 @@ const TYPES = {
   User: 'User',
   getUser: 'getUser',
   updateUser: 'updateUser',
+  createUser: 'createUser',
   //Chat
   Chat: 'Chat',
+  createChat: 'createChat',
   //UserMember
   ChatMember: 'ChatMember',
   createChatMember: 'createChatMember',
@@ -74,11 +76,11 @@ const getSubscriber = (processor) => (store, { subscriptionData }) => {
 }
 
 const getUpdater = (processor, type, docNode) => (store, { data }) => {
-  console.log({docNode, data})
   const oldData = store.readQuery(docNode)
 
   const item = data[type]
   const newData = item && processor(oldData, item)
+  // console.log({oldData, item, newData})
 
   return store.writeQuery({ ...docNode, data: newData})
 }
@@ -179,7 +181,7 @@ export const getCreateUser = (actions, memberID) => async (attributes, type = 'R
 
   const { data: { createUser: user } } = await getAddUser(actions.createUser)({ type, ...attributes})
   const { data: { createChat: chat } } = await getAddChat(actions.createChat, user)()
-  // const { data: { createMessage: message } } = await getAddMessage(actions.createMessage, chat, false)({ type: 'ALL', text: 'Welcome', owner: memberID })
+  await getAddMessage(actions.createMessage, chat, false)({ type: 'ALL', text: 'Welcome', owner: memberID })
 
   const input = getChatMemberInput({memberID, chat, user})
   await actions.createChatMember({
@@ -191,7 +193,7 @@ export const getCreateUser = (actions, memberID) => async (attributes, type = 'R
   await actions.createChatMember({
     variables: { input: memberInput },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
-    optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { user, chat }),
+    optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { member: user, chat }),
     update: getUpdater(updateStoreUserMember, TYPES.createChatMember, { query: GetUser, variables: { id: memberID  } })
   })
 
@@ -285,7 +287,7 @@ export const getAddChatMember = (createChatMember, chat) => async (user) => {
   return await createChatMember({
     variables: { input: memberInput },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
-    optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { user, chat }),
+    optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { member: user, chat }),
     update: getUpdater(updateStoreChatMember, TYPES.createChatMember, { query: GetChat, variables: { id: chat.id  } }),
   })
 }

@@ -74,12 +74,13 @@ const getSubscriber = (processor) => (store, { subscriptionData }) => {
 }
 
 const getUpdater = (processor, type, docNode) => (store, { data }) => {
+  console.log({docNode, data})
   const oldData = store.readQuery(docNode)
 
   const item = data[type]
   const newData = item && processor(oldData, item)
 
-  return store.writeQuery({ ...docNode, data: newData || oldData})
+  return store.writeQuery({ ...docNode, data: newData})
 }
 
 const updateStoreProp = (store, storeType, data, dataType) => {
@@ -174,18 +175,27 @@ export const getEditUser = (updateUser) => async (params) => {
   })
 }
 
-export const getCreateUser = (actions, provider) => async (attributes, type = 'RECEIVER') => {
+export const getCreateUser = (actions, memberID) => async (attributes, type = 'RECEIVER') => {
+
   const { data: { createUser: user } } = await getAddUser(actions.createUser)({ type, ...attributes})
   const { data: { createChat: chat } } = await getAddChat(actions.createChat, user)()
-  // const { data: { createMessage: message } } = await getAddMessage(actions.createMessage, chat)({ type: 'ALL', text: 'Welcome', owner: provider })
+  // const { data: { createMessage: message } } = await getAddMessage(actions.createMessage, chat, false)({ type: 'ALL', text: 'Welcome', owner: memberID })
+
+  const input = getChatMemberInput({memberID, chat, user})
+  await actions.createChatMember({
+    variables: { input },
+    context: { serializationKey: 'CREATE_CHAT_MEMBER' },
+  })
 
   const memberInput = getChatMemberInput({chat, user})
-  return await createChatMember({
+  await actions.createChatMember({
     variables: { input: memberInput },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
     optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { user, chat }),
-    update: getUpdater(updateStoreUserMember, TYPES.createChatMember, { query: GetChat, variables: { id: chat.id  } })
+    update: getUpdater(updateStoreUserMember, TYPES.createChatMember, { query: GetUser, variables: { id: memberID  } })
   })
+
+  return user
 }
 
 export const initializeUser = async (attributes) => {
@@ -195,15 +205,14 @@ export const initializeUser = async (attributes) => {
   const chatInput = getChatInput({user})
   const { data: { createChat: chat } } = await API.graphql(graphqlOperation(CreateChat, {input: chatInput}))
 
-  const memberInput = getChatMemberInput({chat, user})
-  const { data: { createChatMember: member } } = await API.graphql(graphqlOperation(CreateChatMember, {input: memberInput}))
-
   const messageInput = getMessageInput({chat})
   await API.graphql(graphqlOperation(CreateMessage, {input: messageInput}))
 
-  member.chat = chat
-  user.chats = { items: [member], nextToken: null, } // __typename: "ModelChatMemberConnection"
+  const memberInput = getChatMemberInput({chat, user})
+  const { data: { createChatMember: member } } = await API.graphql(graphqlOperation(CreateChatMember, {input: memberInput}))
 
+  member.chat = chat
+  user.chats = { items: [member], nextToken: null, }
   return user
 }
 //////////////////////////////////////////////////////////////////
@@ -327,13 +336,15 @@ export const getFetchMessages = (getChat) => async (id) => {
   })
 }
 
-export const getAddMessage = (createMessage, chat) => async (params) => {
+export const getAddMessage = (createMessage, chat, shouldUpdate = true) => async (params) => {
   const messageInput = getMessageInput({...params, chat})
   return await createMessage({
     variables: { input: messageInput },
     context: { serializationKey: 'CREATE_MESSAGE' },
-    optimisticResponse: buildSchema(messageInput, TYPES.Message, TYPES.createMessage, { chat }),
-    update: getUpdater(updateStoreChatMessage, TYPES.createMessage, { query: GetChat, variables: { id: chat.id } }),
+    ...(shouldUpdate && {
+      optimisticResponse: buildSchema(messageInput, TYPES.Message, TYPES.createMessage, { chat }),
+      update: getUpdater(updateStoreChatMessage, TYPES.createMessage, { query: GetChat, variables: { id: chat.id } })
+    }),
   })
 }
 

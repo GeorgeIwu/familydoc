@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useReducer } from 'react'
 import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 
 import {getUser} from '../graphql/queries'
 import {updateUser} from '../graphql/mutations'
@@ -22,11 +22,14 @@ const useUser = (init = {}, chatPage = '') => {
   const [user, setUser] = useState(init)
   const [updateUser] = useMutation(UpdateUser)
   const [auth, dispatch] = useReducer(authReducer, initialAuthState, authReducer);
-  const { subscribeToMore, data, loading } = useQuery(GetUser, {variables: { id: user?.id || auth?.data?.attributes?.sub }})
+  const [getUser, { loading, data, subscribeToMore }] = useLazyQuery(GetUser)
+  const id = auth?.data?.attributes?.sub
 
   useEffect(() => {
-   subscribeToMore(Actions.updateAddUser())
-  }, [user, subscribeToMore])
+    if (id) {
+      getUser({variables: { id }})
+    }
+  }, [id, getUser])
 
   useEffect(() => {
     if (data?.getUser?.id) {
@@ -34,14 +37,18 @@ const useUser = (init = {}, chatPage = '') => {
     }
   }, [data])
 
+  // useEffect(() => {
+  //   //  subscribeToMore(Actions.updateAddUser())
+  // }, [user, subscribeToMore])
+
   useEffect(() => {
     (async function() {
-      if (auth?.data?.attributes && !loading && !data?.getUser) {
-        const newuser = await Actions.initializeUser(auth.data.attributes)
-        setUser(newuser)
+      if (id && !loading && data && !data.getUser) {
+        await Actions.initializeUser(auth.data.attributes)
+        getUser({variables: { id }})
       }
     })();
-  }, [loading, data, auth]);
+  }, [id, loading, data]);
 
   const status = auth?.data?.attributes ? 'active' : auth.data
   const userData = { ...user, loading, status }

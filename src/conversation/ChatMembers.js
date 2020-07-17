@@ -10,12 +10,12 @@ const ChatMembers = ({ chat }) => {
   const [form, formActions] = useForm({ name: '' })
   const [search, searchActions] = useSearch(store.user.id)
   const [members, memberActions] = useChatMember(chat?.id)
-  
+
   const removeMember = async (member) => memberActions.removeMember(member)
 
   const addMember = async (user) => { memberActions.addMember(user); formActions.reset(); }
 
-  const handleChange = (e) => { formActions.change(e.target); searchActions.search(e.target.value, searchType) }
+  const handleChange = (e) => { formActions.change(e.target); searchActions.searchUser(e.target.value, searchType) }
 
   return (
     <div style={{}}>

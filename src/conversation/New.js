@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import { useForm, useStore } from '../lib/hooks'
+import { useForm, useStore, useSearch } from '../lib/hooks'
 
 const StyledGrid = styled(Grid)`
   .root: {
@@ -12,12 +12,13 @@ const StyledGrid = styled(Grid)`
 `
 
 const ChatAdd = ({ history }) => {
-  const [store, storeActions] = useStore()
+  const [store] = useStore()
+  const [search, searchActions] = useSearch(store.user.id)
   const [form, formActions] = useForm({ email: '', family_name: '', given_name: '', phone_number: '' })
 
   const {given_name, family_name, phone_number, email} = form.values
   const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
-  const onSubmit = async () => { await storeActions.addReceiver(form.values); history.push('/conversation') }
+  const onSubmit = async () => { await searchActions.addReceiver(form.values); history.push('/conversation') }
 
   return (
     <StyledGrid container className={'root'} spacing={2}>

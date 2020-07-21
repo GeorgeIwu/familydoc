@@ -1,6 +1,19 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const updateMessageType = /* GraphQL */ `
+  mutation UpdateMessageType($input: UpdateMessageTypeInput!) {
+    updateMessageType(input: $input) {
+      id
+      text
+      owner
+      messageChatId
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage(
     $input: CreateMessageInput!

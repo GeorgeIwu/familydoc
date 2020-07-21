@@ -74,5 +74,16 @@ type User
     updatedAt: AWSDateTime!
 }
 
+input UpdateMessageTypeInput {
+  id: ID!
+  chatID: ID!
+  memberID: ID!
+  type: MessageType!
+}
+
+type Mutation {
+  updateMessageType(input: UpdateMessageTypeInput!): Message @function(name: "familydocf7331a63-${env}")
+}
+
 
 

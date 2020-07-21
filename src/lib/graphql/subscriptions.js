@@ -2,8 +2,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateMessage = /* GraphQL */ `
-  subscription OnCreateMessage($owner: String!) {
-    onCreateMessage(owner: $owner) {
+  subscription OnCreateMessage {
+    onCreateMessage {
       id
       text
       owner

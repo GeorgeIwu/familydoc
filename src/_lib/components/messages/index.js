@@ -1,13 +1,12 @@
 
 import React, { useState } from 'react'
-import { useMessage, useStore } from '../lib/hooks'
-import MessageBox from './elements/MessageBox';
-import SendBox from "./elements/SendBox";
+import useStore from './useStore'
+import MessageBox from './MessageBox';
+import SendBox from "./SendBox";
 
-const ChatMessages = ({ chat = {} }) => {
-  const [store] = useStore()
-  const [messages, messageActions] = useMessage(chat.id)
-  const owner = store.user.id
+const Messages = ({ loggedInUser, chatID }) => {
+  const [messages, messageActions] = useStore(chatID)
+  const owner = loggedInUser
 
   const [toggledMessage, setToggledMessage] = useState()
 
@@ -31,4 +30,4 @@ const ChatMessages = ({ chat = {} }) => {
   )
 }
 
-export default ChatMessages
+export default Messages

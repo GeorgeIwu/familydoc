@@ -4,9 +4,9 @@ import useStore from './useStore'
 import MessageBox from './MessageBox';
 import SendBox from "./SendBox";
 
-const Messages = ({ loggedInUser, chatID }) => {
+const Messages = ({ userID, chatID }) => {
   const [messages, messageActions] = useStore(chatID)
-  const owner = loggedInUser
+  const owner = userID
 
   const [toggledMessage, setToggledMessage] = useState()
 

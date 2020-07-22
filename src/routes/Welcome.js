@@ -1,12 +1,12 @@
 import React from 'react';
-import { useStore } from '../lib/hooks';
+import { useStore } from '../_lib/hooks';
 
-import Content from './elements/Content'
-import Footer from './elements/Footer'
-import Login from './elements/Login'
-import Ribbon from './elements/Ribbon'
-import Signup from './elements/Signup'
-import PageStyle from './elements/style'
+import Content from '../_lib/components/Content'
+import Footer from '../_lib/components/Footer'
+import Login from '../_lib/components/Login'
+import Ribbon from '../_lib/components/Ribbon'
+import Signup from '../_lib/components/Signup'
+import PageStyle from '../_lib/components/style'
 
 const Welcome = () => {
   const [store, storeActions] = useStore()

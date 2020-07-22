@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore, useForm } from '../lib/hooks';
+import { useStore, useForm } from '../_lib/hooks';
 
 const Verify = () => {
   const [store, storeActions] = useStore()

@@ -1,16 +1,15 @@
 
-import React, { useState } from 'react'
+import React from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
+import ChatList from "../chats";
 import { useStore } from '../lib/hooks'
-import ChatListItem from "../lib/components/ChatListItem";
-import ChatList from "../lib/components/ChatList";
 import Tabs from "../lib/components/Tabs";
 
-import ChatMembers from "./ChatMembers";
-import ChatMessages from "./ChatMessages";
-import ChatMedicals from "./ChatMedicals";
+// import ChatMembers from "./ChatMembers";
+// import ChatMessages from "./ChatMessages";
+// import ChatMedicals from "./ChatMedicals";
 
 const StyledGrid = styled(Grid)`
   .root: {
@@ -18,22 +17,17 @@ const StyledGrid = styled(Grid)`
   }
 `
 
-const Chats = ({history}) => {
+const Chats = () => {
   const [store] = useStore()
-  const {chats} = store.user
-  const [chat, setChat] = useState(chats?.items[0]?.chat)
 
   return (
     <StyledGrid container className={'root'} spacing={2}>
       <Grid item xs={4}>
-        <ChatList >
-          {chats.items.map(item =>
-            <ChatListItem key={item.id} chat={item.chat} isLast={false} onClick={() => setChat(item.chat)} />)}
-        </ChatList>
+        <ChatList user={store.auth.user.id} />
       </Grid>
       <Grid item xs={8}>
         <Tabs>
-          <ChatMessages tabName='Messages' chat={chat} />
+          {/*<ChatMessages tabName='Messages' chat={chat} />
           <ChatMembers tabName='Members' chat={chat} />
           {/*<ChatMedicals tabName='Medicals' chatApi={chatApi} /> */}
         </Tabs>

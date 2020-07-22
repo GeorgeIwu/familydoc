@@ -3,8 +3,8 @@ import React from 'react'
 import useStore from './useStore'
 import MemberItem from "./MemberItem";
 
-const ChatMembers = ({ loggedInUser, chatID }) => {
-  const [members, memberActions] = useStore(chatID, loggedInUser)
+const ChatMembers = ({ userID, chatID }) => {
+  const [members, memberActions] = useStore(chatID, userID)
 
   const removeMember = async (member) => memberActions.removeMember(member)
 

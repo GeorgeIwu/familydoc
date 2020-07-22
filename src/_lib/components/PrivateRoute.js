@@ -5,9 +5,7 @@ import AppBar from './AppBar'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [store, storeActions] = useStore()
-
-  const {user} = store
-  const isAuthed = !!(user && user.id)
+  const isAuthed = !!store.auth.user.id
 
   return (
     <Route

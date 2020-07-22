@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import getAuthUser from '../utils/getUser';
+import getUser from '../utils/getUser';
 
 
 export const getActions = (actions) => ({
@@ -8,12 +8,9 @@ export const getActions = (actions) => ({
       actions.setLoading(true)
       const username = attributes.email || attributes.phone_number
       const auth = await Auth.signIn(username, password)
-      const res = await getAuthUser(auth)
+      const res = await getUser(auth)
 
-      actions.setResponse(res, () => {
-        actions.setUser(res)
-        actions.setStatus('active')
-      })
+      actions.setResponse(res, () => actions.setUser(res))
     },
     register: async ({password, ...attributes}) => {
       actions.setLoading(true)
@@ -38,21 +35,22 @@ export const getActions = (actions) => ({
     }
 })
 
+const initState = { user: {}, status: '', loading: false }
+export default (init = initState) => {
+  const [user, setUser] = useState(init.user)
+  const [status, setStatus] = useState(init.status)
+  const [loading, setLoading] = useState(init.loading)
 
-export default (init = {}) => {
-  const [auth, setAuth] = useState(init)
-
-  const setUser = (user) => setAuth({...auth, user})
-  const setStatus = (status) => setAuth({...auth, status})
-  const setLoading = (loading) => setAuth({...auth, loading})
   const setResponse = (res, onSuccess) => {
     // if (!res.data) {
     //   setAuth({ ...auth, error: 'Error' })
     // }
+
     onSuccess()
-    setAuth({...auth, loading: false})
+    setLoading(false)
   }
 
+  const auth =  { user, status, loading }
   const authActions =  getActions({ setUser, setStatus, setLoading, setResponse })
 
   return [auth, authActions]

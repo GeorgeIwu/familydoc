@@ -23,7 +23,7 @@ const Chats = () => {
   return (
     <StyledGrid container className={'root'} spacing={2}>
       <Grid item xs={4}>
-        <ChatList user={store.auth.user.id} />
+        <ChatList userID={store.auth.user.id} />
       </Grid>
       <Grid item xs={8}>
         <Tabs>

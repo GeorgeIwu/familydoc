@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStore } from '../_lib/hooks';
 
 import Content from '../_lib/components/Content'
@@ -8,8 +8,13 @@ import Ribbon from '../_lib/components/Ribbon'
 import Signup from '../_lib/components/Signup'
 import PageStyle from '../_lib/components/style'
 
-const Welcome = () => {
+const Welcome = ({ history }) => {
   const [store, storeActions] = useStore()
+
+  useEffect(() => {
+    if (store.auth.status === 'registered') history.replace('/verify')
+    if (store.auth.user.id) history.replace('/conversation')
+  }, [store.auth, history])
 
   const onLinkClick = (id) => (e) => {
     e.preventDefault()

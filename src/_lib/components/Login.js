@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm } from '../../lib/hooks';
+import { useForm } from '../hooks';
 
 const Login = ({ login, loading }) => {
     const [form, formActions] = useForm({phone_number: '', password: ''})

@@ -4,12 +4,12 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import * as Store from './store'
 
 export const getActions = (actions) => ({
-  fetchChats: Store.getFetchUserChats(actions.removeChat),
-  removeChat: Store.getRemoveChat(actions.removeChat),
+  fetchChats: Store.getFetchUserChats(actions.removeChatMember),
+  removeChat: Store.getRemoveChatMember(actions.removeChatMember),
 })
 
 export default (userID = '', nextToken = '') => {
-  const [removeChat] = useMutation(Store.DeleteChat)
+  const [removeChatMember] = useMutation(Store.DeleteChatMember)
   const { subscribeToMore, data: user } = useQuery(Store.GetUser, {variables: { id: userID }} )
 
   useEffect(() => {
@@ -19,6 +19,6 @@ export default (userID = '', nextToken = '') => {
   }, [userID, subscribeToMore])
 
   const chats = user.getUser?.chats
-  const chatActions = getActions({ removeChat })
+  const chatActions = getActions({ removeChatMember })
   return [chats, chatActions]
 }

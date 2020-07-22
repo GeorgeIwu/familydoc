@@ -38,9 +38,9 @@ export const getFetchUserChats = (getUser) => async (id) => {
   })
 }
 
-export const getRemoveChat = (createChat, user) => async (params) => {
+export const getRemoveChatMember = (removeChatMember, user) => async (params) => {
   const chatInput = getChatInput({...params, user})
-  return await createChat({
+  return await removeChatMember({
     variables: { input: chatInput },
     context: { serializationKey: 'CREATE_CHAT' },
     optimisticResponse: buildSchema(chatInput, TYPES.Chat, TYPES.createChat),

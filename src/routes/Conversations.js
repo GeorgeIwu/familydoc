@@ -4,8 +4,8 @@ import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
 import ChatList from "../chats";
-import { useStore } from '../lib/hooks'
-import Tabs from "../lib/components/Tabs";
+import { useStore } from '../_lib/hooks'
+import Tabs from "../_lib/components/Tabs";
 
 // import ChatMembers from "./ChatMembers";
 // import ChatMessages from "./ChatMessages";

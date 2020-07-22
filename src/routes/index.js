@@ -1,12 +1,12 @@
 import React from 'react'
 import { HashRouter, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
-import {PrivateRoute} from '../lib/components'
+import {PrivateRoute} from '../_lib/components'
 import Welcome from './Welcome';
 import Recover from './Recover';
 import Verify from './Verify';
 import Conversations from './Conversations';
-import ConversationAdd from './ConversationAdd';
+// import ConversationAdd from './ConversationAdd';
 
 const history = createBrowserHistory();
 
@@ -18,7 +18,7 @@ const Router = () => {
         <Route exact path="/verify" component={Verify} />
         <Route exact path="/forgot-password" component={Recover} />
         <PrivateRoute exact path="/conversation" component={Conversations} />
-        <PrivateRoute exact path="/conversation/new" component={ConversationAdd} />
+        {/*<PrivateRoute exact path="/conversation/new" component={ConversationAdd} />*/}
       </div>
     </HashRouter>
   )

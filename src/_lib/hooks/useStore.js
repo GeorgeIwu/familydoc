@@ -14,10 +14,9 @@ const StoreProvider = ({ children }) => {
   const [auth, authActions] = useAuth(localState.auth)
   const [state, dispatch] = useReducer(rootReducer, initialState);
   const store = { ...state, auth }
-  
-  useEffect(() => localStorage.setItem("store", JSON.stringify(store)), [store]);
+  const actions = { ...formActions(dispatch), auth: authActions }
 
-  const actions = { ...formActions(dispatch), ...authActions }
+  useEffect(() => localStorage.setItem("store", JSON.stringify(store)), [store]);
 
   return (
     <StoreContext.Provider value={[store, actions]}>

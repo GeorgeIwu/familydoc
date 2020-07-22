@@ -72,6 +72,6 @@ export const getRemoveChatMember = (deleteChatMember, chat, owner) => async (mem
   })
 }
 
-export const updateAddChatMember = (owner) => ({ document: OnCreateChatMember, variables: { owner }, updateQuery: getSubscriber(updateStoreChatMember) })
-export const updateEditChatMember = (owner) => ({ document: OnUpdateChatMember, variables: { owner }, updateQuery: getSubscriber(updateStoreChatMember) })
-export const updateRemoveChatMember = (owner) => ({ document: OnDeleteChatMember, variables: { owner }, updateQuery: getSubscriber(removeStoreChatMember) })
+export const onAddChatMember = (owner) => ({ document: OnCreateChatMember, variables: { owner }, updateQuery: getSubscriber(updateStoreChatMember) })
+export const onEditChatMember = (owner) => ({ document: OnUpdateChatMember, variables: { owner }, updateQuery: getSubscriber(updateStoreChatMember) })
+export const onRemoveChatMember = (owner) => ({ document: OnDeleteChatMember, variables: { owner }, updateQuery: getSubscriber(removeStoreChatMember) })

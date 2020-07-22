@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { getUser, listUsers } from './queries'
-import { createUser, createChat, createMessage, createChatMember } from './mutations'
-import { buildSchema, getUserFilter, getUpdater, updateStoreProp } from '../../utils'
+import { getUser, listUsers } from '../_lib/graphql/queries'
+import { createUser, createChat, createMessage, createChatMember } from '../_lib/graphql/mutations'
+import { buildSchema, getUserFilter, getUpdater, updateStoreProp } from '../_lib/utils'
 
 export const GetUser = gql(getUser)
 export const ListUsers = gql(listUsers)

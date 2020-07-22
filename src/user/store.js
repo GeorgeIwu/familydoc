@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { getUser } from '../../graphql/queries'
-import { updateUser } from '../../graphql/mutations'
-import { onUpdateUser } from '../../graphql/subscriptions'
-import { buildSchema, updateStoreUser, getSubscriber, getUpdater } from '../../utils'
+import { getUser } from '../_lib/graphql/queries'
+import { updateUser } from '../_lib/graphql/mutations'
+import { onUpdateUser } from '../_lib/graphql/subscriptions'
+import { buildSchema, updateStoreUser, getSubscriber, getUpdater } from '../_lib/utils'
 
 export const GetUser = gql(getUser)
 export const UpdateUser = gql(updateUser)

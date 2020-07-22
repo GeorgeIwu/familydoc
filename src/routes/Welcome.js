@@ -50,8 +50,8 @@ const Welcome = () => {
       <div className="content-wrapper">
         <Content />
         <Ribbon />
-        <Login login={storeActions.login} loading={store.user.loading}/>
-        <Signup signup={storeActions.signup} />
+        <Login login={storeActions.auth.login} loading={store.auth.loading}/>
+        <Signup signup={storeActions.auth.signup} />
         <Footer />
       </div>
 

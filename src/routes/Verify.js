@@ -6,7 +6,7 @@ const Verify = () => {
   const [form, formActions] = useForm({code: '', phone_number: ''})
 
   const {phone_number, code} = form.values
-  const onSubmit = () => storeActions.verify(form.values)
+  const onSubmit = () => storeActions.auth.verify(form.values)
   const onChange = (e) => formActions.change({ name: e.target.name, value: e.target.value })
 
   return (

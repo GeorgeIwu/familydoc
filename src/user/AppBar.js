@@ -1,36 +1,23 @@
 
 import React from 'react'
-import styled from "styled-components";
 import { Link } from 'react-router-dom'
-import MuAppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
+import SearchBar from './SearchBar'
+import useStore from './useStore'
+import { StyledAppBar } from './style'
 
-const StyledAppBar = styled(MuAppBar)`
-  .root {
-    flex-grow: 1
-  }
-  .menu-button {
-    margin-right: 80%
-  }
-  .title {
-    flex-grow: 1,
-  }
-  .link {
-    color: white
-  }
-  .popover {
-    pointer-events: 'none',
-    padding: 10px,
-  }
-`
-
-const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
+const AppBar = ({ userID, handleLogout, showSearch = true, children }) => {
+  const [user] = useStore(userID)
   const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const onLogout= () => {
+    handleLogout(userID)
+  }
 
   const handleAvatarOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -46,6 +33,7 @@ const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
         <Toolbar>
           <IconButton edge="start" className={'menu-button'} color="inherit" aria-label="menu">
             <MenuIcon />
+            {showSearch && <SearchBar userID={userID} />}
           </IconButton>
 
           <Link to="/conversation/new" className={'link'}>
@@ -56,7 +44,7 @@ const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
 
           <div>
             <Typography variant="h6" className={'title'} onClick={handleAvatarOpen}>
-              {user.name}
+              {user.given_name}
             </Typography>
             <Popover
               className={'popover'}
@@ -73,7 +61,7 @@ const AppBar = ({ user = {name: 'Jane'}, logout = () => {}, children }) => {
               onClose={handleAvatarClose}
               disableRestoreFocus
             >
-              <Typography onClick={logout} >Logout</Typography>
+              <Typography onClick={onLogout} >Logout</Typography>
             </Popover>
           </div>
         </Toolbar>

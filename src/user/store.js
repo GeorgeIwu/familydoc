@@ -1,11 +1,12 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { getUser } from '../_lib/graphql/queries'
+import { getUser, listUsers } from '../_lib/graphql/queries'
 import { updateUser } from '../_lib/graphql/mutations'
 import { onUpdateUser } from '../_lib/graphql/subscriptions'
-import { buildSchema, updateStoreUser, getSubscriber, getUpdater } from '../_lib/utils'
+import { buildSchema, getUserFilter, updateStoreUser, getSubscriber, getUpdater } from '../_lib/utils'
 
 export const GetUser = gql(getUser)
+export const ListUsers = gql(listUsers)
 export const UpdateUser = gql(updateUser)
 
 const TYPES = {
@@ -34,6 +35,13 @@ export const getEditUser = (actions) => async (params) => {
     context: { serializationKey: 'UPDATE_USER' },
     optimisticResponse: buildSchema(userInput, TYPES.User, TYPES.createUser),
     update: getUpdater(updateStoreUser, TYPES.updateUser, { query: GetUser, variables: { id: params.id  } })
+  })
+}
+
+export const getSearchUser = (actions) => async (name, type = 'RECEIVER') => {
+  return await actions.listUsers({
+    variables: { filter: getUserFilter(name, type) },
+    context: { serializationKey: 'LIST_USERS' },
   })
 }
 

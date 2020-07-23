@@ -1,7 +1,7 @@
 import React from 'react'
 import { HashRouter, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
-import {PrivateRoute} from '../_lib/components'
+import PrivateRoute from './PrivateRoute'
 import Welcome from './Welcome';
 import Recover from './Recover';
 import Verify from './Verify';

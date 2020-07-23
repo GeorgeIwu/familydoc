@@ -18,8 +18,6 @@ export default (userID = '', nextToken = '') => {
     subscribeToMore(Store.onRemoveChatMember(userID))
   }, [userID, subscribeToMore])
 
-  console.log({userID, user})
-
   const chats = user?.getUser?.chats?.items || []
   const chatActions = getActions({ removeChatMember })
   return [chats, chatActions]

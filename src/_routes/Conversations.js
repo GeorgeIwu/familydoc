@@ -4,12 +4,12 @@ import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
 import ChatList from "../chats";
-import { useStore } from '../_lib/hooks'
-import Tabs from "../_lib/components/Tabs";
-
 // import ChatMembers from "./ChatMembers";
 // import ChatMessages from "./ChatMessages";
 // import ChatMedicals from "./ChatMedicals";
+import { useStore } from '../_lib/hooks'
+import Tabs from "../_lib/components/Tabs";
+
 
 const StyledGrid = styled(Grid)`
   .root: {

@@ -7,7 +7,7 @@ import { StoreProvider } from './_lib/hooks/useStore';
 
 import getApolloClient from './_lib/utils/apolloClient';
 import * as serviceWorker from './serviceWorker';
-import Router from './routes';
+import Router from './_routes';
 
 export default function App() {
   const [client, setClient] = useState(null)

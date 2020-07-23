@@ -22,5 +22,8 @@ export const StyledAppBar = styled(MuAppBar)`
 `
 
 export const StyledSearchBar = styled.div`
-
+  .popover {
+    pointer-events: 'none',
+    padding: 10px,
+  }
 `

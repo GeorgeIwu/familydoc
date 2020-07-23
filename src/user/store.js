@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
 import { getUser, listUsers } from '../_lib/graphql/queries'
@@ -28,9 +29,9 @@ const getUserInput = ({ id, sub, email, username, phone_number, family_name, giv
 })
 
 
-export const getEditUser = (actions) => async (params) => {
+export const getEditUser = (updateUser) => async (params) => {
   const userInput = getUserInput(params)
-  return await actions.updateUser({
+  return await updateUser({
     variables: { input: userInput },
     context: { serializationKey: 'UPDATE_USER' },
     optimisticResponse: buildSchema(userInput, TYPES.User, TYPES.createUser),
@@ -38,11 +39,11 @@ export const getEditUser = (actions) => async (params) => {
   })
 }
 
-export const getSearchUser = (actions) => async (name, type = 'RECEIVER') => {
-  return await actions.listUsers({
+export const getSearchUser = (listUsers) => debounce(async (name, type = 'RECEIVER') => {
+  return await listUsers({
     variables: { filter: getUserFilter(name, type) },
     context: { serializationKey: 'LIST_USERS' },
   })
-}
+}, 100)
 
 export const onEditUser = (userID) => ({ document: onUpdateUser, variables: { id: userID }, updateQuery: getSubscriber(updateStoreUser) })

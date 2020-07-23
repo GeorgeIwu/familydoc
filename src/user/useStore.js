@@ -1,13 +1,12 @@
 
 import { useEffect } from 'react'
-import debounce from 'lodash/debounce'
 import { useMutation, useLazyQuery } from '@apollo/react-hooks'
 import * as Store from './store'
 
 export const getActions = (actions) => ({
   editUser: Store.getEditUser(actions.updateUser),
   disableUser: Store.getEditUser(actions.updateUser),
-  searchUser: debounce(async (name, type) => Store.getSearchUser(actions.listUsers)(name, type), 100),
+  searchUser: Store.getSearchUser(actions.listUsers),
 })
 
 export default (userID, nextToken = '') => {
@@ -22,7 +21,7 @@ export default (userID, nextToken = '') => {
 
 
   const user = {
-    search: search.listUsers || []
+    search: search?.listUsers?.items || []
     , ...data?.getUser
   }
   const userActions = getActions({ updateUser, listUsers, getUser })

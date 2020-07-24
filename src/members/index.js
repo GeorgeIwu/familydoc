@@ -10,8 +10,8 @@ const ChatMembers = ({ userID, chatID }) => {
 
   return (
     <div style={{}}>
-      {members.items && members.items.map(member =>
-          <MemberItem member={member.member} onDelete={removeMember} />)}
+      {members.map(member =>
+          <MemberItem key={member.member.id} member={member.member} onDelete={removeMember} />)}
     </div>
   )
 }

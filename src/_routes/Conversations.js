@@ -4,11 +4,7 @@ import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
 import ChatList from "../chats";
-// import ChatMembers from "./ChatMembers";
-// import ChatMessages from "./ChatMessages";
-// import ChatMedicals from "./ChatMedicals";
 import { useStore } from '../_lib/hooks'
-import Tabs from "../_lib/components/Tabs";
 
 
 const StyledGrid = styled(Grid)`
@@ -17,24 +13,21 @@ const StyledGrid = styled(Grid)`
   }
 `
 
-const Chats = () => {
+const Conversations = ({ history }) => {
   const [store] = useStore()
+  
+  const handleSelect = (item) => {
+    history.push(`/conversation/${item.id}`)
+  }
 
   return (
     <StyledGrid container className={'root'} spacing={2}>
-      <Grid item xs={4}>
-        <ChatList userID={store.auth.user.id} />
-      </Grid>
-      <Grid item xs={8}>
-        <Tabs>
-          {/*<ChatMessages tabName='Messages' chat={chat} />
-          <ChatMembers tabName='Members' chat={chat} />
-          {/*<ChatMedicals tabName='Medicals' chatApi={chatApi} /> */}
-        </Tabs>
+      <Grid item xs={12}>
+        <ChatList userID={store.auth.user.id} handleSelect={handleSelect} />
       </Grid>
     </StyledGrid>
   )
 }
 
-export default Chats
+export default Conversations
 

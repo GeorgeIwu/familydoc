@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { getChat } from '../../graphql/queries'
+import { getChat } from '../_lib/graphql/queries'
 import { createMessage, updateMessage, deleteMessage } from '../_lib/graphql/mutations'
 import { onCreateMessage, onUpdateMessage, onDeleteMessage } from '../_lib/graphql/subscriptions'
 import { buildSchema, getSubscriber, getUpdater, updateStoreProp, removeStoreProp } from '../_lib/utils'

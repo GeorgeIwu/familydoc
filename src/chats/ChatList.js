@@ -3,7 +3,7 @@ import React from 'react'
 import useStore from './useStore'
 import ChatItem from './ChatItem';
 
-const ChatList = ({ userID, handleClick }) => {
+const ChatList = ({ userID, handleSelect }) => {
   const [chats, chatActions] = useStore(userID)
 
   const removeChat = async (chat) => chatActions.removeChat(chat)
@@ -11,7 +11,7 @@ const ChatList = ({ userID, handleClick }) => {
   return (
     <div style={{}}>
       {chats.map(item =>
-        <ChatItem key={item.id} chat={item.chat} isLast={false} onClick={handleClick} onDelete={removeChat} />)}
+        <ChatItem key={item.id} chat={item.chat} isLast={false} handleClick={handleSelect} onDelete={removeChat} />)}
     </div>
   )
 }

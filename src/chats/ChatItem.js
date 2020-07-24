@@ -16,10 +16,14 @@ const StyledItem = styled.div`
 const ChatListItem = ({
   chat = {},
   isLast = false,
-  onClick = () => {},
+  handleClick = () => {},
   lastestAppt = '23-09-2020',
   lastestMessage = '— I will be in your neighborhood doing errands this…'
 }) => {
+
+  const onClick = () => {
+    handleClick(chat)
+  }
 
   return (
     <StyledItem onClick={onClick}>

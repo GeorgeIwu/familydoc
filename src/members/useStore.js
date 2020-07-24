@@ -16,12 +16,12 @@ export default (chatId = '', nextToken = '') => {
   const { subscribeToMore, data: chat } = useQuery(Store.GetChat, {variables: { id: chatId }} )
 
   useEffect(() => {
-    subscribeToMore(Store.updateAddChatMember(chat?.owner))
-    subscribeToMore(Store.updateEditChatMember(chat?.owner))
-    subscribeToMore(Store.updateRemoveChatMember(chat?.owner))
+    subscribeToMore(Store.onAddChatMember(chat?.owner))
+    subscribeToMore(Store.onEditChatMember(chat?.owner))
+    subscribeToMore(Store.onRemoveChatMember(chat?.owner))
   }, [chat, subscribeToMore])
 
-  const chatMemberData = chat?.getChat?.members
+  const chatMemberData = chat?.getChat?.members?.items || []
   const chatMemberActions = getActions({ createChatMember, updateChatMember, deleteChatMember }, chat?.getChat)
   return [chatMemberData, chatMemberActions]
 }

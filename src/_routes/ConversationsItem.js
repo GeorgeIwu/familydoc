@@ -21,14 +21,9 @@ const ConversationsItem = ({ history, location }) => {
   const [store] = useStore()
   const chatID = location.pathname.split("/").pop()
 
-  const handleSelect = (item) => {
-    history.replace(`/conversation/${item.id}`)
-  }
-
   return (
     <StyledGrid container className={'root'} spacing={2}>
-      <Grid item xs={4}>
-        <ChatList userID={store.auth.user.id} handleSelect={handleSelect} />
+      <Grid item xs={2}>
       </Grid>
       <Grid item xs={8}>
         <Tabs>

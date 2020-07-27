@@ -38,6 +38,18 @@ export const updateStoreUser = (store, user) => {
   return newStore
 }
 
+export const updateStoreChats = (store, chats) => {
+  let newStore = {...store}
+
+  if (!newStore.listChats) {
+    newStore = { ...newStore, listChats: chats }
+  } else {
+    newStore.listChats.items = [ ...newStore.listChats.items, ...chats.items ]
+    newStore.listChats.nextToken = chats.nextToken
+  }
+  return newStore
+}
+
 export const updateStoreChat = (store, chat) => {
   let newStore = {...store}
 

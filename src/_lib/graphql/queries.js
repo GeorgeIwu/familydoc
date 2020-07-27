@@ -1,36 +1,24 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getChat = /* GraphQL */ `
-  query GetChat($id: ID!, $nextToken: String) {
-    getChat(id: $id) {
-      id
-      name
-      owner
-      members {
-        items {
-          id
-          chatID
-          memberID
-          status
-          priviledges
-          createdAt
-          updatedAt
-          member {
-            id
-            type
-            email
-            username
-            phone_number
-            family_name
-            given_name
-          }
-        }
-        nextToken
-      }
-      messages(nextToken: $nextToken) {
-        nextToken
-        items {
+export const listChats = /* GraphQL */ `
+  query ListChats(
+    $userID: String
+    $filter: ModelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChats(
+      userID: $userID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        owner
+        messages {
           id
           text
           owner
@@ -39,9 +27,83 @@ export const getChat = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        members {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
-      createdAt
-      updatedAt
+      nextToken
+    }
+  }
+`;
+export const listChatMembers = /* GraphQL */ `
+  query ListChatMembers(
+    $chatID: String
+    $filter: ModelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatMembers(
+      chatID: $chatID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        chatID
+        memberID
+        status
+        priviledges
+        chat {
+          id
+          name
+          owner
+          createdAt
+          updatedAt
+        }
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listChatMessages = /* GraphQL */ `
+  query ListChatMessages(
+    $chatID: String
+    $filter: ModelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatMessages(
+      chatID: $chatID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        text
+        owner
+        messageChatId
+        type
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;
@@ -64,13 +126,6 @@ export const getUser = /* GraphQL */ `
           priviledges
           createdAt
           updatedAt
-          chat {
-            id
-            name
-            owner
-            createdAt
-            updatedAt
-          }
         }
         nextToken
       }
@@ -79,28 +134,35 @@ export const getUser = /* GraphQL */ `
     }
   }
 `;
-export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $filter: ModelUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
+export const getChat = /* GraphQL */ `
+  query GetChat($id: ID!) {
+    getChat(id: $id) {
+      id
+      name
+      owner
+      messages {
         id
+        text
+        owner
+        messageChatId
         type
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        chats {
-          nextToken
-        }
         createdAt
         updatedAt
       }
-      nextToken
+      members {
+        items {
+          id
+          chatID
+          memberID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

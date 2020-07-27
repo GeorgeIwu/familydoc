@@ -1,35 +1,13 @@
-enum StatusType {
-  OFFERED
-  REQUESTED
-  APPROVED
-}
-
-enum MessageType {
-  ALL
-  TEAM
-  DRUG
-  SCAN
-  VITAL
-  FINANCE
-  LAB
-}
-
-type ModelMessageConnection {
-  nextToken: String
-  items: [Message]
-}
-
-type Message
-  @model(queries: null)
-  @key(name: "byMessageChatId", fields: ["messageChatId"])
-  @auth(rules: [
-    { allow: owner, operations: [update, delete] }
-  ]) {
+type User
+  @model(queries: { get: "getUser" })  {
     id: ID!
-    text: String
-    owner: String!
-    messageChatId: ID!
-    type: MessageType!
+    type: String!
+    email: String!
+    username: String!
+    phone_number: String!
+    family_name: String!
+    given_name: String!
+    chats: [ChatMember] @connection(keyName: "byMember", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
@@ -39,8 +17,8 @@ type Chat
     id: ID!
     name: String!
     owner: String!
+    messages: [Message]
     members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
-    messages(nextToken: String): ModelMessageConnection @function(name: "familydocf7331a63-${env}")
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
@@ -60,18 +38,58 @@ type ChatMember
     updatedAt: AWSDateTime!
 }
 
-type User
-  @model {
+type Message
+  @model(queries: null)
+  @key(name: "byMessageChatId", fields: ["messageChatId"])
+  @auth(rules: [ { allow: owner, operations: [update, delete] } ]) {
     id: ID!
-    type: String!
-    email: String!
-    username: String!
-    phone_number: String!
-    family_name: String!
-    given_name: String!
-    chats: [ChatMember] @connection(keyName: "byMember", fields: ["id"])
+    text: String
+    owner: String!
+    messageChatId: ID!
+    type: MessageType!
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
+}
+
+type ModelChatConnection {
+  items: [Chat]
+  nextToken: String
+}
+
+type ModelChatMemberConnection {
+  items: [ChatMember]
+  nextToken: String
+}
+
+type ModelMessageConnection {
+  items: [Message]
+  nextToken: String
+}
+
+type Mutation {
+  updateMessageType(input: UpdateMessageTypeInput!): Message @function(name: "familydoce32e9d05-${env}")
+}
+
+type Query {
+  listChats(userID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatConnection @function(name: "familydoce32e9d05-${env}")
+  listChatMembers(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatMemberConnection @function(name: "familydoce32e9d05-${env}")
+  listChatMessages(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMessageConnection @function(name: "familydoce32e9d05-${env}")
+}
+
+enum MessageType {
+  ALL
+  TEAM
+  DRUG
+  SCAN
+  VITAL
+  FINANCE
+  LAB
+}
+
+enum StatusType {
+  OFFERED
+  REQUESTED
+  APPROVED
 }
 
 input UpdateMessageTypeInput {
@@ -81,9 +99,22 @@ input UpdateMessageTypeInput {
   type: MessageType!
 }
 
-type Mutation {
-  updateMessageType(input: UpdateMessageTypeInput!): Message @function(name: "familydocf7331a63-${env}")
+input ModelFilterInput {
+  name: ModelStringFilterInput
+  and: [ModelFilterInput]
+  or: [ModelFilterInput]
+  not: ModelFilterInput
 }
 
-
-
+input ModelStringFilterInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+}

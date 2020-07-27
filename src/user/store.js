@@ -1,13 +1,12 @@
 import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { getUser, listUsers } from '../_lib/graphql/queries'
+import { getUser } from '../_lib/graphql/queries'
 import { updateUser } from '../_lib/graphql/mutations'
 import { onUpdateUser } from '../_lib/graphql/subscriptions'
 import { buildSchema, getUserFilter, updateStoreUser, getSubscriber, getUpdater } from '../_lib/utils'
 
 export const GetUser = gql(getUser)
-export const ListUsers = gql(listUsers)
 export const UpdateUser = gql(updateUser)
 
 const TYPES = {

@@ -13,7 +13,7 @@ const Welcome = ({ history }) => {
 
   useEffect(() => {
     if (store.auth.status === 'registered') history.replace('/verify')
-    if (store.auth.user.id) history.replace('/conversation')
+    if (store.auth.user?.id) history.replace('/conversation')
   }, [store.auth, history])
 
   const onLinkClick = (id) => (e) => {

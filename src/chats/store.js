@@ -1,22 +1,21 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { getUser, getChat } from '../_lib/graphql/queries'
+import { getChat, listChats } from '../_lib/graphql/queries'
 import { deleteChatMember } from '../_lib/graphql/mutations'
 import { onCreateChatMember, onUpdateChatMember, onDeleteChatMember } from '../_lib/graphql/subscriptions'
-import { buildSchema, updateStoreUser, getSubscriber, getUpdater, updateStoreProp } from '../_lib/utils'
+import { buildSchema, updateStoreChats, getSubscriber, getUpdater, updateStoreProp } from '../_lib/utils'
 
-export const GetUser = gql(getUser)
 export const GetChat = gql(getChat);
+export const ListChats = gql(listChats)
 export const DeleteChatMember = gql(deleteChatMember);
 export const OnCreateChatMember = gql(onCreateChatMember);
 export const OnUpdateChatMember = gql(onUpdateChatMember);
 export const OnDeleteChatMember = gql(onDeleteChatMember);
 
 const TYPES = {
-  User: 'User',
   Chat: 'Chat',
   getChat: 'getChat',
-  getUser: 'getUser',
+  listChats: 'listChats',
   deleteChatMember: 'deleteChatMember',
 }
 
@@ -30,11 +29,11 @@ const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
 
 const updateStoreUserMember = (store, member) => updateStoreProp(store, 'getUser', member, 'chats')
 
-export const getFetchUserChats = (getUser) => async (id) => {
-  return await getUser({
-    variables: { id },
+export const getFetchUserChats = (listChats) => async (userID) => {
+  return await listChats({
+    variables: { userID },
     context: { serializationKey: 'GET_USER' },
-    update: getUpdater(updateStoreUser, TYPES.updateUser, { query: GetUser, variables: { id } }),
+    update: getUpdater(updateStoreChats, TYPES.listChats, { query: ListChats, variables: { userID } }),
   })
 }
 

@@ -11,7 +11,7 @@ const ChatList = ({ userID, handleSelect }) => {
   return (
     <div style={{}}>
       {chats.map(item =>
-        <ChatItem key={item.id} chat={item.chat} isLast={false} handleClick={handleSelect} onDelete={removeChat} />)}
+        <ChatItem key={item.id} chat={item} isLast={false} handleClick={handleSelect} onDelete={removeChat} />)}
     </div>
   )
 }

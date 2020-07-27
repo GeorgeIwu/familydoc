@@ -5,7 +5,7 @@ import AppBar from '../user/AppBar'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [store, storeActions] = useStore()
-  const userID = store.auth.user.id
+  const userID = store.auth?.user?.id
 
   return (
     <Route

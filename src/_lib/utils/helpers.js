@@ -44,13 +44,13 @@ export const getUpdater = (processor, docNode) => (store, { data }) => {
 }
 
 export const getSubscriber = (processor) => (store, { subscriptionData }) => {
-  const oldData = store
+  // const oldData = store
 
-  const data = subscriptionData.data
-  // const item = data[Object.keys(data)[0]]
-  const newData = processor(oldData, data)
+  // const data = subscriptionData.data
+  // // const item = data[Object.keys(data)[0]]
+  // const newData = processor(oldData, data)
 
-  return newData
+  // return newData
 }
 
 export const getUserFilter = (name, type) => ({
@@ -67,7 +67,7 @@ export const updateStoreUsers = (store, data) => {
   let newStore = { ...store }
 
   if (data.createUser) {
-    newStore.getUser = data
+    newStore.getUser = data.createUser
   }
   if (data.getUser) {
     const itemIndex = newStore.listUsers.items.findIndex(item => item.id === data.getUser.id)
@@ -78,7 +78,7 @@ export const updateStoreUsers = (store, data) => {
     newStore.listUsers = { ...data, items: data.listUsers.items.concat(items) }
   }
   if (data.upateUser) {
-    newStore.getUser = data
+    newStore.getUser = data.upateUser
   }
   if (data.deleteUser) {
     const itemIndex = newStore.listUsers.items.findIndex(item => item.id === data.deleteUser.id)
@@ -92,11 +92,11 @@ export const updateStoreChats = (store, data) => {
   let newStore = { ...store }
 
   if (data.createChat) {
-    newStore.listChats.items = [ ...newStore.listChats.items, data ]
+    newStore.listChats.items = [ ...newStore.listChats.items, data.createChat ]
   }
   if (data.getChat) {
     const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.getChat.id)
-    newStore.getChat = data || newStore.listChats.items[itemIndex]
+    newStore.getChat = data.getChat || newStore.listChats.items[itemIndex]
   }
   if (data.listChats) {
     const items = newStore.listChats || []
@@ -104,7 +104,7 @@ export const updateStoreChats = (store, data) => {
   }
   if (data.upateChat) {
     const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.upateChat.id)
-    newStore.listChats.items[itemIndex] = data
+    newStore.listChats.items[itemIndex] = data.upateChat
   }
   if (data.deleteChat) {
     const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.deleteChat.id)
@@ -118,15 +118,15 @@ export const updateStoreMessages = (store, data) => {
   let newStore = { ...store }
 
   if (data.createMessage) {
-    newStore.listMessages.items = [ ...newStore.listMessages.items, data ]
+    newStore.listMessages.items = [ ...newStore.listMessages.items, data.createMessage ]
   }
   if (data.listMessages) {
     const items = newStore.listMessages || []
     newStore.listMessages = { ...data, items: data.listMessages.items.concat(items) }
   }
   if (data.upateMessage) {
-    const itemIndex = newStore.listMessages.items.findIndex(item => item.id === data.createMessage.id)
-    newStore.listMessages.items[itemIndex] = data
+    const itemIndex = newStore.listMessages.items.findIndex(item => item.id === data.upateMessage.id)
+    newStore.listMessages.items[itemIndex] = data.upateMessage
   }
   if (data.deleteMessage) {
     const itemIndex = newStore.listMessages.items.findIndex(item => item.id === data.deleteMessage.id)
@@ -140,7 +140,7 @@ export const updateStoreMembers = (store, data) => {
   let newStore = { ...store }
 
   if (data.createMember) {
-    newStore.listMembers.items = [ ...newStore.listMembers.items, data ]
+    newStore.listMembers.items = [ ...newStore.listMembers.items, data.createMember ]
   }
   if (data.listMembers) {
     const items = newStore.listMembers || []
@@ -148,7 +148,7 @@ export const updateStoreMembers = (store, data) => {
   }
   if (data.updateMember) {
     const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.updateMember.id)
-    newStore.listMembers.items[itemIndex] = data
+    newStore.listMembers.items[itemIndex] = data.updateMember
   }
   if (data.deleteMember) {
     const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.deleteMember.id)

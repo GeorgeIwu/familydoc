@@ -145,7 +145,7 @@ exports.handler = async (event, context) => {
         context.done(null, response)
     }
 
-    if (event.fieldName === 'listChatMembers') {
+    if (event.fieldName === 'listMembers') {
         const chatID = event.arguments.chatID
         const priviledges = await getMemberPriviledges(chatID, event.identity.sub)
         const priveledgesObject = priviledges.reduce((obj, value, i) => {
@@ -157,7 +157,7 @@ exports.handler = async (event, context) => {
         context.done(null, response)
     }
 
-    if (event.fieldName === 'listChatMessages') {
+    if (event.fieldName === 'listMessages') {
         const chatID = event.arguments.chatID
         const priviledges = await getMemberPriviledges(chatID, event.identity.sub)
         const priveledgesObject = priviledges.reduce((obj, value, i) => {

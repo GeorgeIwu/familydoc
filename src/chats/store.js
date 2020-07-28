@@ -40,6 +40,6 @@ export const getFetchChats = (listChats) => async (userID) => {
   })
 }
 
-export const onAddChat = () => ({ document: OnCreateChat, updateQuery: getSubscriber(updateStoreChats) })
-export const onEditChat = () => ({ document: OnUpdateChat, updateQuery: getSubscriber(updateStoreChats) })
-export const onRemoveChat = () => ({ document: OnDeleteChat, updateQuery: getSubscriber(updateStoreChats) })
+export const onAddChat = (userID) => ({ document: OnCreateChat, variables: { userID }, updateQuery: getSubscriber(updateStoreChats) })
+export const onEditChat = (userID) => ({ document: OnUpdateChat, variables: { userID }, updateQuery: getSubscriber(updateStoreChats) })
+export const onRemoveChat = (userID) => ({ document: OnDeleteChat, variables: { userID }, updateQuery: getSubscriber(updateStoreChats) })

@@ -7,7 +7,7 @@ type User
     phone_number: String!
     family_name: String!
     given_name: String!
-    chats: [ChatMember] @connection(keyName: "byMember", fields: ["id"])
+    chats: [Member] @connection(keyName: "byUser", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
@@ -18,34 +18,34 @@ type Chat
     name: String!
     owner: String!
     messages: [Message]
-    members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
+    members: [Member] @connection(keyName: "byChat", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
 
-type ChatMember
+type Member
   @model(queries: null)
-  @key(name: "byChat", fields: ["chatID", "memberID"])
-  @key(name: "byMember", fields: ["memberID", "chatID"]) {
+  @key(name: "byChat", fields: ["chatID", "userID"])
+  @key(name: "byUser", fields: ["userID", "chatID"]) {
     id: ID!
     chatID: ID!
-    memberID: ID!
+    userID: ID!
     status: StatusType!
     priviledges: [MessageType]
     chat: Chat @connection(fields: ["chatID"])
-    member: User! @connection(fields: ["memberID"])
+    member: User! @connection(fields: ["userID"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
 
 type Message
   @model(queries: null)
-  @key(name: "byMessageChatId", fields: ["messageChatId"])
+  @key(name: "byChatID", fields: ["chatID"])
   @auth(rules: [ { allow: owner, operations: [update, delete] } ]) {
     id: ID!
     text: String
     owner: String!
-    messageChatId: ID!
+    chatID: ID!
     type: MessageType!
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
@@ -56,8 +56,8 @@ type ModelChatConnection {
   nextToken: String
 }
 
-type ModelChatMemberConnection {
-  items: [ChatMember]
+type ModelMemberConnection {
+  items: [Member]
   nextToken: String
 }
 
@@ -67,13 +67,13 @@ type ModelMessageConnection {
 }
 
 type Mutation {
-  updateMessageType(input: UpdateMessageTypeInput!): Message @function(name: "familydoce32e9d05-${env}")
+  updateMessageType(input: UpdateMessageTypeInput!): Message @function(name: "familydocba6bd2d0-${env}")
 }
 
 type Query {
-  listChats(userID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatConnection @function(name: "familydoce32e9d05-${env}")
-  listChatMembers(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatMemberConnection @function(name: "familydoce32e9d05-${env}")
-  listChatMessages(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMessageConnection @function(name: "familydoce32e9d05-${env}")
+  listChats(userID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatConnection @function(name: "familydocba6bd2d0-${env}")
+  listMembers(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMemberConnection @function(name: "familydocba6bd2d0-${env}")
+  listMessages(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMessageConnection @function(name: "familydocba6bd2d0-${env}")
 }
 
 enum MessageType {
@@ -95,7 +95,7 @@ enum StatusType {
 input UpdateMessageTypeInput {
   id: ID!
   chatID: ID!
-  memberID: ID!
+  userID: ID!
   type: MessageType!
 }
 

@@ -2,13 +2,13 @@ import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser } from '../graphql/queries'
-import { createUser, createChat, createMessage , createChatMember } from '../graphql/mutations'
+import { createUser, createChat, createMessage , createMember } from '../graphql/mutations'
 
 const GetUser = gql(getUser)
 const CreateUser = gql(createUser)
 const CreateChat = gql(createChat)
 const CreateMessage = gql(createMessage)
-const CreateChatMember = gql(createChatMember)
+const CreateMember = gql(createMember)
 
 const getUserInput = ({ id, sub, email, username, phone_number, family_name, given_name, nickname = 'RECEIVER', type, createdAt, updatedAt }) => ({
   email,
@@ -30,20 +30,20 @@ const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   updatedAt: updatedAt || new Date(),
 })
 
-const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, updatedAt, chat }) => ({
+const getMessageInput = ({ id, chatID, text, owner, type, createdAt, updatedAt, chat }) => ({
   id: id || uuid(),
   type: type || 'ALL',
   text: text || 'Welcome',
   owner: owner || chat.owner,
-  messageChatId: messageChatId || chat.id,
+  chatID: chatID || chat.id,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),
 })
 
-const getChatMemberInput = ({ id, chatID, memberID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
+const getMemberInput = ({ id, chatID, userID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
   id: id || uuid(),
   chatID: chatID || chat.id,
-  memberID: memberID || user.memberID || user.id,
+  userID: userID || user.id,
   status: status || 'APPROVED',
   priviledges: priviledges || ['ALL'],
   createdAt: createdAt || new Date(),
@@ -71,8 +71,8 @@ export default async (auth) => {
     const messageInput = getMessageInput({chat})
     await API.graphql(graphqlOperation(CreateMessage, {input: messageInput}))
 
-    const memberInput = getChatMemberInput({chat, user})
-    await API.graphql(graphqlOperation(CreateChatMember, {input: memberInput}))
+    const memberInput = getMemberInput({chat, user})
+    await API.graphql(graphqlOperation(CreateMember, {input: memberInput}))
     appUser = user
   }
 

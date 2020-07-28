@@ -43,22 +43,22 @@ const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   updatedAt: updatedAt || new Date(),
 })
 
-const getChatMemberInput = ({ id, chatID, memberID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
+const getChatMemberInput = ({ id, chatID, userID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
   id: id || uuid(),
   chatID: chatID || chat.id,
-  memberID: memberID || user.memberID || user.id,
+  userID: userID || user.id,
   status: status || 'APPROVED',
   priviledges: priviledges || ['ALL'],
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),
 })
 
-const getMessageInput = ({ id, messageChatId, text, owner, type, createdAt, updatedAt, chat }) => ({
+const getMessageInput = ({ id, chatID, text, owner, type, createdAt, updatedAt, chat }) => ({
   id: id || uuid(),
   type: type || 'ALL',
   text: text || 'Welcome',
   owner: owner || chat.owner,
-  messageChatId: messageChatId || chat.id,
+  chatID: chatID || chat.id,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),
 })
@@ -72,7 +72,7 @@ export const getSearch = (listUsers) => async (name, type = 'RECEIVER') => {
   })
 }
 
-export const getCreateUser = (actions, memberID) => async (attributes, type = 'RECEIVER') => {
+export const getCreateUser = (actions, userID) => async (attributes, type = 'RECEIVER') => {
 
   const userInput = getUserInput({ type, ...attributes })
   const { data: { createUser: user } } = await actions.createUser({
@@ -90,12 +90,12 @@ export const getCreateUser = (actions, memberID) => async (attributes, type = 'R
 
   const memberInput = getChatMemberInput({chat, user})
   await actions.createChatMember({
-    variables: { input: {...memberInput, memberID} },
+    variables: { input: {...memberInput, userID} },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
   })
 
   await actions.createMessage({
-    variables: { input: getMessageInput({ type: 'ALL', text: 'Welcome', owner: memberID, chat }) },
+    variables: { input: getMessageInput({ type: 'ALL', text: 'Welcome', owner: userID, chat }) },
     context: { serializationKey: 'CREATE_CHAT_MESSAGE' }
   })
 
@@ -103,7 +103,7 @@ export const getCreateUser = (actions, memberID) => async (attributes, type = 'R
     variables: { input: memberInput },
     context: { serializationKey: 'CREATE_CHAT_MEMBER' },
     optimisticResponse: buildSchema(memberInput, TYPES.ChatMember, TYPES.createChatMember, { member: user, chat }),
-    update: getUpdater(updateStoreUserMember, TYPES.createChatMember, { query: GetUser, variables: { id: memberID  } })
+    update: getUpdater(updateStoreUserMember, TYPES.createChatMember, { query: GetUser, variables: { id: userID  } })
   })
 
   return user

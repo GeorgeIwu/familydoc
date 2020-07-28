@@ -15,7 +15,7 @@ export const onCreateUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -42,7 +42,7 @@ export const onUpdateUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -69,7 +69,7 @@ export const onDeleteUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -92,7 +92,7 @@ export const onCreateChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -101,7 +101,7 @@ export const onCreateChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -124,7 +124,7 @@ export const onUpdateChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -133,7 +133,7 @@ export const onUpdateChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -156,7 +156,7 @@ export const onDeleteChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -165,7 +165,7 @@ export const onDeleteChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -178,12 +178,12 @@ export const onDeleteChat = /* GraphQL */ `
     }
   }
 `;
-export const onCreateChatMember = /* GraphQL */ `
-  subscription OnCreateChatMember {
-    onCreateChatMember {
+export const onCreateMember = /* GraphQL */ `
+  subscription OnCreateMember {
+    onCreateMember {
       id
       chatID
-      memberID
+      userID
       status
       priviledges
       chat {
@@ -194,7 +194,7 @@ export const onCreateChatMember = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -224,12 +224,12 @@ export const onCreateChatMember = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateChatMember = /* GraphQL */ `
-  subscription OnUpdateChatMember {
-    onUpdateChatMember {
+export const onUpdateMember = /* GraphQL */ `
+  subscription OnUpdateMember {
+    onUpdateMember {
       id
       chatID
-      memberID
+      userID
       status
       priviledges
       chat {
@@ -240,7 +240,7 @@ export const onUpdateChatMember = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -270,12 +270,12 @@ export const onUpdateChatMember = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteChatMember = /* GraphQL */ `
-  subscription OnDeleteChatMember {
-    onDeleteChatMember {
+export const onDeleteMember = /* GraphQL */ `
+  subscription OnDeleteMember {
+    onDeleteMember {
       id
       chatID
-      memberID
+      userID
       status
       priviledges
       chat {
@@ -286,7 +286,7 @@ export const onDeleteChatMember = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -322,7 +322,7 @@ export const onCreateMessage = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt
@@ -335,7 +335,7 @@ export const onUpdateMessage = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt
@@ -348,7 +348,7 @@ export const onDeleteMessage = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt

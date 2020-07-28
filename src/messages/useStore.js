@@ -9,11 +9,11 @@ export const getActions = (actions, chat) => ({
   removeMessage: Store.getRemoveMessage(actions.deleteMessage, chat),
 })
 
-export default (chatId = '', nextToken = '') => {
+export default (chatID = '', nextToken = '') => {
   const [createMessage] = useMutation(Store.CreateMessage)
   const [updateMessage] = useMutation(Store.UpdateMessage)
   const [deleteMessage] = useMutation(Store.DeleteMessage)
-  const { subscribeToMore, data: chat } = useQuery(Store.GetChat, {variables: { id: chatId }} )
+  const { subscribeToMore, data: chat } = useQuery(Store.ListMessages, {variables: { chatID }} )
 
   useEffect(() => {
     subscribeToMore(Store.onAddMessage(chat?.owner))

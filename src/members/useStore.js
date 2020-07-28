@@ -4,24 +4,24 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import * as Store from './store'
 
 export const getActions = (actions, chat) => ({
-  addMember: Store.getAddChatMember(actions.createChatMember, chat),
-  editMember: Store.getEditChatMember(actions.updateChatMember, chat),
-  removeMember: Store.getRemoveChatMember(actions.deleteChatMember, chat),
+  addMember: Store.getAddMember(actions.createMember, chat),
+  editMember: Store.getEditMember(actions.updateMember, chat),
+  removeMember: Store.getRemoveMember(actions.deleteMember, chat),
 })
 
 export default (chatId = '', nextToken = '') => {
-  const [createChatMember] = useMutation(Store.CreateChatMember)
-  const [updateChatMember] = useMutation(Store.UpdateChatMember)
-  const [deleteChatMember] = useMutation(Store.DeleteChatMember)
+  const [createMember] = useMutation(Store.CreateMember)
+  const [updateMember] = useMutation(Store.UpdateMember)
+  const [deleteMember] = useMutation(Store.DeleteMember)
   const { subscribeToMore, data: chat } = useQuery(Store.GetChat, {variables: { id: chatId }} )
 
   useEffect(() => {
-    subscribeToMore(Store.onAddChatMember(chat?.owner))
-    subscribeToMore(Store.onEditChatMember(chat?.owner))
-    subscribeToMore(Store.onRemoveChatMember(chat?.owner))
+    subscribeToMore(Store.onAddMember(chat?.owner))
+    subscribeToMore(Store.onEditMember(chat?.owner))
+    subscribeToMore(Store.onRemoveMember(chat?.owner))
   }, [chat, subscribeToMore])
 
   const chatMemberData = chat?.getChat?.members?.items || []
-  const chatMemberActions = getActions({ createChatMember, updateChatMember, deleteChatMember }, chat?.getChat)
+  const chatMemberActions = getActions({ createMember, updateMember, deleteMember }, chat?.getChat)
   return [chatMemberData, chatMemberActions]
 }

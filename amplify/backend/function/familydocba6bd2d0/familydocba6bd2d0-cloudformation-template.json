@@ -32,12 +32,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"familydoce32e9d05",
+						"familydocba6bd2d0",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"familydoce32e9d05",
+									"familydocba6bd2d0",
 									"-",
 									{
 										"Ref": "env"
@@ -84,12 +84,12 @@
 						"API_FAMILYDOC_GRAPHQLAPIIDOUTPUT": {
 							"Ref": "apifamilydocGraphQLAPIIdOutput"
 						},
-						"API_FAMILYDOC_CHATMEMBERTABLE_NAME": {
+						"API_FAMILYDOC_MEMBERTABLE_NAME": {
 							"Fn::ImportValue": {
-								"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+								"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:MemberTable:Name"
 							}
 						},
-						"API_FAMILYDOC_CHATMEMBERTABLE_ARN": {
+						"API_FAMILYDOC_MEMBERTABLE_ARN": {
 							"Fn::Join": [
 								"",
 								[
@@ -104,7 +104,7 @@
 									":table/",
 									{
 										"Fn::ImportValue": {
-											"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+											"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:MemberTable:Name"
 										}
 									}
 								]
@@ -148,7 +148,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-familydoc-dev-155346-deployment",
-					"S3Key": "amplify-builds/familydoce32e9d05-736e623555334f527441-build.zip"
+					"S3Key": "amplify-builds/familydocba6bd2d0-54756867347146706353-build.zip"
 				}
 			}
 		},
@@ -158,12 +158,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"familydocLambdaRole42da5d5c",
+						"familydocLambdaRole02823fdd",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"familydocLambdaRole42da5d5c",
+									"familydocLambdaRole02823fdd",
 									"-",
 									{
 										"Ref": "env"
@@ -393,7 +393,7 @@
 											":table/",
 											{
 												"Fn::ImportValue": {
-													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:MemberTable:Name"
 												}
 											}
 										]
@@ -414,7 +414,7 @@
 											":table/",
 											{
 												"Fn::ImportValue": {
-													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:MemberTable:Name"
 												}
 											},
 											"/index/*"
@@ -509,7 +509,7 @@
 											":table/",
 											{
 												"Fn::ImportValue": {
-													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:MemberTable:Name"
 												}
 											}
 										]
@@ -530,7 +530,7 @@
 											":table/",
 											{
 												"Fn::ImportValue": {
-													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:ChatMemberTable:Name"
+													"Fn::Sub": "${apifamilydocGraphQLAPIIdOutput}:GetAtt:MemberTable:Name"
 												}
 											},
 											"/index/*"

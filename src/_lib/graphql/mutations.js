@@ -7,7 +7,7 @@ export const updateMessageType = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt
@@ -31,7 +31,7 @@ export const createUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -61,7 +61,7 @@ export const updateUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -91,7 +91,7 @@ export const deleteUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -117,7 +117,7 @@ export const createChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -126,7 +126,7 @@ export const createChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -152,7 +152,7 @@ export const updateChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -161,7 +161,7 @@ export const updateChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -187,7 +187,7 @@ export const deleteChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -196,7 +196,7 @@ export const deleteChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -209,15 +209,15 @@ export const deleteChat = /* GraphQL */ `
     }
   }
 `;
-export const createChatMember = /* GraphQL */ `
-  mutation CreateChatMember(
-    $input: CreateChatMemberInput!
-    $condition: ModelChatMemberConditionInput
+export const createMember = /* GraphQL */ `
+  mutation CreateMember(
+    $input: CreateMemberInput!
+    $condition: ModelMemberConditionInput
   ) {
-    createChatMember(input: $input, condition: $condition) {
+    createMember(input: $input, condition: $condition) {
       id
       chatID
-      memberID
+      userID
       status
       priviledges
       chat {
@@ -228,7 +228,7 @@ export const createChatMember = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -258,15 +258,15 @@ export const createChatMember = /* GraphQL */ `
     }
   }
 `;
-export const updateChatMember = /* GraphQL */ `
-  mutation UpdateChatMember(
-    $input: UpdateChatMemberInput!
-    $condition: ModelChatMemberConditionInput
+export const updateMember = /* GraphQL */ `
+  mutation UpdateMember(
+    $input: UpdateMemberInput!
+    $condition: ModelMemberConditionInput
   ) {
-    updateChatMember(input: $input, condition: $condition) {
+    updateMember(input: $input, condition: $condition) {
       id
       chatID
-      memberID
+      userID
       status
       priviledges
       chat {
@@ -277,7 +277,7 @@ export const updateChatMember = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -307,15 +307,15 @@ export const updateChatMember = /* GraphQL */ `
     }
   }
 `;
-export const deleteChatMember = /* GraphQL */ `
-  mutation DeleteChatMember(
-    $input: DeleteChatMemberInput!
-    $condition: ModelChatMemberConditionInput
+export const deleteMember = /* GraphQL */ `
+  mutation DeleteMember(
+    $input: DeleteMemberInput!
+    $condition: ModelMemberConditionInput
   ) {
-    deleteChatMember(input: $input, condition: $condition) {
+    deleteMember(input: $input, condition: $condition) {
       id
       chatID
-      memberID
+      userID
       status
       priviledges
       chat {
@@ -326,7 +326,7 @@ export const deleteChatMember = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -365,7 +365,7 @@ export const createMessage = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt
@@ -381,7 +381,7 @@ export const updateMessage = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt
@@ -397,7 +397,7 @@ export const deleteMessage = /* GraphQL */ `
       id
       text
       owner
-      messageChatId
+      chatID
       type
       createdAt
       updatedAt

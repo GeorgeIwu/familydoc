@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 import { getUser } from '../_lib/graphql/queries'
 import { updateUser } from '../_lib/graphql/mutations'
 import { onUpdateUser } from '../_lib/graphql/subscriptions'
-import { buildSchema, getUserFilter, updateStoreUser, getSubscriber, getUpdater } from '../_lib/utils'
+import { buildSchema, getSubscriber, getUpdater, getUserFilter, updateStoreUsers } from '../_lib/utils'
 
 export const GetUser = gql(getUser)
 export const UpdateUser = gql(updateUser)
@@ -34,7 +34,7 @@ export const getEditUser = (updateUser) => async (params) => {
     variables: { input: userInput },
     context: { serializationKey: 'UPDATE_USER' },
     optimisticResponse: buildSchema(userInput, TYPES.User, TYPES.createUser),
-    update: getUpdater(updateStoreUser, TYPES.updateUser, { query: GetUser, variables: { id: params.id  } })
+    update: getUpdater(updateStoreUsers, { query: GetUser, variables: { id: params.id  } })
   })
 }
 
@@ -45,4 +45,4 @@ export const getSearchUser = (listUsers) => debounce(async (name, type = 'RECEIV
   })
 }, 100)
 
-export const onEditUser = (userID) => ({ document: onUpdateUser, variables: { id: userID }, updateQuery: getSubscriber(updateStoreUser) })
+export const onEditUser = (userID) => ({ document: onUpdateUser, variables: { id: userID }, updateQuery: getSubscriber(updateStoreUsers) })

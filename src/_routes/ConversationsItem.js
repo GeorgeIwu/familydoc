@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 
 import ChatList from "../chats";
 import ChatMessages from "../messages";
-import ChatMembers from "../members";
+// import ChatMembers from "../members";
 // import ChatMedicals from "./ChatMedicals";
 import { useStore } from '../_lib/hooks'
 import Tabs from "../_lib/components/Tabs";
@@ -28,7 +28,7 @@ const ConversationsItem = ({ history, location }) => {
       <Grid item xs={8}>
         <Tabs>
           <ChatMessages tabName='Messages' userID={store.auth.user.id} chatID={chatID} />
-          <ChatMembers tabName='Members' userID={store.auth.user.id} chatID={chatID} />
+          {/*<ChatMembers tabName='Members' userID={store.auth.user.id} chatID={chatID} />
           {/*<ChatMedicals tabName='Medicals' chatApi={chatApi} /> */}
         </Tabs>
       </Grid>

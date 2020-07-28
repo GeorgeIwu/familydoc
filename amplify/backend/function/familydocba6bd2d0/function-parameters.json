@@ -5,7 +5,7 @@
                 "read",
                 "update"
             ],
-            "ChatMember:@model(appsync)": [
+            "Member:@model(appsync)": [
                 "read",
                 "update"
             ],

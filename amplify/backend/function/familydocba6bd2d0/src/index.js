@@ -8,14 +8,14 @@ var apiFamilydocGraphQLAPIIdOutput = process.env.API_FAMILYDOC_GRAPHQLAPIIDOUTPU
 var apiFamilydocChatTableName = process.env.API_FAMILYDOC_CHATTABLE_NAME
 var apiFamilydocChatTableArn = process.env.API_FAMILYDOC_CHATTABLE_ARN
 var apiFamilydocGraphQLAPIIdOutput = process.env.API_FAMILYDOC_GRAPHQLAPIIDOUTPUT
-var apiFamilydocChatMemberTableName = process.env.API_FAMILYDOC_CHATMEMBERTABLE_NAME
-var apiFamilydocChatMemberTableArn = process.env.API_FAMILYDOC_CHATMEMBERTABLE_ARN
+var apiFamilydocMemberTableName = process.env.API_FAMILYDOC_MEMBERTABLE_NAME
+var apiFamilydocMemberTableArn = process.env.API_FAMILYDOC_MEMBERTABLE_ARN
 var apiFamilydocGraphQLAPIIdOutput = process.env.API_FAMILYDOC_GRAPHQLAPIIDOUTPUT
 var apiFamilydocChatTableName = process.env.API_FAMILYDOC_CHATTABLE_NAME
 var apiFamilydocChatTableArn = process.env.API_FAMILYDOC_CHATTABLE_ARN
 var apiFamilydocGraphQLAPIIdOutput = process.env.API_FAMILYDOC_GRAPHQLAPIIDOUTPUT
-var apiFamilydocChatMemberTableName = process.env.API_FAMILYDOC_CHATMEMBERTABLE_NAME
-var apiFamilydocChatMemberTableArn = process.env.API_FAMILYDOC_CHATMEMBERTABLE_ARN
+var apiFamilydocMemberTableName = process.env.API_FAMILYDOC_MEMBERTABLE_NAME
+var apiFamilydocMemberTableArn = process.env.API_FAMILYDOC_MEMBERTABLE_ARN
 var apiFamilydocGraphQLAPIIdOutput = process.env.API_FAMILYDOC_GRAPHQLAPIIDOUTPUT
 var apiFamilydocMessageTableName = process.env.API_FAMILYDOC_MESSAGETABLE_NAME
 var apiFamilydocMessageTableArn = process.env.API_FAMILYDOC_MESSAGETABLE_ARN
@@ -23,20 +23,21 @@ var apiFamilydocGraphQLAPIIdOutput = process.env.API_FAMILYDOC_GRAPHQLAPIIDOUTPU
 
 Amplify Params - DO NOT EDIT */
 
+
 const AWS = require('aws-sdk')
 const region = process.env.REGION
 const dbClient = new AWS.DynamoDB.DocumentClient({region})
 const chatTable = process.env.API_FAMILYDOC_CHATTABLE_NAME
-const memberTable = process.env.API_FAMILYDOC_CHATMEMBERTABLE_NAME
+const memberTable = process.env.API_FAMILYDOC_MEMBERTABLE_NAME
 const messageTable = process.env.API_FAMILYDOC_MESSAGETABLE_NAME
 
 const getChats = async (userID, chatName) => {
     const memberParams = {
         TableName: memberTable,
-        IndexName: "byMember",
-        KeyConditionExpression: 'memberID = :memberID',
+        IndexName: "byUser",
+        KeyConditionExpression: 'userID = :userID',
         ExpressionAttributeValues: {
-            ':memberID': userID
+            ':userID': userID
         },
     };
     const memberResult = await dbClient.query(memberParams).promise()
@@ -80,8 +81,8 @@ const getChatMembers = async (chatID, priveledgesObject) => {
 const getChatMessages = async (chatID, priveledgesObject) => {
     const params = {
         TableName: messageTable,
-        IndexName: "byMessageChatId",
-        KeyConditionExpression: 'messageChatId = :chatID',
+        IndexName: "byChatID",
+        KeyConditionExpression: 'chatID = :chatID',
         FilterExpression: "#type in ("+Object.keys(priveledgesObject).toString()+ ")",
         ExpressionAttributeNames: { "#type": "type" },
         ExpressionAttributeValues: {
@@ -116,14 +117,14 @@ const updateMessageType = async (messageID, messageType) => {
     return result.Attributes
 }
 
-const getMemberPriviledges = async (chatID, memberID) => {
+const getMemberPriviledges = async (chatID, userID) => {
     const params = {
         TableName: memberTable,
         IndexName: "byChat",
-        KeyConditionExpression: 'chatID = :chatID AND memberID = :memberID',
+        KeyConditionExpression: 'chatID = :chatID AND userID = :userID',
         ExpressionAttributeValues: {
             ':chatID': chatID,
-            ':memberID': memberID
+            ':userID': userID
         },
     };
     const result = await dbClient.query(params).promise()

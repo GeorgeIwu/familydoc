@@ -22,7 +22,7 @@ export const listChats = /* GraphQL */ `
           id
           text
           owner
-          messageChatId
+          chatID
           type
           createdAt
           updatedAt
@@ -37,14 +37,14 @@ export const listChats = /* GraphQL */ `
     }
   }
 `;
-export const listChatMembers = /* GraphQL */ `
-  query ListChatMembers(
+export const listMembers = /* GraphQL */ `
+  query ListMembers(
     $chatID: String
     $filter: ModelFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listChatMembers(
+    listMembers(
       chatID: $chatID
       filter: $filter
       limit: $limit
@@ -53,7 +53,7 @@ export const listChatMembers = /* GraphQL */ `
       items {
         id
         chatID
-        memberID
+        userID
         status
         priviledges
         chat {
@@ -81,14 +81,14 @@ export const listChatMembers = /* GraphQL */ `
     }
   }
 `;
-export const listChatMessages = /* GraphQL */ `
-  query ListChatMessages(
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
     $chatID: String
     $filter: ModelFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listChatMessages(
+    listMessages(
       chatID: $chatID
       filter: $filter
       limit: $limit
@@ -98,7 +98,7 @@ export const listChatMessages = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -121,7 +121,7 @@ export const getUser = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt
@@ -144,7 +144,7 @@ export const getChat = /* GraphQL */ `
         id
         text
         owner
-        messageChatId
+        chatID
         type
         createdAt
         updatedAt
@@ -153,7 +153,7 @@ export const getChat = /* GraphQL */ `
         items {
           id
           chatID
-          memberID
+          userID
           status
           priviledges
           createdAt

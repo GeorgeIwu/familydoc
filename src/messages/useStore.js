@@ -21,7 +21,7 @@ export default (chatID = '', nextToken = '') => {
     subscribeToMore(Store.onRemoveMessage(chatID))
   }, [chatID, subscribeToMore])
 
-  const messageData = listMessages.listMessages || []
+  const messageData = listMessages?.listMessages?.items || []
   const messageActions = getActions({ createMessage, updateMessage, deleteMessage }, chatID)
   return [messageData, messageActions]
 }

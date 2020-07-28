@@ -4,7 +4,7 @@ import useStore from './useStore'
 import MemberItem from "./MemberItem";
 
 const ChatMembers = ({ userID, chatID }) => {
-  const [members, memberActions] = useStore(chatID, userID)
+  const [members, memberActions] = useStore(chatID)
 
   const removeMember = async (member) => memberActions.removeMember(member)
 

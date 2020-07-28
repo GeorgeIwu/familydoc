@@ -59,12 +59,15 @@ const getChats = async (userID, chatName) => {
 
 
 const getChatMembers = async (chatID, priveledgesObject) => {
+    const statusObject = { ':status0': 'OFFERED', ':status1': 'REQUESTED', ':status2': 'APPROVED' }
     const params = {
         TableName: memberTable,
         IndexName: "byChat",
         KeyConditionExpression: 'chatID = :chatID',
-        FilterExpression: "status in ("+['OFFERED', 'REQUESTED', 'APPROVED']+")",
+        FilterExpression: "#status in ("+Object.keys(statusObject).toString()+")",
+        ExpressionAttributeNames: { "#status": "status" },
         ExpressionAttributeValues: {
+            ...statusObject,
             ':chatID': chatID,
         },
     };
@@ -83,7 +86,7 @@ const getChatMessages = async (chatID, priveledgesObject) => {
         TableName: messageTable,
         IndexName: "byChatID",
         KeyConditionExpression: 'chatID = :chatID',
-        FilterExpression: "#type in ("+Object.keys(priveledgesObject).toString()+ ")",
+        FilterExpression: "#type in ("+Object.keys(priveledgesObject).toString()+")",
         ExpressionAttributeNames: { "#type": "type" },
         ExpressionAttributeValues: {
             ...priveledgesObject,

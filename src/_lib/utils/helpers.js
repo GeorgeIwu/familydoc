@@ -44,6 +44,7 @@ export const getUpdater = (processor, docNode) => (store, { data }) => {
 }
 
 export const getSubscriber = (processor) => (store, { subscriptionData }) => {
+  console.log(`subscribing`, processor, subscriptionData)
   // const oldData = store
 
   // const data = subscriptionData.data

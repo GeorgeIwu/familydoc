@@ -39,7 +39,7 @@ type Member
 }
 
 type Message
-  @model(queries: null)
+  @model(queries: null, subscriptions: null)
   @key(name: "byChatID", fields: ["chatID"])
   @auth(rules: [ { allow: owner, operations: [update, delete] } ]) {
     id: ID!
@@ -74,6 +74,12 @@ type Query {
   listChats(userID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatConnection @function(name: "familydocba6bd2d0-${env}")
   listMembers(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMemberConnection @function(name: "familydocba6bd2d0-${env}")
   listMessages(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMessageConnection @function(name: "familydocba6bd2d0-${env}")
+}
+
+type Subscription {
+  onCreateMessage(chatID: ID): Message @aws_subscribe(mutations: ["createMessage"])
+  onUpdateMessage(chatID: ID): Message @aws_subscribe(mutations: ["updateMessage"])
+  onDeleteMessage(chatID: ID): Message @aws_subscribe(mutations: ["deleteMessage"])
 }
 
 enum MessageType {

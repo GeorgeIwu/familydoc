@@ -1,6 +1,45 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateMessage = /* GraphQL */ `
+  subscription OnCreateMessage($chatID: ID) {
+    onCreateMessage(chatID: $chatID) {
+      id
+      text
+      owner
+      chatID
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMessage = /* GraphQL */ `
+  subscription OnUpdateMessage($chatID: ID) {
+    onUpdateMessage(chatID: $chatID) {
+      id
+      text
+      owner
+      chatID
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMessage = /* GraphQL */ `
+  subscription OnDeleteMessage($chatID: ID) {
+    onDeleteMessage(chatID: $chatID) {
+      id
+      text
+      owner
+      chatID
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
@@ -311,45 +350,6 @@ export const onDeleteMember = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateMessage = /* GraphQL */ `
-  subscription OnCreateMessage {
-    onCreateMessage {
-      id
-      text
-      owner
-      chatID
-      type
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMessage = /* GraphQL */ `
-  subscription OnUpdateMessage($owner: String!) {
-    onUpdateMessage(owner: $owner) {
-      id
-      text
-      owner
-      chatID
-      type
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMessage = /* GraphQL */ `
-  subscription OnDeleteMessage($owner: String!) {
-    onDeleteMessage(owner: $owner) {
-      id
-      text
-      owner
-      chatID
-      type
       createdAt
       updatedAt
     }

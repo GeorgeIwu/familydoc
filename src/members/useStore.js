@@ -13,15 +13,17 @@ export default (chatID = '', nextToken = '') => {
   const [createMember] = useMutation(Store.CreateMember)
   const [updateMember] = useMutation(Store.UpdateMember)
   const [deleteMember] = useMutation(Store.DeleteMember)
-  const { subscribeToMore, data: listMembers } = useQuery(Store.ListMembers, {variables: { chatID }} )
+  const { subscribeToMore, data: membersData } = useQuery(Store.ListMembers, {variables: { chatID }} )
 
   useEffect(() => {
-    subscribeToMore(Store.onAddMember(chatID))
-    subscribeToMore(Store.onEditMember(chatID))
-    subscribeToMore(Store.onRemoveMember(chatID))
-  }, [chatID, subscribeToMore])
+    if (membersData) {
+      subscribeToMore(Store.onAddMember(chatID))
+      subscribeToMore(Store.onEditMember(chatID))
+      subscribeToMore(Store.onRemoveMember(chatID))
+    }
+  }, [chatID, membersData, subscribeToMore])
 
-  const memberData = listMembers?.listMembers?.items || []
-  const memberActions = getActions({ createMember, updateMember, deleteMember }, chatID)
-  return [memberData, memberActions]
+  const members = membersData?.listMembers?.items || []
+  const membersActions = getActions({ createMember, updateMember, deleteMember }, chatID)
+  return [members, membersActions]
 }

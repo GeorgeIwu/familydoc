@@ -52,11 +52,8 @@ const getMemberInput = ({ id, chatID, userID, status, priviledges, createdAt, up
 
 export default async (auth) => {
   const id = auth?.attributes?.sub
+  if (!id) return {error: 'invalid user'}
   let appUser
-
-  if (!id) {
-    return {error: 'invalid user'}
-  }
 
   const { data: { getUser } }  = await API.graphql(graphqlOperation(GetUser, {id}))
   appUser = getUser
@@ -78,4 +75,3 @@ export default async (auth) => {
 
   return appUser
 }
-

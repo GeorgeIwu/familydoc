@@ -10,7 +10,7 @@ const ChatList = ({ userID, handleSelect }) => {
 
   return (
     <div style={{}}>
-      {chats.map(item =>
+      {chats.items.map(item =>
         <ChatItem key={item.id} chat={item} isLast={false} handleClick={handleSelect} onDelete={removeChat} />)}
     </div>
   )

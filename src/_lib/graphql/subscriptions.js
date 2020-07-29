@@ -1,6 +1,180 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateMember = /* GraphQL */ `
+  subscription OnCreateMember($chatID: ID) {
+    onCreateMember(chatID: $chatID) {
+      id
+      chatID
+      userID
+      status
+      priviledges
+      chat {
+        id
+        name
+        owner
+        messages {
+          id
+          text
+          owner
+          chatID
+          type
+          createdAt
+          updatedAt
+        }
+        members {
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMember = /* GraphQL */ `
+  subscription OnUpdateMember($chatID: ID) {
+    onUpdateMember(chatID: $chatID) {
+      id
+      chatID
+      userID
+      status
+      priviledges
+      chat {
+        id
+        name
+        owner
+        messages {
+          id
+          text
+          owner
+          chatID
+          type
+          createdAt
+          updatedAt
+        }
+        members {
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMember = /* GraphQL */ `
+  subscription OnDeleteMember($chatID: ID) {
+    onDeleteMember(chatID: $chatID) {
+      id
+      chatID
+      userID
+      status
+      priviledges
+      chat {
+        id
+        name
+        owner
+        messages {
+          id
+          text
+          owner
+          chatID
+          type
+          createdAt
+          updatedAt
+        }
+        members {
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      member {
+        id
+        type
+        email
+        username
+        phone_number
+        family_name
+        given_name
+        chats {
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateMessage = /* GraphQL */ `
   subscription OnCreateMessage($chatID: ID) {
     onCreateMessage(chatID: $chatID) {
@@ -51,16 +225,31 @@ export const onCreateUser = /* GraphQL */ `
       family_name
       given_name
       chats {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -78,16 +267,31 @@ export const onUpdateUser = /* GraphQL */ `
       family_name
       given_name
       chats {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -105,16 +309,31 @@ export const onDeleteUser = /* GraphQL */ `
       family_name
       given_name
       chats {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -137,16 +356,31 @@ export const onCreateChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -169,16 +403,31 @@ export const onUpdateChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -201,151 +450,28 @@ export const onDeleteChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        items {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateMember = /* GraphQL */ `
-  subscription OnCreateMember {
-    onCreateMember {
-      id
-      chatID
-      userID
-      status
-      priviledges
-      chat {
         id
-        name
-        owner
-        messages {
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          text
+          name
           owner
-          chatID
-          type
           createdAt
           updatedAt
         }
-        members {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        type
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMember = /* GraphQL */ `
-  subscription OnUpdateMember {
-    onUpdateMember {
-      id
-      chatID
-      userID
-      status
-      priviledges
-      chat {
-        id
-        name
-        owner
-        messages {
+        member {
           id
-          text
-          owner
-          chatID
           type
+          email
+          username
+          phone_number
+          family_name
+          given_name
           createdAt
           updatedAt
-        }
-        members {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        type
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        chats {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMember = /* GraphQL */ `
-  subscription OnDeleteMember {
-    onDeleteMember {
-      id
-      chatID
-      userID
-      status
-      priviledges
-      chat {
-        id
-        name
-        owner
-        messages {
-          id
-          text
-          owner
-          chatID
-          type
-          createdAt
-          updatedAt
-        }
-        members {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      member {
-        id
-        type
-        email
-        username
-        phone_number
-        family_name
-        given_name
-        chats {
-          nextToken
         }
         createdAt
         updatedAt

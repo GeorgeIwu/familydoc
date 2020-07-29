@@ -28,16 +28,31 @@ export const createUser = /* GraphQL */ `
       family_name
       given_name
       chats {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -58,16 +73,31 @@ export const updateUser = /* GraphQL */ `
       family_name
       given_name
       chats {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -88,16 +118,31 @@ export const deleteUser = /* GraphQL */ `
       family_name
       given_name
       chats {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -123,16 +168,31 @@ export const createChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -158,16 +218,31 @@ export const updateChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -193,16 +268,31 @@ export const deleteChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        items {
+        id
+        chatID
+        userID
+        status
+        priviledges
+        chat {
           id
-          chatID
-          userID
-          status
-          priviledges
+          name
+          owner
           createdAt
           updatedAt
         }
-        nextToken
+        member {
+          id
+          type
+          email
+          username
+          phone_number
+          family_name
+          given_name
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -234,7 +324,13 @@ export const createMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          nextToken
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -248,7 +344,13 @@ export const createMember = /* GraphQL */ `
         family_name
         given_name
         chats {
-          nextToken
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -283,7 +385,13 @@ export const updateMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          nextToken
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -297,7 +405,13 @@ export const updateMember = /* GraphQL */ `
         family_name
         given_name
         chats {
-          nextToken
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -332,7 +446,13 @@ export const deleteMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          nextToken
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -346,7 +466,13 @@ export const deleteMember = /* GraphQL */ `
         family_name
         given_name
         chats {
-          nextToken
+          id
+          chatID
+          userID
+          status
+          priviledges
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt

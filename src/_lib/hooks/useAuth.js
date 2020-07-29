@@ -28,10 +28,9 @@ export const getActions = (actions) => ({
     },
     logout: async () => {
       actions.setLoading(true)
-      localStorage.clear()
       const res = await Auth.signOut()
-
-      actions.setResponse(res, () => actions.setUser(null))
+      
+      actions.setResponse(res, () => { localStorage.clear(); actions.setUser(null); })
     }
 })
 

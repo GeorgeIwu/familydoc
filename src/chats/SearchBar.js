@@ -8,7 +8,7 @@ import SearchItem from '../_lib/components/SearchItem'
 
 const Search = ({ userID, onSelect, children }) => {
   const [value, setValue] = useState('')
-  const [user, userActions] = useStore(userID)
+  const [chat, chatActions] = useStore(userID)
   const [anchorEl, setAnchorEl] = React.useState(null)
 
   // const handleAvatarOpen = (event) => {
@@ -22,7 +22,7 @@ const Search = ({ userID, onSelect, children }) => {
   const handleChange = (event) => {
     setValue(event.target.value)
     setAnchorEl(event.currentTarget);
-    userActions.searchUser(event.target.value, 'RECEIVER')
+    chatActions.searchChat(event.target.value)
   };
 
   return (
@@ -33,7 +33,7 @@ const Search = ({ userID, onSelect, children }) => {
         placeholder='search user'
         value={value}
       />
-        {value && user.search.items.map(item => children
+        {value && chat.search.items.map(item => children
             ? children(item)
             : <Popover
                 key={item.id}

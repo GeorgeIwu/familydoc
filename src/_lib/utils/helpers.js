@@ -54,16 +54,6 @@ export const getSubscriber = (processor) => (store, { subscriptionData }) => {
   // return newData
 }
 
-export const getUserFilter = (name, type) => ({
-  type: { eq: type },
-  or: [
-    { given_name: { contains: `${name}` } },
-    { family_name: { contains: `${name}`} },
-    { username: { contains: `${name}`} },
-    { email: { contains: `${name}`} },
-  ]
-})
-
 export const updateStoreUsers = (store, data) => {
   let newStore = { ...store }
 

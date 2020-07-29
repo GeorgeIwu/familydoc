@@ -1,5 +1,5 @@
 type User
-  @model(queries: { get: "getUser" })  {
+  @model(queries: { get: "getUser", list: "searchUsers" })  {
     id: ID!
     type: String!
     email: String!
@@ -7,24 +7,24 @@ type User
     phone_number: String!
     family_name: String!
     given_name: String!
-    chats: [Member] @connection(keyName: "byUser", fields: ["id"])
+    chats: [Member] ###@connection(keyName: "byUser", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
 
 type Chat
-  @model(queries: { get: "getChat" }) {
+  @model(queries: { get: "getChat", list: "searchChats" }) {
     id: ID!
     name: String!
     owner: String!
     messages: [Message]
-    members: [Member] @connection(keyName: "byChat", fields: ["id"])
+    members: [Member] ###@connection(keyName: "byChat", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }
 
 type Member
-  @model(queries: null)
+  @model(queries: null, subscriptions: null)
   @key(name: "byChat", fields: ["chatID", "userID"])
   @key(name: "byUser", fields: ["userID", "chatID"]) {
     id: ID!
@@ -77,6 +77,9 @@ type Query {
 }
 
 type Subscription {
+  onCreateMember(chatID: ID): Member @aws_subscribe(mutations: ["createMember"])
+  onUpdateMember(chatID: ID): Member @aws_subscribe(mutations: ["updateMember"])
+  onDeleteMember(chatID: ID): Member @aws_subscribe(mutations: ["deleteMember"])
   onCreateMessage(chatID: ID): Message @aws_subscribe(mutations: ["createMessage"])
   onUpdateMessage(chatID: ID): Message @aws_subscribe(mutations: ["updateMessage"])
   onDeleteMessage(chatID: ID): Message @aws_subscribe(mutations: ["deleteMessage"])

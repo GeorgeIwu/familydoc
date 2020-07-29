@@ -5,19 +5,23 @@ import * as Store from './store'
 
 export const getActions = (actions) => ({
   fetchChat: Store.getFetchChat(actions.getChat),
+  searchChat: Store.getSearchChat(actions.searchChats),
 })
 
 export default (userID = '', nextToken = '') => {
+  const [ getChat] = useLazyQuery(Store.GetChat)
+  const [ searchChats, { data: search } ] = useLazyQuery(Store.SearchChats)
   const { subscribeToMore, data: chatsData } = useQuery(Store.ListChats, { variables: { userID } } )
-  const [ getChat, { data } ] = useLazyQuery(Store.GetChat)
 
   useEffect(() => {
-    subscribeToMore(Store.onAddChat(userID))
-    subscribeToMore(Store.onEditChat(userID))
-    subscribeToMore(Store.onRemoveChat(userID))
-  }, [userID, subscribeToMore])
+    if (chatsData) {
+      subscribeToMore(Store.onAddChat(userID))
+      subscribeToMore(Store.onEditChat(userID))
+      subscribeToMore(Store.onRemoveChat(userID))
+    }
+  }, [userID, chatsData, subscribeToMore])
 
-  const chats = chatsData?.listChats?.items || []
-  const chatActions = getActions({ getChat })
+  const chats = { search, items:  chatsData?.listChats?.items || [] }
+  const chatActions = getActions({ getChat, searchChats })
   return [chats, chatActions]
 }

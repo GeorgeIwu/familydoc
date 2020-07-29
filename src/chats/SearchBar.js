@@ -33,7 +33,7 @@ const Search = ({ userID, onSelect, children }) => {
         placeholder='search user'
         value={value}
       />
-        {value && chat.search.items.map(item => children
+        {value && chat.search.map(item => children
             ? children(item)
             : <Popover
                 key={item.id}

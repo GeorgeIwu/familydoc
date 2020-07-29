@@ -10,7 +10,7 @@ export const getActions = (actions) => ({
 
 export default (userID = '', nextToken = '') => {
   const [ getChat] = useLazyQuery(Store.GetChat)
-  const [ searchChats, { data: search } ] = useLazyQuery(Store.SearchChats)
+  const [ searchChats, { data: searchData } ] = useLazyQuery(Store.SearchChats)
   const { subscribeToMore, data: chatsData } = useQuery(Store.ListChats, { variables: { userID } } )
 
   useEffect(() => {
@@ -21,7 +21,9 @@ export default (userID = '', nextToken = '') => {
     }
   }, [userID, chatsData, subscribeToMore])
 
-  const chats = { search, items:  chatsData?.listChats?.items || [] }
+  const chats = {
+    search: searchData?.searchChats?.items || [],
+    items:  chatsData?.listChats?.items || [] }
   const chatActions = getActions({ getChat, searchChats })
   return [chats, chatActions]
 }

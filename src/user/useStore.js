@@ -12,7 +12,7 @@ export const getActions = (actions) => ({
 
 export default (id, nextToken = '') => {
   const [updateUser] = useMutation(Store.UpdateUser)
-  const [searchUsers, { data: search }] = useLazyQuery(Store.SearchUsers)
+  const [searchUsers, { data: searchData }] = useLazyQuery(Store.SearchUsers)
   const { subscribeToMore, data: userData } = useQuery(Store.GetUser, { variables: { id } } )
 
 
@@ -23,7 +23,9 @@ export default (id, nextToken = '') => {
   }, [id, userData, subscribeToMore])
 
 
-  const user = { search, ...(userData?.getUser || {}) }
+  const user = {
+    search: searchData?.searchUsers?.items || [],
+    ...(userData?.getUser || {}) }
   const userActions = getActions({ updateUser, searchUsers })
   return [user, userActions]
 }

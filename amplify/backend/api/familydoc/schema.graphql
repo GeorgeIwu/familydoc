@@ -13,7 +13,7 @@ type User
 }
 
 type Chat
-  @model(queries: { get: "getChat", list: "searchChats" }) {
+  @model(queries: { get: "getChat", list: "searchChats" }, subscriptions: null) {
     id: ID!
     name: String!
     owner: String!
@@ -77,6 +77,9 @@ type Query {
 }
 
 type Subscription {
+  onCreateChat(userID: ID): Member @aws_subscribe(mutations: ["createMember"])
+  onUpdateChat(userID: ID): Member @aws_subscribe(mutations: ["updateMember"])
+  onDeleteChat(userID: ID): Member @aws_subscribe(mutations: ["deleteMember"])
   onCreateMember(chatID: ID): Member @aws_subscribe(mutations: ["createMember"])
   onUpdateMember(chatID: ID): Member @aws_subscribe(mutations: ["updateMember"])
   onDeleteMember(chatID: ID): Member @aws_subscribe(mutations: ["deleteMember"])

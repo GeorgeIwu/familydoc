@@ -13,9 +13,7 @@ const SearchBar = ({ chatID, onSelect, items }) => {
     membersActions.searchUser(event.target.value)
   };
 
-  const getAction = (user) => {
-    return items.find(i => i.userID === user.id) && onSelect
-  };
+  const isMember = (user) => items.find(item => item.userID === user.id)
 
   return (
     <StyledSearchBar>
@@ -27,7 +25,7 @@ const SearchBar = ({ chatID, onSelect, items }) => {
         getOptionLabel={(option) => option.given_name}
         renderOption={(item) => (
           <React.Fragment>
-            <SearchItem item={item} attribute={'given_name'} handleAction={getAction(item)} />
+            <SearchItem item={item} attribute={'given_name'} onAction={!isMember(item) && onSelect} />
           </React.Fragment>
         )}
         renderInput={(params) => <TextField {...params} onChange={handleChange} label="Search user" variant="outlined" />}

@@ -30,22 +30,22 @@ const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   updatedAt: updatedAt || new Date(),
 })
 
-const getMessageInput = ({ id, chatID, text, owner, type, createdAt, updatedAt, chat }) => ({
-  id: id || uuid(),
-  type: type || 'ALL',
-  text: text || 'Welcome',
-  owner: owner || chat.owner,
-  chatID: chatID || chat.id,
-  createdAt: createdAt || new Date(),
-  updatedAt: updatedAt || new Date(),
-})
-
 const getMemberInput = ({ id, chatID, userID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
   id: id || uuid(),
   chatID: chatID || chat.id,
   userID: userID || user.id,
   status: status || 'APPROVED',
   priviledges: priviledges || ['ALL'],
+  createdAt: createdAt || new Date(),
+  updatedAt: updatedAt || new Date(),
+})
+
+const getMessageInput = ({ id, chatID, text, owner, type, createdAt, updatedAt, chat }) => ({
+  id: id || uuid(),
+  type: type || 'ALL',
+  text: text || 'Welcome',
+  owner: owner || chat.owner,
+  chatID: chatID || chat.id,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),
 })

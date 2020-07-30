@@ -38,7 +38,6 @@ export const getUpdater = (processor, docNode) => (store, { data }) => {
   const oldData = store.readQuery(docNode)
 
   const newData = processor(oldData, data)
-  // console.log({oldData, item, newData})
 
   return store.writeQuery({ ...docNode, data: newData})
 }
@@ -82,8 +81,8 @@ export const updateStoreUsers = (store, data) => {
 export const updateStoreChats = (store, data) => {
   let newStore = { ...store }
 
-  if (data.createChat) {
-    newStore.listChats.items = [ ...newStore.listChats.items, data.createChat ]
+  if (data.createChat || data.onCreateChat) {
+    newStore.listChats.items = [ ...newStore.listChats.items, data.createChat || data.onCreateChat.chat ]
   }
   if (data.getChat) {
     const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.getChat.id)
@@ -100,6 +99,28 @@ export const updateStoreChats = (store, data) => {
   if (data.deleteChat) {
     const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.deleteChat.id)
     newStore.listChats.items.splice(itemIndex, 1)
+  }
+
+  return newStore
+}
+
+export const updateStoreMembers = (store, data) => {
+  let newStore = { ...store }
+
+  if (data.createMember || data.onCreateMember) {
+    newStore.listMembers.items = [ ...newStore.listMembers.items, data.createMember || data.onCreateMember ]
+  }
+  if (data.listMembers) {
+    const items = newStore.listMembers || []
+    newStore.listMembers = { ...data, items: data.listMembers.items.concat(items) }
+  }
+  if (data.updateMember) {
+    const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.updateMember.id)
+    newStore.listMembers.items[itemIndex] = data.updateMember
+  }
+  if (data.deleteMember) {
+    const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.deleteMember.id)
+    newStore.listMembers.items.splice(itemIndex, 1)
   }
 
   return newStore
@@ -127,24 +148,3 @@ export const updateStoreMessages = (store, data) => {
   return newStore
 }
 
-export const updateStoreMembers = (store, data) => {
-  let newStore = { ...store }
-
-  if (data.createMember) {
-    newStore.listMembers.items = [ ...newStore.listMembers.items, data.createMember ]
-  }
-  if (data.listMembers) {
-    const items = newStore.listMembers || []
-    newStore.listMembers = { ...data, items: data.listMembers.items.concat(items) }
-  }
-  if (data.updateMember) {
-    const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.updateMember.id)
-    newStore.listMembers.items[itemIndex] = data.updateMember
-  }
-  if (data.deleteMember) {
-    const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.deleteMember.id)
-    newStore.listMembers.items.splice(itemIndex, 1)
-  }
-
-  return newStore
-}

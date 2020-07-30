@@ -3,7 +3,7 @@ import React from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import ChatList from "../chats";
+import ChatList from "../chats/ChatList";
 import { useStore } from '../_lib/hooks'
 
 
@@ -15,7 +15,7 @@ const StyledGrid = styled(Grid)`
 
 const Conversations = ({ history }) => {
   const [store] = useStore()
-  
+
   const handleSelect = (item) => {
     history.push(`/conversation/${item.id}`)
   }

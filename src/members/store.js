@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import gql from 'graphql-tag'
-import { listMembers } from '../_lib/graphql/queries'
+import debounce from 'lodash/debounce'
+import { listMembers, searchUsers } from '../_lib/graphql/queries'
 import { createMember, updateMember, deleteMember } from '../_lib/graphql/mutations'
 import { onCreateMember, onUpdateMember, onDeleteMember } from '../_lib/graphql/subscriptions'
 import { buildSchema, getSubscriber, getUpdater, updateStoreMembers } from '../_lib/utils'
@@ -9,6 +10,7 @@ export const ListMembers = gql(listMembers);
 export const CreateMember = gql(createMember)
 export const UpdateMember = gql(updateMember)
 export const DeleteMember = gql(deleteMember)
+export const SearchUsers = gql(searchUsers)
 
 const OnCreateMember = gql(onCreateMember)
 const OnUpdateMember = gql(onUpdateMember)
@@ -20,6 +22,18 @@ const TYPES = {
   updateMember: 'updateMember',
   deleteMember: 'deleteMember',
 }
+
+
+
+const getUserFilter = (name, type) => ({
+  type: { eq: type },
+  or: [
+    { given_name: { contains: `${name}` } },
+    { family_name: { contains: `${name}`} },
+    { username: { contains: `${name}`} },
+    { email: { contains: `${name}`} },
+  ]
+})
 
 const getMemberInput = ({ id, chatID, userID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
   id: id || uuid(),
@@ -68,6 +82,13 @@ export const getRemoveMember = (deleteMember, chatID) => async (member) => {
     update: getUpdater(updateStoreMembers, { query: ListMembers, variables: { chatID  } }),
   })
 }
+
+export const getSearchUser = (searchUsers, type = 'PROVIDER') => debounce(async (name) => {
+  return await searchUsers({
+    variables: { filter: getUserFilter(name, type) },
+    context: { serializationKey: 'LIST_USERS' },
+  })
+}, 100)
 
 export const onAddMember = (chatID) => ({ document: OnCreateMember, variables: { chatID }, updateQuery: getSubscriber(updateStoreMembers) })
 export const onEditMember = (chatID) => ({ document: OnUpdateMember, variables: { chatID }, updateQuery: getSubscriber(updateStoreMembers) })

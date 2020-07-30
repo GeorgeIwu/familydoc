@@ -20,7 +20,7 @@ const Messages = ({ userID, chatID }) => {
 
   return (
     <div style={{}}>
-      {messages.map(message => (
+      {messages.items.map(message => (
         message.id === (toggledMessage && toggledMessage.id)
           ? <SendBox handleSave={editMessage} handleCancel={toggleMessage} message={message} />
           : <MessageBox key={message.id} removeMessage={removeMessage} toggleMessage={toggleMessage} message={message} />

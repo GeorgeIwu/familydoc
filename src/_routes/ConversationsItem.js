@@ -3,9 +3,8 @@ import React from 'react'
 import styled from "styled-components";
 import Grid from '@material-ui/core/Grid';
 
-import ChatMessages from "../messages";
-import ChatMembers from "../members";
-import SearchBar from "../user/SearchBar";
+import MessageList from "../messages/MessageList";
+import MemberList from "../members/MemberList";
 // import ChatMedicals from "./ChatMedicals";
 import { useStore } from '../_lib/hooks'
 import Tabs from "../_lib/components/Tabs";
@@ -28,11 +27,8 @@ const ConversationsItem = ({ history, location }) => {
       </Grid>
       <Grid item xs={8}>
         <Tabs>
-          <ChatMessages tabName='Messages' userID={userID} chatID={chatID} />
-          <div tabName='Members' >
-            <SearchBar userID={userID} />
-            <ChatMembers  userID={userID} chatID={chatID} />
-          </div>
+          <MessageList tabName='Messages' userID={userID} chatID={chatID} />
+          <MemberList tabName='Members' userID={userID} chatID={chatID} />
           {/*<ChatMedicals tabName='Medicals' chatApi={chatApi} /> */}
         </Tabs>
       </Grid>

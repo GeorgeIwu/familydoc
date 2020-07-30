@@ -6,11 +6,15 @@ import useStore from './useStore'
 import { StyledSearchBar } from './style'
 import SearchItem from '../_lib/components/SearchItem'
 
-const SearchBar = ({ userID, onSelect, children }) => {
-  const [user, userActions] = useStore(userID)
+const SearchBar = ({ chatID, onSelect, items }) => {
+  const [members, membersActions] = useStore(chatID)
 
   const handleChange = (event) => {
-    userActions.searchUser(event.target.value)
+    membersActions.searchUser(event.target.value)
+  };
+
+  const getAction = (user) => {
+    return items.find(i => i.userID === user.id) && onSelect
   };
 
   return (
@@ -19,11 +23,11 @@ const SearchBar = ({ userID, onSelect, children }) => {
         id="combo-box-demo"
         autoHighlight
         style={{ width: 300 }}
-        options={user.search}
+        options={members.search}
         getOptionLabel={(option) => option.given_name}
-        renderOption={(option) => (
+        renderOption={(item) => (
           <React.Fragment>
-            <SearchItem item={option} attribute={'given_name'} handleAction={onSelect} />
+            <SearchItem item={item} attribute={'given_name'} handleAction={getAction(item)} />
           </React.Fragment>
         )}
         renderInput={(params) => <TextField {...params} onChange={handleChange} label="Search user" variant="outlined" />}

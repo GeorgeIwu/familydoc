@@ -1,18 +1,15 @@
 
 import { useEffect } from 'react'
-import { useMutation, useQuery, useLazyQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import * as Store from './store'
 
-const PROVIDER = 'USER'
 export const getActions = (actions) => ({
   editUser: Store.getEditUser(actions.updateUser),
   disableUser: Store.getEditUser(actions.updateUser),
-  searchUser: Store.getSearchUser(actions.searchUsers, PROVIDER),
 })
 
 export default (id, nextToken = '') => {
   const [updateUser] = useMutation(Store.UpdateUser)
-  const [searchUsers, { data: searchData }] = useLazyQuery(Store.SearchUsers)
   const { subscribeToMore, data: userData } = useQuery(Store.GetUser, { variables: { id } } )
 
 
@@ -23,9 +20,7 @@ export default (id, nextToken = '') => {
   }, [id, userData, subscribeToMore])
 
 
-  const user = {
-    search: searchData?.searchUsers?.items || [],
-    ...(userData?.getUser || {}) }
-  const userActions = getActions({ updateUser, searchUsers })
+  const user = userData?.getUser || {}
+  const userActions = getActions({ updateUser })
   return [user, userActions]
 }

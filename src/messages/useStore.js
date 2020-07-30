@@ -23,7 +23,9 @@ export default (chatID = '', nextToken = '') => {
     }
   }, [chatID, messagesData, subscribeToMore])
 
-  const messages = messagesData?.listMessages?.items || []
+  const messages = {
+    items: messagesData?.listMessages?.items || []
+  }
   const messagesActions = getActions({ createMessage, updateMessage, deleteMessage }, chatID)
   return [messages, messagesActions]
 }

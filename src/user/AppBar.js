@@ -32,8 +32,9 @@ const AppBar = ({ children, userID, handleLogout, renderSearch = () => {} }) => 
         <Toolbar>
           <IconButton edge="start" className={'menu-button'} color="inherit" aria-label="menu">
             <MenuIcon />
-            {renderSearch({userID})}
           </IconButton>
+          
+          {renderSearch({userID})}
 
           <Link to="/conversation/new" className={'link'}>
             <IconButton color="inherit" aria-label="add">

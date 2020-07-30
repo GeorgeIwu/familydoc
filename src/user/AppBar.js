@@ -7,11 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
-import SearchBar from './SearchBar'
 import useStore from './useStore'
 import { StyledAppBar } from './style'
 
-const AppBar = ({ userID, handleLogout, showSearch = true, children }) => {
+const AppBar = ({ children, userID, handleLogout, renderSearch = () => {} }) => {
   const [user] = useStore(userID)
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -33,7 +32,7 @@ const AppBar = ({ userID, handleLogout, showSearch = true, children }) => {
         <Toolbar>
           <IconButton edge="start" className={'menu-button'} color="inherit" aria-label="menu">
             <MenuIcon />
-            {showSearch && <SearchBar userID={userID} />}
+            {renderSearch({userID})}
           </IconButton>
 
           <Link to="/conversation/new" className={'link'}>

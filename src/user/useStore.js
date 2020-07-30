@@ -3,11 +3,11 @@ import { useEffect } from 'react'
 import { useMutation, useQuery, useLazyQuery } from '@apollo/react-hooks'
 import * as Store from './store'
 
-const PROVIDERS = 'PROVIDERS'
+const PROVIDER = 'USER'
 export const getActions = (actions) => ({
   editUser: Store.getEditUser(actions.updateUser),
   disableUser: Store.getEditUser(actions.updateUser),
-  searchUser: Store.getSearchUser(actions.searchUsers, PROVIDERS),
+  searchUser: Store.getSearchUser(actions.searchUsers, PROVIDER),
 })
 
 export default (id, nextToken = '') => {

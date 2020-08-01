@@ -13,7 +13,7 @@ const ChatMembers = ({ userID, chatID }) => {
   return (
     <div style={{}}>
       <SearchBar chatID={chatID} onSelect={addMember} items={members.items} />
-      {members.items.map(({ member }) => <MemberItem key={member.id} member={member} onDelete={removeMember} />)}
+      {members.items.map((member) => <MemberItem key={member.id} member={member} onDelete={removeMember} />)}
     </div>
   )
 }

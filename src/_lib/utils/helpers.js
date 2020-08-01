@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep'
 // function combineReducers(reducers) {
 //   return (state = {}, action) => {
 //     const newState = {};
@@ -35,116 +36,123 @@ export const buildSchema = (input, type, action, additionalInput = {} ) => ({
 })
 
 export const getUpdater = (processor, docNode) => (store, { data }) => {
-  const oldData = store.readQuery(docNode)
+  const oldStore = cloneDeep(store.readQuery(docNode))
 
-  const newData = processor(oldData, data)
+  const newStore = processor(oldStore, data)
 
-  return store.writeQuery({ ...docNode, data: newData})
+  console.log(`updater`, newStore)
+  return store.writeQuery({ ...docNode, data: newStore})
 }
 
 export const getSubscriber = (processor) => (store, { subscriptionData }) => {
-  console.log(`subscribing`, processor, subscriptionData)
-  // const oldData = store
+  const oldStore = cloneDeep(store)
 
-  // const data = subscriptionData.data
-  // // const item = data[Object.keys(data)[0]]
-  // const newData = processor(oldData, data)
+  const newStore = processor(oldStore, subscriptionData.data)
 
-  // return newData
+  console.log(`subscriber`, newStore)
+  return newStore
 }
 
 export const updateStoreUsers = (store, data) => {
-  let newStore = { ...store }
-
-  if (data.createUser) {
-    newStore.getUser = data.createUser
-  }
   if (data.getUser) {
-    const itemIndex = newStore.listUsers.items.findIndex(item => item.id === data.getUser.id)
-    newStore.getUser = data || newStore.listUsers.items[itemIndex]
+    const itemIndex = store.listUsers.items.findIndex(item => item.id === data.getUser.id)
+    store.getUser = data || store.listUsers.items[itemIndex]
   }
   if (data.listUsers) {
-    const items = newStore.listUsers || []
-    newStore.listUsers = { ...data, items: data.listUsers.items.concat(items) }
+    const items = store.listUsers || []
+    store.listUsers = { ...data, items: data.listUsers.items.concat(items) }
+  }
+  if (data.createUser) {
+    store.getUser = data.createUser
   }
   if (data.upateUser) {
-    newStore.getUser = data.upateUser
+    store.getUser = data.upateUser
   }
   if (data.deleteUser) {
-    const itemIndex = newStore.listUsers.items.findIndex(item => item.id === data.deleteUser.id)
-    newStore.listUsers.items.splice(itemIndex, 1)
+    const itemIndex = store.listUsers.items.findIndex(item => item.id === data.deleteUser.id)
+    store.listUsers.items.splice(itemIndex, 1)
   }
 
-  return newStore
+  return store
 }
 
 export const updateStoreChats = (store, data) => {
-  let newStore = { ...store }
-
-  if (data.createChat || data.onCreateChat) {
-    newStore.listChats.items = [ ...newStore.listChats.items, data.createChat || data.onCreateChat.chat ]
-  }
   if (data.getChat) {
-    const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.getChat.id)
-    newStore.getChat = data.getChat || newStore.listChats.items[itemIndex]
+    const itemIndex = store.listChats.items.findIndex(item => item.id === data.getChat.id)
+    store.getChat = data.getChat || store.listChats.items[itemIndex]
   }
   if (data.listChats) {
-    const items = newStore.listChats || []
-    newStore.listChats = { ...data, items: data.listChats.items.concat(items) }
+    const items = store.listChats || []
+    store.listChats = { ...data, items: data.listChats.items.concat(items) }
   }
-  if (data.upateChat) {
-    const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.upateChat.id)
-    newStore.listChats.items[itemIndex] = data.upateChat
+  if (data.createChat) {
+    store.listChats.items = [ ...store.listChats.items, data.createChat ]
   }
-  if (data.deleteChat) {
-    const itemIndex = newStore.listChats.items.findIndex(item => item.id === data.deleteChat.id)
-    newStore.listChats.items.splice(itemIndex, 1)
+  if (data.upateChat || data.onUpdateChat || data.onCreateChat) {
+    const newData = data.upateChat || data?.onUpdateChat?.chat || data?.onCreateChat?.chat
+    let itemIndex = store.listChats.items.findIndex(item => item.id === newData.id)
+    console.log({newData, itemIndex})
+
+    itemIndex = itemIndex !== -1 ? itemIndex : store.listChats.items.length
+    store.listChats.items[itemIndex] = newData
+  }
+  if (data.deleteChat || data.onDeleteChat) {
+    const newData = data.deleteChat || data?.onDeleteChat.chat
+    const itemIndex = store.listChats.items.findIndex(item => item.id === newData.id)
+
+    store.listChats.items.splice(itemIndex, 1)
   }
 
-  return newStore
+  return store
 }
 
 export const updateStoreMembers = (store, data) => {
-  let newStore = { ...store }
-
-  if (data.createMember || data.onCreateMember) {
-    newStore.listMembers.items = [ ...newStore.listMembers.items, data.createMember || data.onCreateMember ]
-  }
   if (data.listMembers) {
-    const items = newStore.listMembers || []
-    newStore.listMembers = { ...data, items: data.listMembers.items.concat(items) }
+    const items = store.listMembers || []
+    store.listMembers = { ...data, items: data.listMembers.items.concat(items) }
   }
-  if (data.updateMember) {
-    const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.updateMember.id)
-    newStore.listMembers.items[itemIndex] = data.updateMember
+  if (data.createMember) {
+    store.listMembers.items = [ ...store.listMembers.items, data.createMember ]
   }
-  if (data.deleteMember) {
-    const itemIndex = newStore.listMembers.items.findIndex(item => item.id === data.deleteMember.id)
-    newStore.listMembers.items.splice(itemIndex, 1)
+  if (data.updateMember || data.onUpdateMember || data.onCreateMember) {
+    const newData = data.updateMember || data.onUpdateMember || data.onCreateMember
+    let itemIndex = store.listMembers.items.findIndex(item => item.id === newData.id)
+
+    itemIndex = itemIndex !== -1 ? itemIndex : store.listMembers.items.length
+    store.listMembers.items[itemIndex] = newData
+  }
+  if (data.deleteMember || data.onDeleteMember) {
+    const newData = data.deleteMember || data.onDeleteMember
+    const itemIndex = store.listMembers.items.findIndex(item => item.id === newData.id)
+
+    store.listMembers.items.splice(itemIndex, 1)
   }
 
-  return newStore
+  return store
 }
 
 export const updateStoreMessages = (store, data) => {
-  let newStore = { ...store }
-
-  if (data.createMessage) {
-    newStore.listMessages.items = [ ...newStore.listMessages.items, data.createMessage ]
-  }
   if (data.listMessages) {
-    const items = newStore.listMessages || []
-    newStore.listMessages = { ...data, items: data.listMessages.items.concat(items) }
+    const items = store.listMessages || []
+    store.listMessages = { ...data, items: data.listMessages.items.concat(items) }
   }
-  if (data.upateMessage) {
-    const itemIndex = newStore.listMessages.items.findIndex(item => item.id === data.upateMessage.id)
-    newStore.listMessages.items[itemIndex] = data.upateMessage
+  if (data.createMessage) {
+    store.listMessages.items = [ ...store.listMessages.items, data.createMessage ]
   }
-  if (data.deleteMessage) {
-    const itemIndex = newStore.listMessages.items.findIndex(item => item.id === data.deleteMessage.id)
-    newStore.listMessages.items.splice(itemIndex, 1)
+  if (data.updateMessage || data.onUpdateMessage || data.onCreateMessage) {
+    const newData = data.updateMessage || data.onUpdateMessage || data.onCreateMessage
+    let itemIndex = store.listMessages.items.findIndex(item => item.id === newData.id)
+
+    itemIndex = itemIndex !== -1 ? itemIndex : store.listMessages.items.length
+    store.listMessages.items[itemIndex] = newData
+  }
+  if (data.deleteMessage || data.onDeleteMessage) {
+    const newData = data.deleteMessage || data.onDeleteMessage
+    const itemIndex = store.listMessages.items.findIndex(item => item.id === newData.id)
+
+    store.listMessages.items.splice(itemIndex, 1)
   }
 
-  return newStore
+  return store
 }
 

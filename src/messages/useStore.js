@@ -13,15 +13,13 @@ export default (chatID = '', nextToken = '') => {
   const [createMessage] = useMutation(Store.CreateMessage)
   const [updateMessage] = useMutation(Store.UpdateMessage)
   const [deleteMessage] = useMutation(Store.DeleteMessage)
-  const { subscribeToMore, data: messagesData } = useQuery(Store.ListMessages, {variables: { chatID }} )
+  const { data: messagesData, subscribeToMore } = useQuery(Store.ListMessages, {variables: { chatID }} )
 
   useEffect(() => {
-    if (messagesData) {
-      subscribeToMore(Store.onAddMessage(chatID))
-      subscribeToMore(Store.onEditMessage(chatID))
-      subscribeToMore(Store.onRemoveMessage(chatID))
-    }
-  }, [chatID, messagesData, subscribeToMore])
+    subscribeToMore(Store.onAddMessage(chatID))
+    subscribeToMore(Store.onEditMessage(chatID))
+    subscribeToMore(Store.onRemoveMessage(chatID))
+  }, [])
 
   const messages = {
     items: messagesData?.listMessages?.items || []

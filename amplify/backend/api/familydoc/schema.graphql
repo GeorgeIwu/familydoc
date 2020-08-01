@@ -18,7 +18,7 @@ type Chat
     name: String!
     owner: String!
     messages: [Message]
-    members: [Member] ###@connection(keyName: "byChat", fields: ["id"])
+    members: [Member] @connection(keyName: "byChat", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
 }

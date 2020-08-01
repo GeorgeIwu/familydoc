@@ -24,7 +24,7 @@ const getUserInput = ({ id, sub, email, username, phone_number, family_name, giv
 
 const getChatInput = ({ id, name, owner, createdAt, updatedAt, user }) => ({
   id: id || uuid(),
-  name: name || user.given_name,
+  name: name || `${user.given_name} ${user.family_name} ${user.email} ${user.phone_number}`,
   owner: owner || user.id,
   createdAt: createdAt || new Date(),
   updatedAt: updatedAt || new Date(),

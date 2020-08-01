@@ -168,31 +168,16 @@ export const createChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        id
-        chatID
-        userID
-        status
-        priviledges
-        chat {
+        items {
           id
-          name
-          owner
+          chatID
+          userID
+          status
+          priviledges
           createdAt
           updatedAt
         }
-        member {
-          id
-          type
-          email
-          username
-          phone_number
-          family_name
-          given_name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -218,31 +203,16 @@ export const updateChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        id
-        chatID
-        userID
-        status
-        priviledges
-        chat {
+        items {
           id
-          name
-          owner
+          chatID
+          userID
+          status
+          priviledges
           createdAt
           updatedAt
         }
-        member {
-          id
-          type
-          email
-          username
-          phone_number
-          family_name
-          given_name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -268,31 +238,16 @@ export const deleteChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        id
-        chatID
-        userID
-        status
-        priviledges
-        chat {
+        items {
           id
-          name
-          owner
+          chatID
+          userID
+          status
+          priviledges
           createdAt
           updatedAt
         }
-        member {
-          id
-          type
-          email
-          username
-          phone_number
-          family_name
-          given_name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -324,13 +279,7 @@ export const createMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -385,13 +334,7 @@ export const updateMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -446,13 +389,7 @@ export const deleteMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt

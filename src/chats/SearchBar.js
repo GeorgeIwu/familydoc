@@ -13,6 +13,8 @@ const SearchBar = ({ userID, onSelect }) => {
     chatActions.searchChat(event.target.value)
   };
 
+  const isMember = (chat) => chat?.members?.items.find(member => member.userID === userID)
+
   return (
     <StyledSearchBar>
       <Autocomplete
@@ -20,9 +22,9 @@ const SearchBar = ({ userID, onSelect }) => {
         style={{ width: 300 }}
         options={chat.search}
         getOptionLabel={(option) => option.name}
-        renderOption={(option) => (
+        renderOption={(item) => (
           <React.Fragment>
-            <SearchItem item={option} attribute={'name'} handleAction={onSelect} />
+            <SearchItem item={item} attribute={'name'} onAction={!isMember(item) && onSelect} actionName={'Chat'} />
           </React.Fragment>
         )}
         renderInput={(params) => <TextField {...params} onChange={handleChange} label="Search user" variant="outlined" />}

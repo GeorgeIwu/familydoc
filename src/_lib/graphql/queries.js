@@ -28,13 +28,7 @@ export const listChats = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -202,31 +196,7 @@ export const getChat = /* GraphQL */ `
         updatedAt
       }
       members {
-        id
-        chatID
-        userID
-        status
-        priviledges
-        chat {
-          id
-          name
-          owner
-          createdAt
-          updatedAt
-        }
-        member {
-          id
-          type
-          email
-          username
-          phone_number
-          family_name
-          given_name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -254,13 +224,16 @@ export const searchChats = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          items {
+            id
+            chatID
+            userID
+            status
+            priviledges
+            createdAt
+            updatedAt
+          }
+          nextToken
         }
         createdAt
         updatedAt

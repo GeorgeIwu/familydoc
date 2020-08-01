@@ -23,13 +23,7 @@ export const onCreateChat = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -81,13 +75,7 @@ export const onUpdateChat = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -139,13 +127,7 @@ export const onDeleteChat = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -197,13 +179,7 @@ export const onCreateMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -255,13 +231,7 @@ export const onUpdateMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt
@@ -313,13 +283,7 @@ export const onDeleteMember = /* GraphQL */ `
           updatedAt
         }
         members {
-          id
-          chatID
-          userID
-          status
-          priviledges
-          createdAt
-          updatedAt
+          nextToken
         }
         createdAt
         updatedAt

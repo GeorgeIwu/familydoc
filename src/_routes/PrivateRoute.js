@@ -8,6 +8,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const [store, storeActions] = useStore()
   const userID = store.auth?.user?.id
 
+  const handleSelect = () => {}
+
   return (
     <Route
       {...rest}
@@ -17,7 +19,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
           : <AppBar
               userID={userID}
               handleLogout={storeActions.auth.logout}
-              renderSearch={({userID}) => <SearchBar userID={userID} />}
+              renderSearch={({userID}) => <SearchBar userID={userID} onSelect={handleSelect} />}
             >
               <Component {...props} />
             </AppBar>

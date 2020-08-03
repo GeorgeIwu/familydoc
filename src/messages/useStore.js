@@ -13,9 +13,10 @@ export default (chatID = '', nextToken = '') => {
   const [createMessage] = useMutation(Store.CreateMessage)
   const [updateMessage] = useMutation(Store.UpdateMessage)
   const [deleteMessage] = useMutation(Store.DeleteMessage)
-  const { data: messagesData, subscribeToMore } = useQuery(Store.ListMessages, {variables: { chatID }} )
+  const { data: messagesData, refetch, subscribeToMore } = useQuery(Store.ListMessages, {variables: { chatID }} )
 
   useEffect(() => {
+    refetch()
     subscribeToMore(Store.onAddMessage(chatID))
     subscribeToMore(Store.onEditMessage(chatID))
     subscribeToMore(Store.onRemoveMessage(chatID))

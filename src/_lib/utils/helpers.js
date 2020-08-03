@@ -70,7 +70,7 @@ export const updateStoreUsers = (store, data) => {
   }
   if (data.deleteUser) {
     const itemIndex = store.listUsers.items.findIndex(item => item.id === data.deleteUser.id)
-    store.listUsers.items.splice(itemIndex, 1)
+    if (itemIndex !== -1) store.listUsers.items.splice(itemIndex, 1)
   }
 
   return store
@@ -100,7 +100,7 @@ export const updateStoreChats = (store, data) => {
     const newData = data.deleteChat || data?.onDeleteChat.chat
     const itemIndex = store.listChats.items.findIndex(item => item.id === newData.id)
 
-    store.listChats.items.splice(itemIndex, 1)
+    if (itemIndex !== -1) store.listChats.items.splice(itemIndex, 1)
   }
 
   return store
@@ -125,7 +125,7 @@ export const updateStoreMembers = (store, data) => {
     const newData = data.deleteMember || data.onDeleteMember
     const itemIndex = store.listMembers.items.findIndex(item => item.id === newData.id)
 
-    store.listMembers.items.splice(itemIndex, 1)
+    if (itemIndex !== -1) store.listMembers.items.splice(itemIndex, 1)
   }
 
   return store
@@ -150,7 +150,7 @@ export const updateStoreMessages = (store, data) => {
     const newData = data.deleteMessage || data.onDeleteMessage
     const itemIndex = store.listMessages.items.findIndex(item => item.id === newData.id)
 
-    store.listMessages.items.splice(itemIndex, 1)
+    if (itemIndex !== -1) store.listMessages.items.splice(itemIndex, 1)
   }
 
   return store

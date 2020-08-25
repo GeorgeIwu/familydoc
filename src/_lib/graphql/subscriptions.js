@@ -27,6 +27,8 @@ export const onCreateChat = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -79,6 +81,8 @@ export const onUpdateChat = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -131,6 +135,8 @@ export const onDeleteChat = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -183,6 +189,8 @@ export const onCreateMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -235,6 +243,8 @@ export const onUpdateMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -287,6 +297,8 @@ export const onDeleteMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -374,6 +386,8 @@ export const onCreateUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -416,6 +430,8 @@ export const onUpdateUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -458,6 +474,8 @@ export const onDeleteUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id

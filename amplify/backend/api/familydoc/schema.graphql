@@ -21,6 +21,8 @@ type Chat
     members: [Member] @connection(keyName: "byChat", fields: ["id"])
     createdAt: AWSDateTime!
     updatedAt: AWSDateTime!
+    appointmentStart: AWSDateTime
+    appointmentEnd: AWSDateTime
 }
 
 type Member

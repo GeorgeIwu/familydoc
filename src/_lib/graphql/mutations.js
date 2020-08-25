@@ -39,6 +39,8 @@ export const createUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -84,6 +86,8 @@ export const updateUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -129,6 +133,8 @@ export const deleteUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -181,6 +187,8 @@ export const createChat = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      appointmentStart
+      appointmentEnd
     }
   }
 `;
@@ -216,6 +224,8 @@ export const updateChat = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      appointmentStart
+      appointmentEnd
     }
   }
 `;
@@ -251,6 +261,8 @@ export const deleteChat = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      appointmentStart
+      appointmentEnd
     }
   }
 `;
@@ -283,6 +295,8 @@ export const createMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -338,6 +352,8 @@ export const updateMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id
@@ -393,6 +409,8 @@ export const deleteMember = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       member {
         id

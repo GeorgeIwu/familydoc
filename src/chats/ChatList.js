@@ -1,7 +1,12 @@
 
 import React from 'react'
+import styled from "styled-components";
 import useStore from './useStore'
 import ChatItem from './ChatItem';
+
+const StyledDiv = styled.div`
+  padding: 5px
+`
 
 const ChatList = ({ userID, handleSelect }) => {
   const [chats, chatActions] = useStore(userID)
@@ -9,9 +14,11 @@ const ChatList = ({ userID, handleSelect }) => {
   const removeChat = async (chat) => chatActions.removeChat(chat)
 
   return (
-    <div style={{}}>
+    <div>
       {chats.items.map(item =>
-        <ChatItem key={item.id} chat={item} isLast={false} handleClick={handleSelect} onDelete={removeChat} />)}
+        <StyledDiv>
+          <ChatItem key={item.id} chat={item} isLast={false} handleClick={handleSelect} onDelete={removeChat} />
+        </StyledDiv>)}
     </div>
   )
 }

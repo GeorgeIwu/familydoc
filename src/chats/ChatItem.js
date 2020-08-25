@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -8,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 
 const StyledItem = styled.div`
+  background-color: white
   inline: {
     display: inline
   }
@@ -49,7 +49,6 @@ const ChatListItem = ({
         />
 
       </ListItem>
-      {!isLast && <Divider variant="inset" component="li" />}
     </StyledItem>
   );
 }

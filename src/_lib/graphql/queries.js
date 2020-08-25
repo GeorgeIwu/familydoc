@@ -32,6 +32,8 @@ export const listChats = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       nextToken
     }
@@ -62,6 +64,8 @@ export const listMembers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -129,6 +133,8 @@ export const getUser = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          appointmentStart
+          appointmentEnd
         }
         member {
           id
@@ -200,6 +206,8 @@ export const getChat = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      appointmentStart
+      appointmentEnd
     }
   }
 `;
@@ -237,6 +245,8 @@ export const searchChats = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        appointmentStart
+        appointmentEnd
       }
       nextToken
     }

@@ -1,42 +1,42 @@
 {
-    "auth": {
-        "familydoc6df81674": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": []
-        }
-    },
-    "api": {
-        "familydoc": {
-            "service": "AppSync",
-            "providerPlugin": "awscloudformation",
-            "output": {
-                "authConfig": {
-                    "additionalAuthenticationProviders": [],
-                    "defaultAuthentication": {
-                        "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-                        "userPoolConfig": {
-                            "userPoolId": "authfamilydoc6df81674"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "function": {
-        "familydocf7331a63": {
-            "build": true,
-            "providerPlugin": "awscloudformation",
-            "service": "Lambda",
-            "dependsOn": [
-                {
-                    "category": "api",
-                    "resourceName": "familydoc",
-                    "attributes": [
-                        "GraphQLAPIIdOutput"
-                    ]
-                }
-            ]
-        }
-    }
+	"auth": {
+		"familydoc6df81674": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"api": {
+		"familydoc": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authfamilydoc6df81674"
+						}
+					}
+				}
+			}
+		}
+	},
+	"function": {
+		"familydocba6bd2d0": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"dependsOn": [
+				{
+					"category": "api",
+					"resourceName": "familydoc",
+					"attributes": [
+						"GraphQLAPIIdOutput"
+					]
+				}
+			]
+		}
+	}
 }

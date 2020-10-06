@@ -1,7 +1,93 @@
-enum StatusType {
-  OFFERED
-  REQUESTED
-  APPROVED
+type User
+  @model(queries: { get: "getUser", list: "searchUsers" })  {
+    id: ID!
+    type: String!
+    email: String!
+    username: String!
+    phone_number: String!
+    family_name: String!
+    given_name: String!
+    chats: [Member] ###@connection(keyName: "byUser", fields: ["id"])
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+}
+
+type Chat
+  @model(queries: { get: "getChat", list: "searchChats" }, subscriptions: null) {
+    id: ID!
+    name: String!
+    owner: String!
+    messages: [Message]
+    members: [Member] @connection(keyName: "byChat", fields: ["id"])
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+    appointmentStart: AWSDateTime
+    appointmentEnd: AWSDateTime
+}
+
+type Member
+  @model(queries: null, subscriptions: null)
+  @key(name: "byChat", fields: ["chatID", "userID"])
+  @key(name: "byUser", fields: ["userID", "chatID"]) {
+    id: ID!
+    chatID: ID!
+    userID: ID!
+    status: StatusType!
+    priviledges: [MessageType]
+    chat: Chat @connection(fields: ["chatID"])
+    member: User! @connection(fields: ["userID"])
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+}
+
+type Message
+  @model(queries: null, subscriptions: null)
+  @key(name: "byChatID", fields: ["chatID"])
+  @auth(rules: [ { allow: owner, operations: [update, delete] } ]) {
+    id: ID!
+    text: String
+    owner: String!
+    chatID: ID!
+    type: MessageType!
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+}
+
+type ModelChatConnection {
+  items: [Chat]
+  nextToken: String
+}
+
+type ModelMemberConnection {
+  items: [Member]
+  nextToken: String
+}
+
+type ModelMessageConnection {
+  items: [Message]
+  nextToken: String
+}
+
+type Mutation {
+  updateMessageType(input: UpdateMessageTypeInput!): Message @function(name: "familydocba6bd2d0-${env}")
+}
+
+type Query {
+  listChats(userID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelChatConnection @function(name: "familydocba6bd2d0-${env}")
+  listMembers(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMemberConnection @function(name: "familydocba6bd2d0-${env}")
+  listMessages(chatID: String, filter: ModelFilterInput, limit: Int, nextToken: String): ModelMessageConnection @function(name: "familydocba6bd2d0-${env}")
+}
+
+type Subscription {
+  onCreateChat(userID: ID): Member @aws_subscribe(mutations: ["createMember"])
+  onUpdateChat(userID: ID): Member @aws_subscribe(mutations: ["updateMember"])
+  onDeleteChat(userID: ID): Member @aws_subscribe(mutations: ["deleteMember"])
+  onCreateMember(chatID: ID): Member @aws_subscribe(mutations: ["createMember"])
+  onUpdateMember(chatID: ID): Member @aws_subscribe(mutations: ["updateMember"])
+  onDeleteMember(chatID: ID): Member @aws_subscribe(mutations: ["deleteMember"])
+  onCreateMessage(chatID: ID): Message @aws_subscribe(mutations: ["createMessage"])
+  onUpdateMessage(chatID: ID): Message @aws_subscribe(mutations: ["updateMessage"])
+  onDeleteMessage(chatID: ID): Message @aws_subscribe(mutations: ["deleteMessage"])
 }
 
 enum MessageType {
@@ -14,62 +100,35 @@ enum MessageType {
   LAB
 }
 
-type ModelMessageConnection {
-  nextToken: String
-  items: [Message]
+enum StatusType {
+  OFFERED
+  REQUESTED
+  APPROVED
 }
 
-type Message
-  @model(queries: null)
-  @key(name: "byMessageChatId", fields: ["messageChatId"])
-  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
-    id: ID!
-    text: String
-    messageChatId: ID!
-    type: MessageType!
-    createdAt: AWSDateTime!
-    updatedAt: AWSDateTime!
+input UpdateMessageTypeInput {
+  id: ID!
+  chatID: ID!
+  userID: ID!
+  type: MessageType!
 }
 
-type Chat
-  @model(queries: { get: "getChat" }) {
-    id: ID!
-    name: String!
-    owner: String!
-    members: [ChatMember] @connection(keyName: "byChat", fields: ["id"])
-    messages(nextToken: String): ModelMessageConnection @function(name: "familydocf7331a63-${env}")
-    createdAt: AWSDateTime!
-    updatedAt: AWSDateTime!
+input ModelFilterInput {
+  name: ModelStringFilterInput
+  and: [ModelFilterInput]
+  or: [ModelFilterInput]
+  not: ModelFilterInput
 }
 
-type ChatMember
-  @model(queries: null)
-  @key(name: "byChat", fields: ["chatID", "memberID"])
-  @key(name: "byMember", fields: ["memberID", "chatID"]) {
-    id: ID!
-    chatID: ID!
-    memberID: ID!
-    status: StatusType!
-    priviledges: [MessageType]
-    chat: Chat @connection(fields: ["chatID"])
-    member: User! @connection(fields: ["memberID"])
-    createdAt: AWSDateTime!
-    updatedAt: AWSDateTime!
+input ModelStringFilterInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
 }
-
-type User
-  @model {
-    id: ID!
-    type: String!
-    email: String!
-    username: String!
-    phone_number: String!
-    family_name: String!
-    given_name: String!
-    chats: [ChatMember] @connection(keyName: "byMember", fields: ["id"])
-    createdAt: AWSDateTime!
-    updatedAt: AWSDateTime!
-}
-
-
-

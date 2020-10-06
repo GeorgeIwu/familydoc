@@ -1,0 +1,95 @@
+import { v4 as uuid } from 'uuid';
+import gql from 'graphql-tag'
+import debounce from 'lodash/debounce'
+import { listMembers, searchUsers } from '../_lib/graphql/queries'
+import { createMember, updateMember, deleteMember } from '../_lib/graphql/mutations'
+import { onCreateMember, onUpdateMember, onDeleteMember } from '../_lib/graphql/subscriptions'
+import { buildSchema, getSubscriber, getUpdater, updateStoreMembers } from '../_lib/utils'
+
+export const ListMembers = gql(listMembers);
+export const CreateMember = gql(createMember)
+export const UpdateMember = gql(updateMember)
+export const DeleteMember = gql(deleteMember)
+export const SearchUsers = gql(searchUsers)
+
+const OnCreateMember = gql(onCreateMember)
+const OnUpdateMember = gql(onUpdateMember)
+const OnDeleteMember = gql(onDeleteMember)
+
+const TYPES = {
+  listMembers: 'listMembers',
+  createMember: 'createMember',
+  updateMember: 'updateMember',
+  deleteMember: 'deleteMember',
+}
+
+
+
+const getUserFilter = (name, type) => ({
+  type: { eq: type },
+  or: [
+    { given_name: { contains: `${name}` } },
+    { family_name: { contains: `${name}`} },
+    { username: { contains: `${name}`} },
+    { email: { contains: `${name}`} },
+  ]
+})
+
+const getMemberInput = ({ id, chatID, userID, status, priviledges, createdAt, updatedAt, chat, user }) => ({
+  id: id || uuid(),
+  chatID: chatID || chat.id,
+  userID: userID || user.id,
+  status: status || 'APPROVED',
+  priviledges: priviledges || ['ALL'],
+  createdAt: createdAt || new Date(),
+  updatedAt: updatedAt || new Date(),
+})
+
+export const getFetchMembers = (getChat) => async (chatID) => {
+  return await getChat({
+    variables: { chatID },
+    context: { serializationKey: 'GET_CHAT_MEMBERS' },
+    update: getUpdater(updateStoreMembers, { query: ListMembers, variables: { chatID } }),
+  })
+}
+
+export const getAddMember = (createMember, chatID) => async (user) => {
+  const memberInput = getMemberInput({chatID, user})
+  return await createMember({
+    variables: { input: memberInput },
+    context: { serializationKey: 'CREATE_CHAT_MEMBER' },
+    optimisticResponse: buildSchema(memberInput, TYPES.Member, TYPES.createMember, { member: user }),
+    update: getUpdater(updateStoreMembers, { query: ListMembers, variables: { chatID  } }),
+  })
+}
+
+export const getEditMember = (updateMember, chatID) => async (member) => {
+  const memberInput = getMemberInput({ chatID, ...member })
+  return await updateMember({
+    variables: { input: memberInput },
+    context: { serializationKey: 'UPDATE_CHAT_MEMBER' },
+    optimisticResponse: buildSchema(memberInput, TYPES.Member, TYPES.updateMember),
+    update: getUpdater(updateStoreMembers, { query: ListMembers, variables: { chatID  } }),
+  })
+}
+
+export const getRemoveMember = (deleteMember, chatID) => async (member) => {
+  const memberInput = getMemberInput({ chatID, ...member })
+  return await deleteMember({
+    variables: { input: { id: memberInput.id } },
+    context: { serializationKey: 'DELETE_CHAT_MEMBER' },
+    optimisticResponse: buildSchema(memberInput, TYPES.Member, TYPES.deleteMember),
+    update: getUpdater(updateStoreMembers, { query: ListMembers, variables: { chatID  } }),
+  })
+}
+
+export const getSearchUser = (searchUsers, type = 'PROVIDER') => debounce(async (name) => {
+  return await searchUsers({
+    variables: { filter: getUserFilter(name, type) },
+    context: { serializationKey: 'LIST_USERS' },
+  })
+}, 100)
+
+export const onAddMember = (chatID) => ({ document: OnCreateMember, variables: { chatID }, updateQuery: getSubscriber(updateStoreMembers) })
+export const onEditMember = (chatID) => ({ document: OnUpdateMember, variables: { chatID }, updateQuery: getSubscriber(updateStoreMembers) })
+export const onRemoveMember = (chatID) => ({ document: OnDeleteMember, variables: { chatID }, updateQuery: getSubscriber(updateStoreMembers) })

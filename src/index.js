@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom'
 import { ApolloProvider } from '@apollo/react-common'
 import { ThemeProvider } from 'styled-components';
 import { StylesProvider } from '@material-ui/core/styles';
-import { StoreProvider } from './components/hooks/useStore';
+import { StoreProvider } from './_lib/hooks/useStore';
 
-import getApolloClient from './components/utils/apolloClient';
+import getApolloClient from './_lib/utils/apolloClient';
 import * as serviceWorker from './serviceWorker';
-import Router from './Router';
+import Router from './_routes';
 
 export default function App() {
   const [client, setClient] = useState(null)

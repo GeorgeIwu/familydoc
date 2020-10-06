@@ -1,7 +1,4 @@
 {
     "Version": 5,
-    "ElasticsearchWarning": true,
-    "StackMapping": {
-        "ChatmessagesResolver": "ConnectionStack"
-    }
+    "ElasticsearchWarning": true
 }

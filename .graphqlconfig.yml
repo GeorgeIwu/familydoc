@@ -2,14 +2,14 @@ projects:
   familydoc:
     schemaPath: amplify/backend/api/familydoc/build/schema.graphql
     includes:
-      - src/components/graphql/**/*.js
+      - src/_lib/graphql/**/*.js
     excludes:
       - ./amplify/**
     extensions:
       amplify:
         codeGenTarget: javascript
         generatedFileName: ''
-        docsFilePath: src/components/graphql
+        docsFilePath: src/_lib/graphql
 extensions:
   amplify:
     version: 3

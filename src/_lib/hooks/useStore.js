@@ -7,7 +7,7 @@ const localState = JSON.parse(localStorage.getItem('store')) || {}
 
 const StoreContext = createContext();
 const useStore = () => useContext(StoreContext);
-const rootReducer = combineReducers({ form: formReducer, })
+const rootReducer = combineReducers({ form: formReducer })
 const initialState = localState || rootReducer(undefined, {type: undefined});
 
 const StoreProvider = ({ children }) => {

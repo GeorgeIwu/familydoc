@@ -3,6 +3,8 @@ import { HashRouter, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
 import PrivateRoute from './PrivateRoute'
 import Welcome from './Welcome';
+// import Welcome from '../slek';
+// import Welcome from '../mui';
 import Recover from './Recover';
 import Verify from './Verify';
 import Conversations from './Conversations';
